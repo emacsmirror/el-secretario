@@ -35,8 +35,7 @@
 (defun all-reviewer-start-session (source-list)
   (setq all-reviewer-current-source-list source-list)
   (funcall (all-reviewer-source-init-function (car source-list)))
-  (funcall (all-reviewer-source-next-function (car source-list)))
-  (funcall (all-reviewer-source-hydra-body (car source-list))))
+  (all-reviewer-next-item))
 
 (defun all-reviewer-next-item ()
   (interactive)
