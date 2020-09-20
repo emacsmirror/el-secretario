@@ -35,6 +35,7 @@
 (defun all-reviewer-start-session (source-list)
   (setq all-reviewer-current-source-list source-list)
   (funcall (all-reviewer-source-init-function (car source-list)))
+  (funcall (all-reviewer-source-next-function (car source-list)))
   (funcall (all-reviewer-source-hydra-body (car source-list))))
 
 (defun all-reviewer-next-item ()
@@ -48,11 +49,15 @@
 
     (push all-reviewer-current-source-list-done
           (car all-reviewer-current-source-list))
-    (pop all-reviewer-current-source-list))
+    (pop all-reviewer-current-source-list)
+
+    (when (car all-reviewer-current-source-list)
+      (funcall (all-reviewer-source-init-function (car all-reviewer-current-source-list)))))
 
   (when all-reviewer-current-source-list
-      (funcall (all-reviewer-source-next-item-hook
-                (car all-reviewer-current-source-list)))))
+    (funcall (all-reviewer-source-hydra-body (car all-reviewer-current-source-list)))
+    (funcall (all-reviewer-source-next-item-hook
+              (car all-reviewer-current-source-list)))))
 
 (provide 'all-reviewer)
 ;;; all-reviewer.el ends here
