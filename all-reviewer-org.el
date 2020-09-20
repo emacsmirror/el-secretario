@@ -65,5 +65,14 @@
     (message "No next item!")
     nil))
 
+(defun all-reviewer-org-add-tag (&rest tags)
+  "Add TAGS to headline."
+  (org-set-tags (append tags (or (org-get-tags nil 't)
+                              '()))))
+
+(defun all-reviewer-org-remove-tag (&rest tags)
+  "Add TAGS to headline."
+  (org-set-tags (--keep (string-equal tags it) (org-get-tags nil 't))))
+
 (provide 'all-reviewer-org)
 ;;; all-reviewer-org.el ends here
