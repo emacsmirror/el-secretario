@@ -28,11 +28,12 @@
   "A list of items that has been reviewed")
 
 
-(defun all-reviewer-org-init (query)
+(defun all-reviewer-org-init (query &optional files)
   "TODO"
   (setq all-reviewer--org-items-left
         (cons nil
-              (org-ql-select "/tmp/test.org" '(todo)
+              (org-ql-select (or files
+                                 (org-agenda-files)) '(todo)
                 :action '(list (current-buffer)
                                (point-marker)))))
   (setq all-reviewer--org-items-done nil))

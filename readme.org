@@ -1,0 +1,34 @@
+#+TITLE: Readme
+
+A framework for daily/weekly reviews.
+
+* To try it to see how it works
+
+Create some TODO headlines in ~/tmp/test.org~. Run the following code in
+~/tmp/test.org~ (currently there is a bug so the hydra disappears if you don't
+do this, otherwise you should be able to call it from anywhere). You will be put
+into ~/tmp/test.org~ at the first todo headline. You can mark it as done or add
+some tags if you want. Press =n= to go to the next todo. The idea is that you
+can make an arbitrary list here mixing org, notmuch, elfeed or other sources and
+make the review process seamless.
+
+#+BEGIN_SRC emacs-lisp
+(all-reviewer-start-session
+ (list
+  (make-all-reviewer-source
+   :init-function  (lambda () (all-reviewer-org-init '(todo) "/tmp/test.org" ))
+   :next-function  #'all-reviewer-org-next-item
+   :prev-function  #'all-reviewer-org-previous-item
+   :hydra-body #'hydra-org-review/body
+   :finished-hook #'widen
+   :next-item-hook (lambda ()
+                     (all-reviewer-org-add-tag "weeklyreview")))))
+#+END_SRC
+* Each source needs these functions
+
+- A function that is called when initializing a source
+- A function for going to the next review item, e.g. next email or nest todo
+- A function for going back one review item
+- A hydra for actions to do on an item
+- A function that is called when a source is finished
+- A function that is called when arriving at the next item
