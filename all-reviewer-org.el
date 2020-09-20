@@ -34,7 +34,7 @@
         (cons nil
               (org-ql-select "/tmp/test.org" '(todo)
                 :action '(list (current-buffer)
-                               (point)))))
+                               (point-marker)))))
   (setq all-reviewer--org-items-done nil))
 
 (defun all-reviewer-org-next-item ()
