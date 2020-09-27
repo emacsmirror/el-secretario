@@ -44,7 +44,7 @@
   (if (car el-secretario--org-items-left)
     (cl-destructuring-bind (buf pos) (car el-secretario--org-items-left)
       (push (list buf pos) el-secretario--org-items-done)
-      (set-window-buffer (selected-window) buf)
+      (switch-to-buffer buf)
       (widen)
       (goto-char pos)
       (org-narrow-to-subtree)
