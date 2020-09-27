@@ -29,10 +29,18 @@
 
 (defvar el-secretario-current-source-list nil
   "TODO")
+
 (defvar el-secretario-current-source-list-done nil
   "TODO")
+(defvar el-secretario--original-buffer nil
+  "The buffer the user was in before activating el-secretario.")
+
+(defhydra el-secretario--hydra-quit (:exit t
+                                     :foreign-keys run)
+  ("q" (switch-to-buffer el-secretario--original-buffer) "Quit"))
 
 (defun el-secretario-start-session (source-list)
+  (setq el-secretario--original-buffer (current-buffer))
   (setq el-secretario-current-source-list source-list)
   (funcall (el-secretario-source-init-function (car source-list)))
   (el-secretario-next-item))
@@ -53,10 +61,14 @@
     (when (car el-secretario-current-source-list)
       (funcall (el-secretario-source-init-function (car el-secretario-current-source-list)))))
 
-  (when el-secretario-current-source-list
-    (funcall (el-secretario-source-hydra-body (car el-secretario-current-source-list)))
-    (funcall (el-secretario-source-next-item-hook
-              (car el-secretario-current-source-list)))))
+  (if el-secretario-current-source-list
+      (progn
+        (funcall (el-secretario-source-hydra-body (car el-secretario-current-source-list)))
+        (funcall (el-secretario-source-next-item-hook
+                  (car el-secretario-current-source-list))))
+    (switch-to-buffer (get-buffer-create "*el-secretario*"))
+    (insert "You are done for today!")
+    (el-secretario--hydra-quit/body)))
 
 (provide 'el-secretario)
 ;;; el-secretario.el ends here
