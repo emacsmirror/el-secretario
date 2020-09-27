@@ -23,6 +23,9 @@ make the review process seamless.
    :finished-hook #'widen
    :next-item-hook (lambda ()
                      (el-secretario-org-add-tag "weeklyreview")))))
+ (defhydra hydra-org-review (:foreign-keys run)
+   ("n" el-secretario-next-item "next")
+   ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
 #+END_SRC
 * Each source needs these functions
 
