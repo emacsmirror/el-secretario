@@ -13,20 +13,24 @@ can make an arbitrary list here mixing org, notmuch, elfeed or other sources and
 make the review process seamless.
 
 #+BEGIN_SRC emacs-lisp
-(el-secretario-start-session
- (list
-  (make-el-secretario-source
-   :init-function  (lambda () (el-secretario-org-init '(todo) "/tmp/test.org" ))
-   :next-function  #'el-secretario-org-next-item
-   :prev-function  #'el-secretario-org-previous-item
-   :hydra-body #'hydra-org-review/body
-   :finished-hook #'widen
-   :next-item-hook (lambda ()
-                     (el-secretario-org-add-tag "weeklyreview")))))
  (defhydra hydra-org-review (:foreign-keys run)
    ("n" el-secretario-next-item "next")
    ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
+
+(defun el-secretario-test-session ()
+  (interactive)
+  (el-secretario-start-session
+   (list
+    (make-el-secretario-source
+     :init-function  (lambda () (el-secretario-org-init '(todo) "/tmp/test.org" ))
+     :next-function  #'el-secretario-org-next-item
+     :prev-function  #'el-secretario-org-previous-item
+     :hydra-body #'hydra-org-review/body
+     :finished-hook #'widen
+     :next-item-hook (lambda ()
+                       (el-secretario-org-add-tag "weeklyreview"))))))
 #+END_SRC
+
 * Each source needs these functions
 
 - A function that is called when initializing a source
