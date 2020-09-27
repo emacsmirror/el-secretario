@@ -13,16 +13,16 @@ can make an arbitrary list here mixing org, notmuch, elfeed or other sources and
 make the review process seamless.
 
 #+BEGIN_SRC emacs-lisp
-(all-reviewer-start-session
+(el-secretario-start-session
  (list
-  (make-all-reviewer-source
-   :init-function  (lambda () (all-reviewer-org-init '(todo) "/tmp/test.org" ))
-   :next-function  #'all-reviewer-org-next-item
-   :prev-function  #'all-reviewer-org-previous-item
+  (make-el-secretario-source
+   :init-function  (lambda () (el-secretario-org-init '(todo) "/tmp/test.org" ))
+   :next-function  #'el-secretario-org-next-item
+   :prev-function  #'el-secretario-org-previous-item
    :hydra-body #'hydra-org-review/body
    :finished-hook #'widen
    :next-item-hook (lambda ()
-                     (all-reviewer-org-add-tag "weeklyreview")))))
+                     (el-secretario-org-add-tag "weeklyreview")))))
 #+END_SRC
 * Each source needs these functions
 

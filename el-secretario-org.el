@@ -1,4 +1,4 @@
-;;; all-reviewer-org.el org-mode module for all-reviewer -*- lexical-binding: t; -*-
+;;; el-secretario-org.el org-mode module for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
@@ -8,7 +8,7 @@
 ;; Modified: September 20, 2020
 ;; Version: 0.0.1
 ;; Keywords:
-;; Homepage: https://github.com/leo/all-reviewer-org
+;; Homepage: https://github.com/leo/el-secretario-org
 ;; Package-Requires: ((emacs 26.1) (cl-lib "0.5"))
 ;;
 ;; This file is not part of GNU Emacs.
@@ -21,29 +21,29 @@
 
 (require 'org-ql)
 
-(defvar all-reviewer--org-items-left nil
+(defvar el-secretario--org-items-left nil
   "A list of items that should be reviewed")
 
-(defvar all-reviewer--org-items-done nil
+(defvar el-secretario--org-items-done nil
   "A list of items that has been reviewed")
 
 
-(defun all-reviewer-org-init (query &optional files)
+(defun el-secretario-org-init (query &optional files)
   "TODO"
-  (setq all-reviewer--org-items-left
+  (setq el-secretario--org-items-left
         (cons nil
               (org-ql-select (or files
                                  (org-agenda-files)) '(todo)
                 :action '(list (current-buffer)
                                (point-marker)))))
-  (setq all-reviewer--org-items-done nil))
+  (setq el-secretario--org-items-done nil))
 
-(defun all-reviewer-org-next-item ()
+(defun el-secretario-org-next-item ()
   "TODO"
-  (pop all-reviewer--org-items-left)
-  (if (car all-reviewer--org-items-left)
-    (cl-destructuring-bind (buf pos) (car all-reviewer--org-items-left)
-      (push (list buf pos) all-reviewer--org-items-done)
+  (pop el-secretario--org-items-left)
+  (if (car el-secretario--org-items-left)
+    (cl-destructuring-bind (buf pos) (car el-secretario--org-items-left)
+      (push (list buf pos) el-secretario--org-items-done)
       (set-window-buffer (selected-window) buf)
       (widen)
       (goto-char pos)
@@ -52,12 +52,12 @@
     (message "No next item!")
     nil))
 
-(defun all-reviewer-org-previous-item ()
+(defun el-secretario-org-previous-item ()
   "TODO"
-  (pop all-reviewer--org-items-done)
-  (unless (car all-reviewer--org-items-done)
-    (cl-destructuring-bind (buf pos) (car all-reviewer--org-items-done)
-      (push (list buf pos) all-reviewer--org-items-left)
+  (pop el-secretario--org-items-done)
+  (unless (car el-secretario--org-items-done)
+    (cl-destructuring-bind (buf pos) (car el-secretario--org-items-done)
+      (push (list buf pos) el-secretario--org-items-left)
       (widen)
       (set-window-buffer (selected-window) buf)
       (goto-char pos)
@@ -66,14 +66,14 @@
     (message "No next item!")
     nil))
 
-(defun all-reviewer-org-add-tag (&rest tags)
+(defun el-secretario-org-add-tag (&rest tags)
   "Add TAGS to headline."
   (org-set-tags (append tags (or (org-get-tags nil 't)
                               '()))))
 
-(defun all-reviewer-org-remove-tag (&rest tags)
+(defun el-secretario-org-remove-tag (&rest tags)
   "Add TAGS to headline."
   (org-set-tags (--keep (string-equal tags it) (org-get-tags nil 't))))
 
-(provide 'all-reviewer-org)
-;;; all-reviewer-org.el ends here
+(provide 'el-secretario-org)
+;;; el-secretario-org.el ends here
