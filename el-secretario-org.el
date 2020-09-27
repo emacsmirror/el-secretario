@@ -68,8 +68,10 @@
 
 (defun el-secretario-org-add-tag (&rest tags)
   "Add TAGS to headline."
-  (org-set-tags (append tags (or (org-get-tags nil 't)
-                              '()))))
+  (org-set-tags (cl-remove-duplicates
+                 (append tags (or (org-get-tags nil 't)
+                                  '()))
+                 :test #'string-equal)))
 
 (defun el-secretario-org-remove-tag (&rest tags)
   "Add TAGS to headline."
