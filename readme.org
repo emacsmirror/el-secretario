@@ -13,9 +13,7 @@ can make an arbitrary list here mixing org, notmuch, elfeed or other sources and
 make the review process seamless.
 
 #+BEGIN_SRC emacs-lisp
- (defhydra hydra-org-review (:foreign-keys run)
-   ("n" el-secretario-next-item "next")
-   ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
+
 
 (defun el-secretario-test-session ()
   (interactive)
@@ -25,7 +23,7 @@ make the review process seamless.
      :init-function  (lambda () (el-secretario-org-init '(todo) "/tmp/test.org" ))
      :next-function  #'el-secretario-org-next-item
      :prev-function  #'el-secretario-org-previous-item
-     :hydra-body #'hydra-org-review/body
+     :hydra-body #'el-secretario-default-hydra/body
      :finished-hook #'widen
      :next-item-hook (lambda ()
                        (el-secretario-org-add-tag "weeklyreview")))
@@ -33,7 +31,7 @@ make the review process seamless.
      :init-function  #'el-secretario--notmuch-init
      :next-function  #'el-secretario--notmuch-show-next-thread
      :prev-function  #'notmuch-show-previous-thread-show
-     :hydra-body #'hydra-org-review/body
+     :hydra-body #'el-secretario-default-hydra/body
      :finished-hook (lambda ())
      :next-item-hook (lambda ()
                        (message "next item"))))))

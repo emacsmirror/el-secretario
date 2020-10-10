@@ -19,6 +19,14 @@
 ;;
 ;;; Code:
 
+
+
+
+(defhydra el-secretario-default-hydra (:foreign-keys run)
+   ("n" el-secretario-next-item "next")
+   ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
+
+
 (cl-defstruct el-secretario-source
   init-function
   next-function
@@ -37,18 +45,21 @@
 
 (defhydra el-secretario--hydra-quit (:exit t
                                      :foreign-keys run)
-  ("q" (switch-to-buffer el-secretario--original-buffer) "Quit"))
+  ("q"  (when el-secretario--original-buffer
+          (switch-to-buffer el-secretario--original-buffer)) "Quit"))
 
 (defun el-secretario-start-session (source-list)
   (setq el-secretario--original-buffer (current-buffer))
   (setq el-secretario-current-source-list source-list)
-  (el-secretario-mode 1)
+  (with-current-buffer (get-buffer-create "*el-secretario-en*")
+    (delete-region (point-min) (point-max)))
   (funcall (el-secretario-source-init-function (car source-list))))
 
 (defun el-secretario-next-item ()
   (interactive)
-  (funcall (el-secretario-source-next-function
-            (car el-secretario-current-source-list))))
+  (when el-secretario-current-source-list
+    (funcall (el-secretario-source-next-function
+              (car el-secretario-current-source-list)))))
 
 
 (defun el-secretario--next-source ()
@@ -60,7 +71,9 @@
         (if el-secretario-current-source-list
             (funcall (el-secretario-source-init-function
                       (car el-secretario-current-source-list)))
-          (message "Done!")))
+          (with-current-buffer (get-buffer-create "*el-secretario-en*")
+            (insert "Done!"))
+          (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
     (message "Done!")))
 
 (provide 'el-secretario)

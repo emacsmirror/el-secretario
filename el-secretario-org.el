@@ -34,9 +34,11 @@
         (cons nil
               (org-ql-select (or files
                                  (org-agenda-files)) '(todo)
-                :action '(list (current-buffer)
-                               (point-marker)))))
-  (setq el-secretario--org-items-done nil))
+                                 :action '(list (current-buffer)
+                                                (point-marker)))))
+  (setq el-secretario--org-items-done nil)
+  (funcall (el-secretario-source-hydra-body
+            (car el-secretario-current-source-list))))
 
 (defun el-secretario-org-next-item ()
   "TODO"
