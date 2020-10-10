@@ -25,11 +25,27 @@
                   nil
                   0
                   nil)
-  ;; (notmuch-search-first-thread)
-  ;; (funcall-interactively 'notmuch-search-show-thread)
-  )
+  (notmuch-search-first-thread)
+  (sit-for 0.2)
+  (el-secretario--notmuch-search-show-thread))
 
-(defun el-secretario--notmuch-next-item (&optional elide-toggle)
+(defun el-secretario--notmuch-show-next-thread (&optional previous)
+  "Move to the next item in the search results, if any.
+
+  If PREVIOUS is non-nil, move to the previous item in the
+search results instead."
+  (interactive "P")
+  (let ((parent-buffer notmuch-show-parent-buffer))
+    (notmuch-bury-or-kill-this-buffer)
+    (when (buffer-live-p parent-buffer)
+      (switch-to-buffer parent-buffer)
+      (and (if previous
+	       (notmuch-search-previous-thread)
+	     (notmuch-search-next-thread))
+	   (el-secretario--notmuch-search-show-thread)))))
+
+
+(defun el-secretario--notmuch-search-show-thread (&optional elide-toggle)
   "Display the currently selected thread.
 
 With a prefix argument, invert the default value of

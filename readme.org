@@ -28,7 +28,15 @@ make the review process seamless.
      :hydra-body #'hydra-org-review/body
      :finished-hook #'widen
      :next-item-hook (lambda ()
-                       (el-secretario-org-add-tag "weeklyreview"))))))
+                       (el-secretario-org-add-tag "weeklyreview")))
+    (make-el-secretario-source
+     :init-function  #'el-secretario--notmuch-init
+     :next-function  #'el-secretario--notmuch-show-next-thread
+     :prev-function  #'notmuch-show-previous-thread-show
+     :hydra-body #'hydra-org-review/body
+     :finished-hook (lambda ())
+     :next-item-hook (lambda ()
+                       (message "next item"))))))
 #+END_SRC
 
 * Each source needs these functions
