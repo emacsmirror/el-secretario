@@ -42,33 +42,26 @@
 (defun el-secretario-start-session (source-list)
   (setq el-secretario--original-buffer (current-buffer))
   (setq el-secretario-current-source-list source-list)
-  (funcall (el-secretario-source-init-function (car source-list)))
-  (el-secretario-next-item))
+  (el-secretario-mode 1)
+  (funcall (el-secretario-source-init-function (car source-list))))
 
 (defun el-secretario-next-item ()
   (interactive)
-  (while (and el-secretario-current-source-list
-              (not (funcall (el-secretario-source-next-function
-                             (car el-secretario-current-source-list)))))
+  (funcall (el-secretario-source-next-function
+            (car el-secretario-current-source-list))))
 
-    (funcall (el-secretario-source-finished-hook
-              (car el-secretario-current-source-list)))
 
-    (push el-secretario-current-source-list-done
-          (car el-secretario-current-source-list))
-    (pop el-secretario-current-source-list)
-
-    (when (car el-secretario-current-source-list)
-      (funcall (el-secretario-source-init-function (car el-secretario-current-source-list)))))
-
+(defun el-secretario--next-source ()
   (if el-secretario-current-source-list
       (progn
-        (funcall (el-secretario-source-hydra-body (car el-secretario-current-source-list)))
-        (funcall (el-secretario-source-next-item-hook
-                  (car el-secretario-current-source-list))))
-    (switch-to-buffer (get-buffer-create "*el-secretario*"))
-    (insert "You are done for today!")
-    (el-secretario--hydra-quit/body)))
+        (push el-secretario-current-source-list-done
+              (car el-secretario-current-source-list))
+        (pop el-secretario-current-source-list)
+        (if el-secretario-current-source-list
+            (funcall (el-secretario-source-init-function
+                      (car el-secretario-current-source-list)))
+          (message "Done!")))
+    (message "Done!")))
 
 (provide 'el-secretario)
 ;;; el-secretario.el ends here

@@ -42,15 +42,14 @@
   "TODO"
   (pop el-secretario--org-items-left)
   (if (car el-secretario--org-items-left)
-    (cl-destructuring-bind (buf pos) (car el-secretario--org-items-left)
-      (push (list buf pos) el-secretario--org-items-done)
-      (switch-to-buffer buf)
-      (widen)
-      (goto-char pos)
-      (org-narrow-to-subtree)
-      't)
+      (cl-destructuring-bind (buf pos) (car el-secretario--org-items-left)
+        (push (list buf pos) el-secretario--org-items-done)
+        (switch-to-buffer buf)
+        (widen)
+        (goto-char pos)
+        (org-narrow-to-subtree))
     (message "No next item!")
-    nil))
+    (el-secretario--next-source)))
 
 (defun el-secretario-org-previous-item ()
   "TODO"

@@ -53,18 +53,17 @@ With a prefix argument, invert the default value of
 thread."
   (interactive "P")
   (let ((thread-id (notmuch-search-find-thread-id))
-	(subject (notmuch-search-find-subject)))
+        (subject (notmuch-search-find-subject)))
     (if (> (length thread-id) 0)
-	(progn (notmuch-show thread-id
-		             elide-toggle
-		             (current-buffer)
-		             notmuch-search-query-string
-		             ;; Name the buffer based on the subject.
-		             (concat "*"
-			             (truncate-string-to-width subject 30 nil nil t)
-			             "*"))
-               't)
+        (progn (notmuch-show thread-id
+                             elide-toggle
+                             (current-buffer)
+                             notmuch-search-query-string
+                             ;; Name the buffer based on the subject.
+                             (concat "*"
+                                     (truncate-string-to-width subject 30 nil nil t)
+                                     "*")))
       (message "End of search results.")
-      nil)))
+      (el-secretario--next-source))))
 (provide 'el-secretario-notmuch)
 ;;; el-secretario-notmuch.el ends here
