@@ -50,7 +50,9 @@
         (switch-to-buffer buf)
         (widen)
         (goto-char pos)
-        (org-narrow-to-subtree))
+        (org-narrow-to-subtree)
+        (funcall (el-secretario-source-next-item-hook
+                  (car el-secretario-current-source-list))))
     (message "No next item!")
     (el-secretario--next-source)))
 
