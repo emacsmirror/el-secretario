@@ -11,13 +11,6 @@ A framework for daily/weekly reviews.
 
 (use-package! el-secretario
   :after (hydra)
-  :config
-  (defhydra my/el-secretario-org-hydra (:foreign-keys run)
-    ("n" el-secretario-next-item "next")
-    ("r" org-refile)
-    ("s" org-schedule)
-    ("d" org-deadline)
-    ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
   (defun my/dailyreview-secretary ()
     (list
 

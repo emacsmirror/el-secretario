@@ -21,12 +21,13 @@
 
 (require 'org-ql)
 (defhydra el-secretario-org-hydra (:foreign-keys run)
-    ("n" el-secretario-next-item "next")
-    ("r" org-refile)
-    ("t" org-set-tags-command)
-    ("s" org-schedule)
-    ("d" org-deadline)
-    ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
+  ("n" el-secretario-next-item "next")
+  ("r" org-refile "Refile" :exit t)
+  ("t" org-set-tags-command "Tags" :exit t)
+  ("s" org-schedule "Schedule" :exit t)
+  ("d" org-deadline  "Deadline" :exit t)
+  ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t)
+  ("/" nil "disable hydra"  :exit t))
 
 (defmacro el-secretario-org-make-source (query files &optional next-item-hook hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.

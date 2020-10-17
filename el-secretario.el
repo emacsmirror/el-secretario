@@ -23,8 +23,9 @@
 
 
 (defhydra el-secretario-default-hydra (:foreign-keys run)
-   ("n" el-secretario-next-item "next")
-   ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
+  ("n" el-secretario-next-item "next")
+  ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t)
+  ("/" nil "disable hydra"  :exit t))
 
 
 (cl-defstruct el-secretario-source
