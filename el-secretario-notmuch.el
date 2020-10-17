@@ -19,15 +19,17 @@
 ;;
 ;;; Code:
 
-(defun el-secretario--notmuch-init ()
-  (notmuch-search "tag:test" ;; "tag:notdone AND NOT tag:deleted NOT tag:gmail/Inbox"
+(defun el-secretario--notmuch-init (&optional query)
+  (notmuch-search (or query "tag:unread")
                   't
                   nil
                   0
                   nil)
   (notmuch-search-first-thread)
-  (sit-for 0.2)
-  (el-secretario--notmuch-search-show-thread))
+  (sit-for 0.1)
+  (el-secretario--notmuch-search-show-thread)
+  (funcall (el-secretario-source-hydra-body
+            (car el-secretario-current-source-list))))
 
 (defun el-secretario--notmuch-show-next-thread (&optional previous)
   "Move to the next item in the search results, if any.
