@@ -2,13 +2,13 @@
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
-;; Author: Leo <http://github/leo>
-;; Maintainer: Leo <leo@leo-B85-HD3>
+;; Author: Leo Okawa Ericson <http://github/Zetagon>
+;; Maintainer: Leo <github@relevant-information.com>
 ;; Created: September 20, 2020
-;; Modified: September 20, 2020
+;; Modified: October 17, 2020
 ;; Version: 0.0.1
 ;; Keywords:
-;; Homepage: https://github.com/leo/el-secretario-org
+;; Homepage: https://github.com/Zetagon/el-secretario
 ;; Package-Requires: ((emacs 26.1) (cl-lib "0.5"))
 ;;
 ;; This file is not part of GNU Emacs.
