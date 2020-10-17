@@ -19,8 +19,7 @@
 ;;
 ;;; Code:
 
-(defmacro el-secretario-notmuch-make-source (query &optional next-item-hook)
-   :hydra-body #'el-secretario-default-hydra/body
+(defmacro el-secretario-notmuch-make-source (query &optional next-item-hook hydra)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
 NEXT-ITEM-HOOk is called on each heading.
@@ -29,7 +28,7 @@ HYDRA is an hydra to use during review of this source"
     :init-function  (lambda () (el-secretario--notmuch-init  ,query))
     :next-function  #'el-secretario--notmuch-show-next-thread
     :prev-function  #'notmuch-show-previous-thread-show
-    :hydra-body #'el-secretario-default-hydra/body
+    :hydra-body (or ,hydra #'el-secretario-default-hydra/body)
     :finished-hook (lambda ())
     :next-item-hook (or ,next-item-hook (lambda ()))) )
 

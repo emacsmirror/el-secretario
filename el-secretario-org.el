@@ -21,10 +21,10 @@
 
 (require 'org-ql)
 
-(defmacro el-secretario-org-make-source (query files &optional next-item-hook)
-       :hydra-body #'my/el-secretario-org-hydra/body
+(defmacro el-secretario-org-make-source (query files &optional next-item-hook hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
-NEXT-ITEM-HOOk is called on each heading"
+NEXT-ITEM-HOOk is called on each heading.
+HYDRA is an hydra to use during review of this source."
   `(make-el-secretario-source
     :init-function  (lambda () (el-secretario-org-init (quote ,query) (quote ,files) ))
     :next-function  #'el-secretario-org-next-item
