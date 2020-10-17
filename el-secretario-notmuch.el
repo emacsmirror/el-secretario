@@ -19,6 +19,15 @@
 ;;
 ;;; Code:
 
+(defmacro el-secretario-notmuch-make-source (query &optional next-item-hook)
+ `(make-el-secretario-source
+   :init-function  (lambda () (el-secretario--notmuch-init  ,query))
+   :next-function  #'el-secretario--notmuch-show-next-thread
+   :prev-function  #'notmuch-show-previous-thread-show
+   :hydra-body #'el-secretario-default-hydra/body
+   :finished-hook (lambda ())
+   :next-item-hook (or ,next-item-hook (lambda ()))) )
+
 (defun el-secretario--notmuch-init (&optional query)
   (notmuch-search (or query "tag:unread")
                   't
