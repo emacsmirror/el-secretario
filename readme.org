@@ -1,41 +1,43 @@
 #+TITLE: Readme
 
 A framework for daily/weekly reviews.
-
-* To try it to see how it works
-
-Create some TODO headlines in ~/tmp/test.org~. Run the following code in
-~/tmp/test.org~ (currently there is a bug so the hydra disappears if you don't
-do this, otherwise you should be able to call it from anywhere). You will be put
-into ~/tmp/test.org~ at the first todo headline. You can mark it as done or add
-some tags if you want. Press =n= to go to the next todo. The idea is that you
-can make an arbitrary list here mixing org, notmuch, elfeed or other sources and
-make the review process seamless.
-
+* Example Configuration
 #+BEGIN_SRC emacs-lisp
+(use-package! el-secretario-org
+  :after (el-secretario org-ql))
+(use-package! el-secretario-notmuch
+  :after (el-secretario))
 
 
-(defun el-secretario-test-session ()
-  (interactive)
-  (el-secretario-start-session
-   (list
-    (make-el-secretario-source
-     :init-function  (lambda () (el-secretario-org-init '(todo) "/tmp/test.org" ))
-     :next-function  #'el-secretario-org-next-item
-     :prev-function  #'el-secretario-org-previous-item
-     :hydra-body #'el-secretario-default-hydra/body
-     :finished-hook #'widen
-     :next-item-hook (lambda ()
-                       (el-secretario-org-add-tag "weeklyreview")))
-    (make-el-secretario-source
-     :init-function  #'el-secretario--notmuch-init
-     :next-function  #'el-secretario--notmuch-show-next-thread
-     :prev-function  #'notmuch-show-previous-thread-show
-     :hydra-body #'el-secretario-default-hydra/body
-     :finished-hook (lambda ())
-     :next-item-hook (lambda ()
-                       (message "next item"))))))
+(use-package! el-secretario
+  :after (hydra)
+  :config
+  (defhydra my/el-secretario-org-hydra (:foreign-keys run)
+    ("n" el-secretario-next-item "next")
+    ("r" org-refile)
+    ("s" org-schedule)
+    ("d" org-deadline)
+    ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
+  (defun my/dailyreview-secretary ()
+    (list
+
+     ;; First take care of email
+     (el-secretario-notmuch-make-source "tag:lists/emacs-orgmode")
+     ;; Then Take care of inbox
+     (el-secretario-org-make-source nil ("~/org/Inbox.org"))
+
+     ;; Check if any waiting items are done
+     (el-secretario-org-make-source (todo "WAITING") ("~/org/orgzly/Todo.org")))
+     ;; Go through TODOs
+     (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))
+
+  ;; Create a function to start the review
+  (defun el-secretario-daily-review ()
+    (interactive)
+    (el-secretario-start-session (my/dailyreview-secretary)))
+  :commands (el-secretario-daily-review))
 #+END_SRC
+
 
 * Each source needs these functions
 

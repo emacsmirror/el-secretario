@@ -22,13 +22,16 @@
 (require 'org-ql)
 
 (defmacro el-secretario-org-make-source (query files &optional next-item-hook)
- `(make-el-secretario-source
-   :init-function  (lambda () (el-secretario-org-init (quote ,query) (quote ,files) ))
-       :next-function  #'el-secretario-org-next-item
-       :prev-function  #'el-secretario-org-previous-item
        :hydra-body #'my/el-secretario-org-hydra/body
-       :finished-hook #'widen
-       :next-item-hook (or ,next-item-hook (lambda ()))) )
+  "QUERY is an arbitrary org-ql query. FILES is the files to search through.
+NEXT-ITEM-HOOk is called on each heading"
+  `(make-el-secretario-source
+    :init-function  (lambda () (el-secretario-org-init (quote ,query) (quote ,files) ))
+    :next-function  #'el-secretario-org-next-item
+    :prev-function  #'el-secretario-org-previous-item
+    :hydra-body #'my/el-secretario-org-hydra/body
+    :finished-hook #'widen
+    :next-item-hook (or ,next-item-hook (lambda ()))) )
 
 
 (defvar el-secretario--org-items-left nil

@@ -20,13 +20,18 @@
 ;;; Code:
 
 (defmacro el-secretario-notmuch-make-source (query &optional next-item-hook)
- `(make-el-secretario-source
-   :init-function  (lambda () (el-secretario--notmuch-init  ,query))
-   :next-function  #'el-secretario--notmuch-show-next-thread
-   :prev-function  #'notmuch-show-previous-thread-show
    :hydra-body #'el-secretario-default-hydra/body
-   :finished-hook (lambda ())
-   :next-item-hook (or ,next-item-hook (lambda ()))) )
+  "Convenience macro for creating a source for notmuch mail.
+QUERY is a normal notmuch query.
+NEXT-ITEM-HOOk is called on each heading.
+HYDRA is an hydra to use during review of this source"
+  `(make-el-secretario-source
+    :init-function  (lambda () (el-secretario--notmuch-init  ,query))
+    :next-function  #'el-secretario--notmuch-show-next-thread
+    :prev-function  #'notmuch-show-previous-thread-show
+    :hydra-body #'el-secretario-default-hydra/body
+    :finished-hook (lambda ())
+    :next-item-hook (or ,next-item-hook (lambda ()))) )
 
 (defun el-secretario--notmuch-init (&optional query)
   (notmuch-search (or query "tag:unread")
@@ -41,10 +46,7 @@
             (car el-secretario-current-source-list))))
 
 (defun el-secretario--notmuch-show-next-thread (&optional previous)
-  "Move to the next item in the search results, if any.
-
-  If PREVIOUS is non-nil, move to the previous item in the
-search results instead."
+  "Like `notmuch-show-next-thread' but call `el-secretario--notmuch-search-show-thread' instead"
   (interactive "P")
   (let ((parent-buffer notmuch-show-parent-buffer))
     (notmuch-bury-or-kill-this-buffer)
@@ -57,11 +59,7 @@ search results instead."
 
 
 (defun el-secretario--notmuch-search-show-thread (&optional elide-toggle)
-  "Display the currently selected thread.
-
-With a prefix argument, invert the default value of
-`notmuch-show-only-matching-messages' when displaying the
-thread."
+  "Like `notmuch-search-show-thread' but call `el-secretario--next-source' if there are no more mail."
   (interactive "P")
   (let ((thread-id (notmuch-search-find-thread-id))
         (subject (notmuch-search-find-subject)))
