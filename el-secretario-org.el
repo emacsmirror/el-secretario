@@ -20,6 +20,13 @@
 ;;; Code:
 
 (require 'org-ql)
+(defhydra el-secretario-org-hydra (:foreign-keys run)
+    ("n" el-secretario-next-item "next")
+    ("r" org-refile)
+    ("t" org-set-tags-command)
+    ("s" org-schedule)
+    ("d" org-deadline)
+    ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t))
 
 (defmacro el-secretario-org-make-source (query files &optional next-item-hook hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
@@ -29,7 +36,7 @@ HYDRA is an hydra to use during review of this source."
     :init-function  (lambda () (el-secretario-org-init (quote ,query) (quote ,files) ))
     :next-function  #'el-secretario-org-next-item
     :prev-function  #'el-secretario-org-previous-item
-    :hydra-body #'my/el-secretario-org-hydra/body
+    :hydra-body #'el-secretario-org-hydra/body
     :finished-hook #'widen
     :next-item-hook (or ,next-item-hook (lambda ()))) )
 
