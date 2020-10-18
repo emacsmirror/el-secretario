@@ -20,8 +20,8 @@
 ;;; Code:
 
 (require 'org-ql)
-(defhydra el-secretario-org-hydra (:foreign-keys run)
-  ("n" el-secretario-next-item "next")
+(defhydra el-secretario-org-hydra ()
+  ("n" el-secretario-next-item "next" :exit t)
   ("r" org-refile "Refile" :exit t)
   ("t" org-set-tags-command "Tags" :exit t)
   ("s" org-schedule "Schedule" :exit t)
@@ -73,7 +73,9 @@ HYDRA is an hydra to use during review of this source."
         (goto-char pos)
         (org-narrow-to-subtree)
         (funcall (el-secretario-source-next-item-hook
-                  (car el-secretario-current-source-list))))
+                  (car el-secretario-current-source-list)))
+        (funcall (el-secretario-source-hydra-body
+                  (car el-secretario-current-source-list))) )
     (message "No next item!")
     (el-secretario--next-source)))
 

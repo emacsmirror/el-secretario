@@ -70,7 +70,9 @@ HYDRA is an hydra to use during review of this source"
                              ;; Name the buffer based on the subject.
                              (concat "*"
                                      (truncate-string-to-width subject 30 nil nil t)
-                                     "*")))
+                                     "*"))
+               (funcall (el-secretario-source-hydra-body
+                         (car el-secretario-current-source-list))))
       (message "End of search results.")
       (el-secretario--next-source))))
 (provide 'el-secretario-notmuch)
