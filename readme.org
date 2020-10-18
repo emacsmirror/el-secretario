@@ -10,25 +10,25 @@ A framework for daily/weekly reviews.
 
 
 (use-package! el-secretario
-  :after (hydra)
-  (defun my/dailyreview-secretary ()
-    (list
+:after (hydra)
+(defun my/dailyreview-secretary ()
+  (list
 
-     ;; First take care of email
-     (el-secretario-notmuch-make-source "tag:lists/emacs-orgmode")
-     ;; Then Take care of inbox
-     (el-secretario-org-make-source nil ("~/org/Inbox.org"))
+   ;; First take care of email
+   (el-secretario-notmuch-make-source "tag:lists/emacs-orgmode")
+   ;; Then Take care of inbox
+   (el-secretario-org-make-source nil ("~/org/Inbox.org"))
 
-     ;; Check if any waiting items are done
-     (el-secretario-org-make-source (todo "WAITING") ("~/org/orgzly/Todo.org")))
-     ;; Go through TODOs
-     (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))
+   ;; Check if any waiting items are done
+   (el-secretario-org-make-source (todo "WAITING") ("~/org/orgzly/Todo.org"))
+   ;; Go through TODOs
+   (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))
 
-  ;; Create a function to start the review
-  (defun el-secretario-daily-review ()
-    (interactive)
-    (el-secretario-start-session (my/dailyreview-secretary)))
-  :commands (el-secretario-daily-review))
+;; Create a function to start the review
+(defun el-secretario-daily-review ()
+  (interactive)
+  (el-secretario-start-session (my/dailyreview-secretary)))
+:commands (el-secretario-daily-review))
 #+END_SRC
 
 
