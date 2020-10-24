@@ -53,11 +53,10 @@ HYDRA is an hydra to use during review of this source."
 (defun el-secretario-org-init (query &optional files)
   "TODO"
   (setq el-secretario--org-items-left
-        (cons nil
-              (org-ql-select (or files
-                                 (org-agenda-files)) query
-                                 :action '(list (current-buffer)
-                                                (point-marker)))))
+        (org-ql-select (or files
+                           (org-agenda-files)) query
+                           :action '(list (current-buffer)
+                                          (point-marker))))
   (setq el-secretario--org-items-done nil)
   (funcall (el-secretario-source-hydra-body
             (car el-secretario-current-source-list)))
@@ -65,9 +64,9 @@ HYDRA is an hydra to use during review of this source."
 
 (defun el-secretario-org-next-item ()
   "TODO"
-  (pop el-secretario--org-items-left)
-  (if (car el-secretario--org-items-left)
-      (cl-destructuring-bind (buf pos) (car el-secretario--org-items-left)
+
+  (if-let ((item (pop el-secretario--org-items-left)))
+      (cl-destructuring-bind (buf pos) item
         (push (list buf pos) el-secretario--org-items-done)
         (switch-to-buffer buf)
         (widen)
