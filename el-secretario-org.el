@@ -74,12 +74,29 @@ HYDRA is an hydra to use during review of this source."
         (org-narrow-to-subtree)
         (funcall (el-secretario-source-next-item-hook
                   (car el-secretario-current-source-list)))
+        (el-secretario-org-update-status-buffer)
         (funcall (el-secretario-source-hydra-body
                   (car el-secretario-current-source-list))) )
     (message "No next item!")
     (el-secretario--next-source)))
 
-(defun el-secretario-org-previous-item ()
+(defvar date nil)
+(defun el-secretario-org-update-status-buffer ()
+  (interactive)
+  (let ((date (calendar-current-date))
+        deadlines
+        scheduleds)
+    (save-excursion
+      (setq deadlines (org-agenda-get-deadlines))
+      (setq scheduleds (org-agenda-get-scheduled)))
+    (with-current-buffer el-secretario-status-buffer-name
+      (delete-region (point-min) (point-max))
+      (--each deadlines
+        (insert "Deadline: " it "\n"))
+      (--each scheduleds
+        (insert "Scheduled: " it "\n")))))
+
+  (defun el-secretario-org-previous-item ()
   "TODO"
   (pop el-secretario--org-items-done)
   (unless (car el-secretario--org-items-done)

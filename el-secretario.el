@@ -47,6 +47,9 @@
 
 (defvar el-secretario-current-source-list-done nil
   "TODO")
+
+(defvar el-secretario-status-buffer-name "*el-secretario-status*"
+  "TODO")
 (defvar el-secretario--original-buffer nil
   "The buffer the user was in before activating el-secretario.")
 
@@ -83,6 +86,16 @@
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
     (message "Done!")))
+
+
+(defun el-secretario-status-buffer-activate ()
+  (el-secretario-status-buffer-deactivate)
+  (display-buffer-in-side-window (get-buffer-create el-secretario-status-buffer-name)
+                                 '((side . top))))
+
+(defun el-secretario-status-buffer-deactivate ()
+  (-some-> (get-buffer-window el-secretario-status-buffer-name)
+    (delete-window)))
 
 (provide 'el-secretario)
 ;;; el-secretario.el ends here
