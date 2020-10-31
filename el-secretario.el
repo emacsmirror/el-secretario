@@ -24,7 +24,7 @@
 
 (defhydra el-secretario-default-hydra ()
   ("n" el-secretario-next-item "next" :exit t)
-  ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t)
+  ("q" (el-secretario-end-sesion) "Quit" :exit t)
   ("/" nil "disable hydra"  :exit t))
 
 (defun el-secretario-activate-hydra ()
@@ -64,7 +64,12 @@
   (setq el-secretario-current-source-list source-list)
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
-  (funcall (el-secretario-source-init-function (car source-list))))
+  (funcall (el-secretario-source-init-function (car source-list)))
+  (el-secretario-status-buffer-activate))
+
+(defun el-secretario-end-sesion ()
+  (switch-to-buffer el-secretario--original-buffer)
+  (el-secretario-status-buffer-deactivate))
 
 (defun el-secretario-next-item ()
   (interactive)
@@ -85,7 +90,7 @@
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
-    (message "Done!")))
+    (el-secretario-end-sesion)))
 
 
 (defun el-secretario-status-buffer-activate ()

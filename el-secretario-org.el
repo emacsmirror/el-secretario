@@ -27,7 +27,7 @@
   ("s" org-schedule "Schedule")
   ("d" org-deadline  "Deadline")
   ("D" (delete-region (point-min) (point-max)) "Delete visible")
-  ("q" (switch-to-buffer el-secretario--original-buffer) "Quit" :exit t)
+  ("q" (el-secretario-end-sesion) "Quit" :exit t)
   ("/" nil "disable hydra"  :exit t))
 
 (defmacro el-secretario-org-make-source (query files &optional next-item-hook hydra)
