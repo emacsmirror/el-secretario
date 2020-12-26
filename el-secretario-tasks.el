@@ -19,7 +19,7 @@
 ;;
 ;;; Code:
 
-(defun el-secretario-tasks--query-action ()
+(defun el-secretario-tasks--parse-headline ()
   "Parse headline at point and put in some more relevant information"
   (--> (org-element-headline-parser (line-end-position))
        (nth 1 it)
@@ -41,7 +41,7 @@
                 (set-buffer-modified-p t)
                 (basic-save-buffer)))
             (org-ql-select files '(property "EL-SECRETARIO-PRIORITY")
-              :action #'el-secretario-tasks--query-action
+              :action #'el-secretario-tasks--parse-headline
               :sort (lambda (x y)
                       (< (plist-get x :EL-SECRETARIO-PRIORITY)
                          (plist-get y :EL-SECRETARIO-PRIORITY)))))))
@@ -74,7 +74,7 @@
 
 (defun el-secretario-tasks-finish-task-hook ()
   (when (member org-state org-done-keywords)
-    (el-secretario-tasks-run-task-hook (el-secretario-tasks--query-action) :EL-SECRETARIO-FINISH-TASK-HOOK '(identity))))
+    (el-secretario-tasks-run-task-hook (el-secretario-tasks--parse-headline) :EL-SECRETARIO-FINISH-TASK-HOOK '(identity))))
 
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks-finish-task-hook)
 
