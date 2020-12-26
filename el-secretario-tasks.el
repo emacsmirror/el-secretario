@@ -50,15 +50,23 @@
         (widen)
         (goto-char (plist-get task :begin))
         (org-narrow-to-subtree)
-        (if (y-or-n-p "Do you want to work on this task? ")
-            (break)
-                              (number-to-string (+ (max (round  (* 0.2 priority)) 1)
-                                                   priority)))))))))
+        (if (not (y-or-n-p "Do you want to work on this task? "))
             (let ((priority (plist-get task :EL-SECRETARIO-PRIORITY)))
               (org-set-property "EL-SECRETARIO-PRIORITY"
+                                (number-to-string (+ (max (round  (* 0.2 priority)) 1)
+                                                     priority))))
+          (el-secretario-tasks-run-begin-task-hook task)
+          (return))))))
 
-(dolist (x '(1 2 3))
-  (when (= x 2)
-    (return x)))
+(defun el-secretario-tasks-run-begin-task-hook (task)
+  (with-current-buffer (plist-get task :buffer)
+    (save-excursion
+      (goto-char (plist-get task :begin))
+      (eval (or (-some-> (plist-get task :EL-SECRETARIO-BEGIN-TASK-HOOK)
+                  (read))
+                ;; "(org-clock-in)"
+                '(message "Mock clock in!")
+                )
+            t))))
 (provide 'el-secretario-tasks)
 ;;; el-secretario-tasks.el ends here
