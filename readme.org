@@ -40,3 +40,31 @@ A framework for daily/weekly reviews.
 - A hydra for actions to do on an item
 - A function that is called when a source is finished
 - A function that is called when arriving at the next item
+
+* Tasks
+Main entry point is ~el-secretario-tasks-choose-task~. See it's docstring for more info.
+
+When you choose to begin *FOO* or *baz* the default begin hook will run, but
+when you start *bar* the secretary will run ~(insert "foobar")~ at the beginning
+of the headline. When you finish *baz* the secretary also will run ~(insert
+"foobar")~ at the beginning of the headline.
+
+#+begin_src org
+,* DONE FOO
+:PROPERTIES:
+:EL-SECRETARIO-PRIORITY: 74
+:END:
+
+,* bar
+:PROPERTIES:
+:EL-SECRETARIO-PRIORITY: 85
+:EL-SECRETARIO-BEGIN-TASK-HOOK: (insert "foobar")
+:END:
+
+,* DONE baz
+:PROPERTIES:
+:EL-SECRETARIO-PRIORITY: 106
+:EL-SECRETARIO-FINISH-TASK-HOOK: (insert "foobar")
+:END:
+
+#+end_src
