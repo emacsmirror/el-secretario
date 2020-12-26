@@ -24,10 +24,10 @@
        (nth 1 it)
        (plist-put it :file-name (buffer-file-name))
        (plist-put it :buffer (current-buffer))
-       (plist-put it :ELSECRETARIOPRIORITY
+       (plist-put it :EL-SECRETARIO-PRIORITY
                   (string-to-number (plist-get
                                      it
-                                     :ELSECRETARIOPRIORITY)))))
+                                     :EL-SECRETARIO-PRIORITY)))))
 
 (defun el-secretario-tasks-choose-task ()
   (interactive)
@@ -39,11 +39,11 @@
               (with-current-buffer (find-file-noselect f)
                 (set-buffer-modified-p t)
                 (basic-save-buffer)))
-            (org-ql-select files '(property "ELSECRETARIOPRIORITY")
+            (org-ql-select files '(property "EL-SECRETARIO-PRIORITY")
               :action #'el-secretario-tasks--query-action
               :sort (lambda (x y)
-                      (< (plist-get x :ELSECRETARIOPRIORITY)
-                         (plist-get y :ELSECRETARIOPRIORITY)))))))
+                      (< (plist-get x :EL-SECRETARIO-PRIORITY)
+                         (plist-get y :EL-SECRETARIO-PRIORITY)))))))
     (dolist (task task-list)
       (switch-to-buffer  (plist-get task :buffer))
       (save-restriction
@@ -52,10 +52,10 @@
         (org-narrow-to-subtree)
         (if (y-or-n-p "Do you want to work on this task? ")
             (break)
-          (let ((priority (plist-get task :ELSECRETARIOPRIORITY)))
-            (org-set-property "ELSECRETARIOPRIORITY"
                               (number-to-string (+ (max (round  (* 0.2 priority)) 1)
                                                    priority)))))))))
+            (let ((priority (plist-get task :EL-SECRETARIO-PRIORITY)))
+              (org-set-property "EL-SECRETARIO-PRIORITY"
 
 (dolist (x '(1 2 3))
   (when (= x 2)
