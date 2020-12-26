@@ -20,6 +20,7 @@
 ;;; Code:
 
 (defun el-secretario-tasks--query-action ()
+  "Parse headline at point and put in some more relevant information"
   (--> (org-element-headline-parser (line-end-position))
        (nth 1 it)
        (plist-put it :file-name (buffer-file-name))
@@ -58,15 +59,24 @@
           (el-secretario-tasks-run-begin-task-hook task)
           (return))))))
 
-(defun el-secretario-tasks-run-begin-task-hook (task)
+(defun el-secretario-tasks-run-task-hook (task hook-name default-hook)
   (with-current-buffer (plist-get task :buffer)
     (save-excursion
       (goto-char (plist-get task :begin))
-      (eval (or (-some-> (plist-get task :EL-SECRETARIO-BEGIN-TASK-HOOK)
+      (eval (or (-some-> (plist-get task hook-name)
                   (read))
-                ;; "(org-clock-in)"
-                '(message "Mock clock in!")
+                default-hook
                 )
             t))))
+
+(defun el-secretario-tasks-run-begin-task-hook (task)
+  (el-secretario-tasks-run-task-hook task :EL-SECRETARIO-BEGIN-TASK-HOOK '(message "Mock clock in")))
+
+(defun el-secretario-tasks-finish-task-hook ()
+  (when (member org-state org-done-keywords)
+    (el-secretario-tasks-run-task-hook (el-secretario-tasks--query-action) :EL-SECRETARIO-FINISH-TASK-HOOK '(identity))))
+
+(add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks-finish-task-hook)
+
 (provide 'el-secretario-tasks)
 ;;; el-secretario-tasks.el ends here
