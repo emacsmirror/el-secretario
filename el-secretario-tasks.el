@@ -65,6 +65,17 @@ dismissed will get their priority decreased.
                                                      priority))))
           (el-secretario-tasks--run-begin-task-hook task)
           (return))))))
+(defun el-secretario-tasks--normalize-priorities (tasks)
+  (-->
+   (-min-by (-on #'> (lambda (x) (plist-get x :EL-SECRETARIO-PRIORITY))) tasks)
+   (save-excursion
+     (mapc (lambda (t)
+             (with-current-buffer (plist-get t :buffer)
+               (goto-char (plist-get t :begin))
+               (org-set-property "EL-SECRETARIO-PRIORITY"
+                                 (-> (- (plist-get t :EL-SECRETARIO-PRIORITY)
+                                        (plist-get it :EL-SECRETARIO-PRIORITY))
+                                     (number-to-string))))) tasks))))
 
 (defun el-secretario-tasks--run-task-hook (task hook-name default-hook)
   "Run a hook defined in the property of a org subtree.
