@@ -42,9 +42,11 @@ HYDRA is an hydra to use during review of this source."
        (plist-put it :file-name (buffer-file-name))
        (plist-put it :buffer (current-buffer))
        (plist-put it :EL-SECRETARIO-PRIORITY
-                  (string-to-number (plist-get
-                                     it
-                                     :EL-SECRETARIO-PRIORITY)))))
+                  (or (-some-> (plist-get
+                                it
+                                :EL-SECRETARIO-PRIORITY)
+                        (string-to-number))
+                      1))))
 
 (defvar el-secretario-tasks--tasks-left nil)
 (defvar el-secretario-tasks--tasks-skipped nil)
@@ -162,9 +164,13 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
 See `el-secretario-tasks--run-task-hook' for more info. "
   (el-secretario-tasks--run-task-hook task :EL-SECRETARIO-BEGIN-TASK-HOOK '(message "Mock clock in")))
 
+(defvar el-secretario-tasks-default-finish-task-action '()
+  "An s-exp (i.e. a list) to be run when a task is finished.")
+
+;; TODO rename to something better
 (defun el-secretario-tasks--finish-task-hook ()
   (when (member org-state org-done-keywords)
-    (el-secretario-tasks--run-task-hook (el-secretario-tasks--parse-headline) :EL-SECRETARIO-FINISH-TASK-HOOK '(identity))))
+    (el-secretario-tasks--run-task-hook (el-secretario-tasks--parse-headline) :EL-SECRETARIO-FINISH-TASK-HOOK el-secretario-tasks-default-finish-task-action)))
 
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
 
