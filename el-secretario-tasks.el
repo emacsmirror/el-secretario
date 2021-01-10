@@ -26,14 +26,15 @@ NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
   `(make-el-secretario-source
     :init-function  (lambda () (el-secretario-tasks--init (quote ,query) (quote ,files) ))
-    :next-function
-    :prev-function
-    :hydra-body
+    :next-function #'el-secretario-tasks--skip-task
+    :prev-function (lambda ())
+    :hydra-body (or ,hydra #'el-secretario-tasks-hydra/body)
     :finished-hook #'widen
     :next-item-hook (lambda ())) )
 
 (defhydra el-secretario-tasks-hydra ()
-  ("s"))
+  ("s" el-secretario-tasks--skip-task "Skip task" :exit t)
+  ("b" el-secretario-tasks-begin-task "Begin task" :exit t))
 
 (defun el-secretario-tasks--parse-headline ()
   "Parse headline at point and put in some more relevant information"
@@ -68,32 +69,33 @@ HYDRA is an hydra to use during review of this source."
                   (< (plist-get x :EL-SECRETARIO-PRIORITY)
                      (plist-get y :EL-SECRETARIO-PRIORITY)))))
   (setq el-secretario-tasks--items-done nil)
-  ;; TODO call Next item
-  (funcall (funcall (el-secretario-source-hydra-body
-            (car el-secretario-current-source-list)))))
+  (funcall (el-secretario-source-hydra-body
+            (car el-secretario-current-source-list)))
+  (el-secretario-tasks--skip-task))
 
 (defun el-secretario-tasks--skip-task (&optional decrease-priority)
-  (if-let ((task (pop el-secretario-tasks--items-left)))
+  (interactive)
+  (if-let ((task (pop el-secretario-tasks--tasks-left)))
       (progn
         (push task el-secretario-tasks--tasks-skipped)
         (switch-to-buffer (plist-get task :buffer))
-        (save-restriction
-          (widen)
-          (goto-char (plist-get task :begin))
-          (org-narrow-to-subtree)
+        (widen)
+        (goto-char (plist-get task :begin))
+        (org-narrow-to-subtree)
 
-          (when decrease-priority
-            (let ((priority (plist-get task :EL-SECRETARIO-PRIORITY)))
-              (org-set-property "EL-SECRETARIO-PRIORITY"
-                                (number-to-string (+ (max (round  (* 0.2 priority)) 1)
-                                                     priority)))))
-          (funcall (el-secretario-source-hydra-body
-                    (car el-secretario-current-source-list)))))
+        (when decrease-priority
+          (let ((priority (plist-get task :EL-SECRETARIO-PRIORITY)))
+            (org-set-property "EL-SECRETARIO-PRIORITY"
+                              (number-to-string (+ (max (round  (* 0.2 priority)) 1)
+                                                   priority)))))
+        (funcall (el-secretario-source-hydra-body
+                  (car el-secretario-current-source-list))))
     (el-secretario--next-source)))
 
 
-(defun el-secretario-tasks--begin-task ()
-  (el-secretario-tasks--run-begin-task-hook))
+(defun el-secretario-tasks-begin-task ()
+  (interactive)
+  (el-secretario-tasks--run-begin-task-hook (el-secretario-tasks--parse-headline)))
 
 (defun el-secretario-tasks-choose-task ()
   "Choose a task based on a priority queue.
@@ -170,7 +172,9 @@ See `el-secretario-tasks--run-task-hook' for more info. "
 ;; TODO rename to something better
 (defun el-secretario-tasks--finish-task-hook ()
   (when (member org-state org-done-keywords)
-    (el-secretario-tasks--run-task-hook (el-secretario-tasks--parse-headline) :EL-SECRETARIO-FINISH-TASK-HOOK el-secretario-tasks-default-finish-task-action)))
+    (el-secretario-tasks--run-task-hook
+     (el-secretario-tasks--parse-headline)
+     :EL-SECRETARIO-FINISH-TASK-HOOK el-secretario-tasks-default-finish-task-action)))
 
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
 
