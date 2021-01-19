@@ -178,5 +178,39 @@ See `el-secretario-tasks--run-task-hook' for more info. "
 
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
 
+(defmacro el-secretario-tasks--subtask-make-source (query files &optional hydra)
+  "TODO"
+  `(make-el-secretario-source
+    :init-function  (lambda () (el-secretario-tasks--subtask-init))
+    :next-function #'el-secretario-tasks--skip-task
+    :prev-function (lambda ())
+    :hydra-body (or ,hydra #'el-secretario-tasks-hydra/body)
+    :finished-hook #'widen
+    :next-item-hook (lambda ())) )
+
+(defvar el-secretario-tasks-project-todo-state "PROJ")
+(defun el-secretario-tasks--subtask-init ()
+  "TODO"
+  (interactive)
+  ;; Sort according to priority
+  (setq el-secretario-tasks--tasks-left nil)
+  (save-excursion
+    (org-clock-goto)
+    (save-restriction
+      (org-save-outline-visibility t
+        (org-show-all)
+        (while (not (string-equal (org-no-properties (org-get-todo-state))
+                                  el-secretario-tasks-project-todo-state))
+          (outline-up-heading 1))
+        (org-narrow-to-subtree)
+        (while (outline-next-heading)
+          (push (el-secretario-tasks--parse-headline) el-secretario-tasks--tasks-left)))))
+  (setq el-secretario-tasks--items-done nil)
+  (setq el-secretario-tasks--tasks-left (nreverse el-secretario-tasks--tasks-left))
+  (funcall (el-secretario-source-hydra-body
+            (car el-secretario-current-source-list)))
+  (el-secretario-tasks--skip-task))
+
+
 (provide 'el-secretario-tasks)
 ;;; el-secretario-tasks.el ends here
