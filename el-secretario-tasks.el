@@ -178,15 +178,18 @@ See `el-secretario-tasks--run-task-hook' for more info. "
 
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
 
-(defmacro el-secretario-tasks--subtask-make-source (query files &optional hydra)
+(defun el-secretario-tasks-subtask-begin (&optional hydra)
   "TODO"
-  `(make-el-secretario-source
-    :init-function  (lambda () (el-secretario-tasks--subtask-init))
-    :next-function #'el-secretario-tasks--skip-task
-    :prev-function (lambda ())
-    :hydra-body (or ,hydra #'el-secretario-tasks-hydra/body)
-    :finished-hook #'widen
-    :next-item-hook (lambda ())) )
+  (interactive)
+  (el-secretario-start-session
+   (list (make-el-secretario-source
+          :init-function  (lambda () (el-secretario-tasks--subtask-init))
+          :next-function #'el-secretario-tasks--skip-task
+          :prev-function (lambda ())
+          :hydra-body (or hydra #'el-secretario-tasks-hydra/body)
+          :finished-hook #'widen
+          :next-item-hook (lambda ())))) )
+
 
 (defvar el-secretario-tasks-project-todo-state "PROJ")
 (defun el-secretario-tasks--subtask-init ()
