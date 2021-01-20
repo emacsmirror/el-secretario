@@ -121,5 +121,13 @@ HYDRA is an hydra to use during review of this source."
   "Add TAGS to headline."
   (org-set-tags (--keep (string-equal tags it) (org-get-tags nil 't))))
 
+(defun el-secretario-org-up-heading (arg)
+  "Call `outline-up-heading' but return position if succeeds and nil otherwise"
+  (condition-case nil
+      (progn
+        (outline-up-heading arg)
+        (point))
+    (error nil)))
+
 (provide 'el-secretario-org)
 ;;; el-secretario-org.el ends here

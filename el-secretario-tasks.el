@@ -199,12 +199,17 @@ See `el-secretario-tasks--run-task-hook' for more info. "
     (save-restriction
       (org-save-outline-visibility t
         (org-show-all)
-        (while (not (string-equal (org-no-properties (org-get-todo-state))
-                                  el-secretario-tasks-project-todo-state))
-          (outline-up-heading 1))
-        (org-narrow-to-subtree)
-        (while (outline-next-heading)
-          (push (el-secretario-tasks--parse-headline) el-secretario-tasks--tasks-left)))))
+        (let ((closest-todo-upwards (point)))
+          (while (and (el-secretario-org-up-heading 1)
+                      (not (org-get-todo-state)))
+            ;; TODO Error recovery if there is no parent heading with project todo state
+            (when (org-get-todo-state)
+              (setq most-toplevel-todo (point))))
+          (goto-char most-toplevel-todo)
+          (org-narrow-to-subtree)
+          (while (outline-next-heading)
+            (when (member (org-get-todo-state) org-not-done-keywords)
+              (push (el-secretario-tasks--parse-headline) el-secretario-tasks--tasks-left)))))))
   (setq el-secretario-tasks--items-done nil)
   (setq el-secretario-tasks--tasks-left (nreverse el-secretario-tasks--tasks-left))
   (funcall (el-secretario-source-hydra-body
