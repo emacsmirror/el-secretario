@@ -38,7 +38,7 @@ HYDRA is an hydra to use during review of this source."
     :init-function  (lambda () (el-secretario-org-init (quote ,query) (quote ,files) ))
     :next-function  #'el-secretario-org-next-item
     :prev-function  #'el-secretario-org-previous-item
-    :hydra-body #'el-secretario-org-hydra/body
+    :hydra-body (or (quote ,hydra) #'el-secretario-org-hydra/body)
     :finished-hook #'widen
     :next-item-hook (or ,next-item-hook (lambda ()))) )
 
