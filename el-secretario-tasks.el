@@ -18,7 +18,7 @@
 ;;
 ;;
 ;;; Code:
-
+(require 'el-secretario-tasks-message)
 
 (defmacro el-secretario-tasks-make-source (query files &optional hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
@@ -34,7 +34,8 @@ HYDRA is an hydra to use during review of this source."
 
 (defhydra el-secretario-tasks-hydra ()
   ("s" el-secretario-tasks--skip-task "Skip task" :exit t)
-  ("b" el-secretario-tasks-begin-task "Begin task" :exit t))
+  ("b" el-secretario-tasks-begin-task "Begin task" :exit t)
+  ("t" (el-secretario-message--with-pre-buffer (org-todo)) "TODO" ))
 
 (defun el-secretario-tasks--parse-headline ()
   "Parse headline at point and put in some more relevant information"
@@ -88,6 +89,8 @@ HYDRA is an hydra to use during review of this source."
             (org-set-property "EL-SECRETARIO-PRIORITY"
                               (number-to-string (+ (max (round  (* 0.2 priority)) 1)
                                                    priority)))))
+        (funcall (el-secretario-source-next-item-hook
+                  (car el-secretario-current-source-list)))
         (funcall (el-secretario-source-hydra-body
                   (car el-secretario-current-source-list))))
     (el-secretario--next-source)))
@@ -145,7 +148,7 @@ dismissed will get their priority decreased.
                                         (plist-get it :EL-SECRETARIO-PRIORITY))
                                      (number-to-string))))) tasks))))
 
-(defun el-secretario-tasks--run-task-hook (task hook-name default-hook)
+(defun el-secretario-tasks--run-task-hook (task hook-name &optional default-hook)
   "Run a hook defined in the property of a org subtree.
 The hook will be called at the beginning of the line of the headline.
 
@@ -157,10 +160,10 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
       (goto-char (plist-get task :begin))
       (eval (or (-some-> (plist-get task hook-name)
                   (read))
-                default-hook
-                )
+                default-hook)
             t))))
 
+;; TODO refactor this to use `org-entry-properties' instead
 (defun el-secretario-tasks--run-begin-task-hook (task)
   "Run the begin task hook.
 See `el-secretario-tasks--run-task-hook' for more info. "
@@ -188,7 +191,11 @@ See `el-secretario-tasks--run-task-hook' for more info. "
           :prev-function (lambda ())
           :hydra-body (or hydra #'el-secretario-tasks-hydra/body)
           :finished-hook #'widen
-          :next-item-hook (lambda ())))) )
+          :next-item-hook (lambda ()
+                            (el-secretario-tasks--run-task-hook
+                             (el-secretario-tasks--parse-headline)
+                             :EL-SECRETARIO-REVIEW-TASK-HOOK))))) )
+
 
 
 (defvar el-secretario-tasks-project-todo-state "PROJ")
@@ -207,8 +214,8 @@ See `el-secretario-tasks--run-task-hook' for more info. "
                       (not (org-get-todo-state)))
             ;; TODO Error recovery if there is no parent heading with project todo state
             (when (org-get-todo-state)
-              (setq most-toplevel-todo (point))))
-          (goto-char most-toplevel-todo)
+              (setq closest-todo-upwards (point))))
+          (goto-char closest-todo-upwards)
           (org-narrow-to-subtree)
           (while (outline-next-heading)
             (when (member (org-get-todo-state) org-not-done-keywords)
