@@ -25,24 +25,27 @@
 (require 'el-secretario-org)
 
 
-(describe "Org module"
-  :var (buf source count-fun)
 
-  (before-all
-    (let ((files (list (get-buffer-create "*el-secretario-test-buf*"))))
-      (setq source (list (el-secretario-org--make-source '(todo)
-                                                        files
-                                                        #'count-fun))))
-    )
+(describe "Org module"
+  :var* (file source count-fun)
+
 
   (before-each
+
     (setf (symbol-function 'count-fun) (lambda () ))
-    (setq buf (get-buffer-create "*el-secretario-test-buf*"))
-    (with-current-buffer buf (insert "foo"))
-    (display-warning 'buttercup
-                     (concat "foo:" (prin1-to-string (with-current-buffer buf (buffer-substring-no-properties (point-min)
-                                                                                                              (point-max))))))
-    (with-current-buffer buf
+    (spy-on 'count-fun)
+
+    (unless (file-exists-p (concat (temporary-file-directory) "el-secretario"))
+      (make-directory (concat (temporary-file-directory) "el-secretario")))
+    (setq file (find-file-noselect
+                (concat (temporary-file-directory) "el-secretario/tmp-test.org")))
+
+    (setq source (list (el-secretario-org-make-source '(todo)
+                                                      (list file)
+                                                      #'count-fun)))
+
+    (with-current-buffer file
+      (read-only-mode -1)
       (delete-region (point-min) (point-max))
       (org-mode)
       (insert "
@@ -74,15 +77,17 @@
 :EL-SECRETARIO-REVIEW-TASK-HOOK: (el-secretario-message--display-message-prompt \"Sync reMarkable Inbox\")
 :END:
 
-"))
-    )
+")
+      (save-buffer)))
 
-  (xit "runs!"
+  (it "can run a test!"
     (expect t :to-be t))
-  (it "runs the next-item hook"
-    (message source)
 
-    (expect count-fun :to-have-been-called-times 8)))
+  (it "runs the next-item hook"
+    (el-secretario-start-session source)
+    (dotimes (_ 7)
+      (el-secretario-next-item))
+    (expect 'count-fun :to-have-been-called-times 7)))
 
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here
