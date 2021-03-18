@@ -30,15 +30,16 @@
   ("q" (el-secretario-end-sesion) "Quit" :exit t)
   ("/" nil "disable hydra"  :exit t))
 
-(defmacro el-secretario-org-make-source (query files &optional next-item-hook hydra)
+
+(defun el-secretario-org-make-source (query files &optional next-item-hook hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
-  `(make-el-secretario-source
-    :init-function  (lambda () (el-secretario-org-init (quote ,query) (quote ,files) ))
+  (make-el-secretario-source
+   :init-function  (lambda () (el-secretario-org-init query files))
     :next-function  #'el-secretario-org-next-item
     :prev-function  #'el-secretario-org-previous-item
-    :hydra-body (or (quote ,hydra) #'el-secretario-org-hydra/body)
+    :hydra-body (or hydra #'el-secretario-org-hydra/body)
     :finished-hook #'widen
     :next-item-hook (or ,next-item-hook (lambda ()))) )
 

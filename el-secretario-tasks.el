@@ -16,19 +16,19 @@
 ;;; Commentary:
 ;;
 ;;
-;;
+;; (el-secretario-start-session (list (el-secretario-tasks-make-source (todo) ("~/Documents/el-secretario/test/test.org"))))
 ;;; Code:
-(require 'el-secretario-tasks-message)
+(require 'el-secretario-message)
 
-(defmacro el-secretario-tasks-make-source (query files &optional hydra)
+(defun el-secretario-tasks-make-source (query files &optional hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
   `(make-el-secretario-source
-    :init-function  (lambda () (el-secretario-tasks--init (quote ,query) (quote ,files) ))
+    :init-function  (lambda () (el-secretario-tasks--init query files ))
     :next-function #'el-secretario-tasks--skip-task
     :prev-function (lambda ())
-    :hydra-body (or ,hydra #'el-secretario-tasks-hydra/body)
+    :hydra-body (or hydra #'el-secretario-tasks-hydra/body)
     :finished-hook #'widen
     :next-item-hook (lambda ())) )
 
