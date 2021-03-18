@@ -76,11 +76,15 @@ HYDRA is an hydra to use during review of this source."
         (widen)
         (goto-char pos)
         (org-narrow-to-subtree)
+
         (funcall (el-secretario-source-next-item-hook
                   (car el-secretario-current-source-list)))
         (el-secretario-org-update-status-buffer)
         (funcall (el-secretario-source-hydra-body
-                  (car el-secretario-current-source-list))) )
+                  (car el-secretario-current-source-list)))
+        (el-secretario-tasks--run-task-hook
+                             (el-secretario-tasks--parse-headline)
+                             :EL-SECRETARIO-REVIEW-TASK-HOOK))
     (message "No next item!")
     (el-secretario--next-source)))
 
