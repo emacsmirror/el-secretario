@@ -44,7 +44,7 @@ HYDRA is an hydra to use during review of this source."
     :prev-function  #'el-secretario-org-previous-item
     :hydra-body (or hydra #'el-secretario-org-hydra/body)
     :finished-hook #'widen
-    :next-item-hook (or ,next-item-hook (lambda ()))) )
+    :next-item-hook (or next-item-hook (lambda ()))) )
 
 
 (defvar el-secretario--org-items-left nil
