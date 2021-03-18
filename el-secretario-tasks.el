@@ -198,7 +198,6 @@ See `el-secretario-tasks--run-task-hook' for more info. "
 
 
 
-(defvar el-secretario-tasks-project-todo-state "PROJ")
 ;; TODO Take an optional marker argument. Go to that marker instead of clocking task. If nil, goto clocking task
 (defun el-secretario-tasks--subtask-init (&optional ARG)
   "TODO"

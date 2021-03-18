@@ -20,6 +20,9 @@
 ;;; Code:
 
 (require 'buttercup)
+(require 'hydra)
+(require 'el-secretario)
+(require 'el-secretario-org)
 
 
 (describe "Org module"
@@ -66,11 +69,6 @@
 :PROPERTIES:
 :EL-SECRETARIO-BEGIN-TASK-HOOK: (progn  (el-secretario-tasks-subtask-begin))
 :END:
-** WAITING Sync phone inbox
-:PROPERTIES:
-:EL-SECRETARIO-REVIEW-TASK-HOOK: (el-secretario-message--display-message-prompt \"Sync phone Inbox\")
-:END:
-
 ** TODO Sync remarkable inbox
 :PROPERTIES:
 :EL-SECRETARIO-REVIEW-TASK-HOOK: (el-secretario-message--display-message-prompt \"Sync reMarkable Inbox\")

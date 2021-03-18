@@ -20,10 +20,13 @@
 ;;; Code:
 
 (require 'org-ql)
+(require 'el-secretario-tasks)
+
 (defhydra el-secretario-org-hydra ()
   ("n" el-secretario-next-item "next" :exit t)
   ("r" (progn (org-refile) (el-secretario-next-item)) "Refile" :exit t)
   ("t" org-set-tags-command "Tags")
+  ("T" org-todo"Tags")
   ("s" org-schedule "Schedule")
   ("d" org-deadline  "Deadline")
   ("D" (delete-region (point-min) (point-max)) "Delete visible")
