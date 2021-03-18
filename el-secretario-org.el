@@ -93,7 +93,7 @@ HYDRA is an hydra to use during review of this source."
     (save-excursion
       (setq deadlines (org-agenda-get-deadlines))
       (setq scheduleds (org-agenda-get-scheduled)))
-    (with-current-buffer el-secretario-status-buffer-name
+    (with-current-buffer (get-buffer-create el-secretario-status-buffer-name)
       (delete-region (point-min) (point-max))
       (--each deadlines
         (insert "Deadline: " it "\n"))
