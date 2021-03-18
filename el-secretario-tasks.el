@@ -199,13 +199,14 @@ See `el-secretario-tasks--run-task-hook' for more info. "
 
 
 (defvar el-secretario-tasks-project-todo-state "PROJ")
-(defun el-secretario-tasks--subtask-init ()
+;; TODO Take an optional marker argument. Go to that marker instead of clocking task. If nil, goto clocking task
+(defun el-secretario-tasks--subtask-init (&optional ARG)
   "TODO"
   (interactive)
   ;; Sort according to priority
   (setq el-secretario-tasks--tasks-left nil)
   (save-excursion
-    (org-clock-goto)
+    (unless ARG (org-clock-goto))
     (save-restriction
       (org-save-outline-visibility t
         (org-show-all)
