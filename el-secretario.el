@@ -19,7 +19,12 @@
 ;;
 ;;; Code:
 
+(defvar el-secretario-is-testing nil
+  "Determines if code is running in testing mode.
 
+When a user is interacting with el-secretario this should always
+be nil. Set it to `t' if in testing
+")
 
 
 (defhydra el-secretario-default-hydra ()
@@ -102,5 +107,21 @@
   (-some-> (get-buffer-window el-secretario-status-buffer-name)
     (delete-window)))
 
+;;; Utility functions
+
+
+(defvar el-secretario--y-or-no-p-input-list nil
+  "The list `el-secretario-y-or-no-p' will take from if in testing mode")
+
+(defun el-secretario--y-or-n-p (prompt)
+  (if el-secretario-is-testing
+      (pop el-secretario--y-or-no-p-input-list)
+    (y-or-n-p prompt)))
+;; (let ((el-secretario-is-testing t)
+;;       (el-secretario--y-or-no-p-input-list '(n n y)))
+;;   (el-secretario--y-or-n-p "foo")
+;;   (el-secretario--y-or-n-p "foo")
+;;   (el-secretario--y-or-n-p "foo")
+;;   (el-secretario--y-or-n-p "foo"))
 (provide 'el-secretario)
 ;;; el-secretario.el ends here

@@ -8,7 +8,7 @@
 ;; Modified: December 26, 2020
 ;; Version: 0.0.1
 ;; Keywords:
-;; Homepage: https://github.com/leo/el-secretario-tasks
+;; Homepage: https://github.com/leo/el-secretario
 ;; Package-Requires: ((emacs 26.1) (cl-lib "0.5"))
 ;;
 ;; This file is not part of GNU Emacs.
@@ -40,15 +40,15 @@ HYDRA is an hydra to use during review of this source."
 (defun el-secretario-tasks--parse-headline ()
   "Parse headline at point and put in some more relevant information"
   (--> (org-element-headline-parser (line-end-position))
-       (nth 1 it)
-       (plist-put it :file-name (buffer-file-name))
-       (plist-put it :buffer (current-buffer))
-       (plist-put it :EL-SECRETARIO-PRIORITY
-                  (or (-some-> (plist-get
-                                it
-                                :EL-SECRETARIO-PRIORITY)
-                        (string-to-number))
-                      1))))
+    (nth 1 it)
+    (plist-put it :file-name (buffer-file-name))
+    (plist-put it :buffer (current-buffer))
+    (plist-put it :EL-SECRETARIO-PRIORITY
+               (or (-some-> (plist-get
+                             it
+                             :EL-SECRETARIO-PRIORITY)
+                     (string-to-number))
+                   1))))
 
 (defvar el-secretario-tasks--tasks-left nil)
 (defvar el-secretario-tasks--tasks-skipped nil)
@@ -100,53 +100,55 @@ HYDRA is an hydra to use during review of this source."
   (interactive)
   (el-secretario-tasks--run-begin-task-hook (el-secretario-tasks--parse-headline)))
 
+(defvar el-secretario-tasks-files nil
+  "The files that `el-secretario-tasks-choose-task'a will search through")
+
 (defun el-secretario-tasks-choose-task ()
-  "Choose a task based on a priority queue.
+  "Choose a task based on a priority queue from `el-secretario-tasks-files'.
 This will go through the matched tasks from the lowest priority
 first until you find a task you want to work on. All tasks you
 dismissed will get their priority decreased.
 "
   (interactive)
-  (let* ((files (list "/tmp/test.org"))
-         (task-list
+  (let* ((task-list
           (progn
             ;; Bypass the caching for org-ql as it breaks some stuff
-            (dolist (f files)
+            (dolist (f el-secretario-tasks-files)
               (with-current-buffer (find-file-noselect f)
                 (set-buffer-modified-p t)
                 (basic-save-buffer)))
             ;; Sort according to priority
-            (org-ql-select files '(property "EL-SECRETARIO-PRIORITY")
+            (org-ql-select el-secretario-tasks-files '(property "EL-SECRETARIO-PRIORITY")
               :action #'el-secretario-tasks--parse-headline
               :sort (lambda (x y)
                       (< (plist-get x :EL-SECRETARIO-PRIORITY)
                          (plist-get y :EL-SECRETARIO-PRIORITY)))))))
     ;; Go through the tasks and ask the user if they want to do it
-    (dolist (task task-list)
+    (cl-dolist (task task-list)
       (switch-to-buffer  (plist-get task :buffer))
       (save-restriction
         (widen)
         (goto-char (plist-get task :begin))
         (org-narrow-to-subtree)
-        (if (not (y-or-n-p "Do you want to work on this task? "))
+        (if (not (el-secretario--y-or-n-p "Do you want to work on this task? "))
             (let ((priority (plist-get task :EL-SECRETARIO-PRIORITY)))
               (org-set-property "EL-SECRETARIO-PRIORITY"
                                 (number-to-string (+ (max (round  (* 0.2 priority)) 1)
                                                      priority))))
           (el-secretario-tasks--run-begin-task-hook task)
-          (return))))))
+          (cl-return))))))
 
 (defun el-secretario-tasks--normalize-priorities (tasks)
   (-->
-   (-min-by (-on #'> (lambda (x) (plist-get x :EL-SECRETARIO-PRIORITY))) tasks)
-   (save-excursion
-     (mapc (lambda (t)
-             (with-current-buffer (plist-get t :buffer)
-               (goto-char (plist-get t :begin))
-               (org-set-property "EL-SECRETARIO-PRIORITY"
-                                 (-> (- (plist-get t :EL-SECRETARIO-PRIORITY)
-                                        (plist-get it :EL-SECRETARIO-PRIORITY))
-                                     (number-to-string))))) tasks))))
+      (-min-by (-on #'> (lambda (x) (plist-get x :EL-SECRETARIO-PRIORITY))) tasks)
+    (save-excursion
+      (mapc (lambda (t)
+              (with-current-buffer (plist-get t :buffer)
+                (goto-char (plist-get t :begin))
+                (org-set-property "EL-SECRETARIO-PRIORITY"
+                                  (-> (- (plist-get t :EL-SECRETARIO-PRIORITY)
+                                         (plist-get it :EL-SECRETARIO-PRIORITY))
+                                      (number-to-string))))) tasks))))
 
 (defun el-secretario-tasks--run-task-hook (task hook-name &optional default-hook)
   "Run a hook defined in the property of a org subtree.
