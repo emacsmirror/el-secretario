@@ -13,7 +13,7 @@
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
-;;; Commentary:
+;;;  Commentary:
 ;;
 ;;  description
 ;;
@@ -24,31 +24,16 @@
 (require 'el-secretario)
 (require 'el-secretario-org)
 
-
-
-(describe "Org module"
-  :var* (file source count-fun)
-
-
-  (before-each
-
-    (setf (symbol-function 'count-fun) (lambda () ))
-    (spy-on 'count-fun)
-
-    (unless (file-exists-p (concat (temporary-file-directory) "el-secretario"))
-      (make-directory (concat (temporary-file-directory) "el-secretario")))
-    (setq file (find-file-noselect
-                (concat (temporary-file-directory) "el-secretario/tmp-test.org")))
-
-    (setq source (list (el-secretario-org-make-source '(todo)
-                                                      (list file)
-                                                      #'count-fun)))
-
-    (with-current-buffer file
-      (read-only-mode -1)
-      (delete-region (point-min) (point-max))
-      (org-mode)
-      (insert "
+(setq buttercup-colors '((black . 30)
+                         (red . 31)
+                         (green . 32)
+                         (yellow . 34)
+                         (blue . 34)
+                         (magenta . 35)
+                         (cyan . 36)
+                         (white . 37))
+     el-secretario-is-testing t)
+(defvar el-secretario-org-buffer-s  "
 * TODO FOO
 :PROPERTIES:
 :EL-SECRETARIO-PRIORITY: 74
@@ -74,20 +59,105 @@
 :END:
 ** TODO Sync remarkable inbox
 :PROPERTIES:
-:EL-SECRETARIO-REVIEW-TASK-HOOK: (el-secretario-message--display-message-prompt \"Sync reMarkable Inbox\")
+:EL-SECRETARIO-REVIEW-TASK-HOOK: (review-item-fun)
 :END:
 
 ")
-      (save-buffer)))
+
+(defmacro test-el-secretario-reset-file (s file)
+  `(progn
+     (unless (file-exists-p (concat (temporary-file-directory) "el-secretario"))
+       (make-directory (concat (temporary-file-directory) "el-secretario")))
+     (setq ,file (find-file-noselect
+                 (concat (temporary-file-directory) "el-secretario/tmp-test.org")))
+     (with-current-buffer file
+       (read-only-mode -1)
+       (widen)
+       (delete-region (point-min) (point-max))
+       (org-mode)
+       (insert ,s)
+       (save-buffer))))
+
+(describe "Org module"
+  :var* (file source next-item-fun review-item-fun)
+
+
+  (before-each
+
+    (test-el-secretario-reset-file el-secretario-org-buffer-s file)
+
+    (setf (symbol-function 'next-item-fun) (lambda () ))
+    (spy-on 'next-item-fun)
+
+    (setf (symbol-function 'review-item-fun) (lambda () ))
+    (spy-on 'review-item-fun)
+
+    (setq source (list (el-secretario-org-make-source '(todo)
+                                                      (list file)
+                                                      #'next-item-fun))))
 
   (it "can run a test!"
     (expect t :to-be t))
 
-  (it "runs the next-item hook"
+  (it "runs the next-item hook on each todo heading"
     (el-secretario-start-session source)
+    (dotimes (_ 6)
+      (el-secretario-next-item))
+    (expect 'next-item-fun :to-have-been-called-times 7))
+
+  (it "runs the review-item hook on each todo heading"
+    (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                      (list file)
+                                                                      #'next-item-fun)))
     (dotimes (_ 7)
       (el-secretario-next-item))
-    (expect 'count-fun :to-have-been-called-times 7)))
+    (expect 'review-item-fun :to-have-been-called-times 1)))
+
+(describe "Tasks module"
+  :var* (file source next-item-fun review-item-fun)
+
+  (before-each
+
+    (test-el-secretario-reset-file el-secretario-org-buffer-s file)
+
+    (setf (symbol-function 'next-item-fun) (lambda () ))
+    (spy-on 'next-item-fun)
+
+    (setf (symbol-function 'review-item-fun) (lambda () ))
+    (spy-on 'review-item-fun)
+
+    (setq source (list (el-secretario-org-make-source '(todo)
+                                                      (list file)
+                                                      #'next-item-fun))))
+  (it "can increase the priority value of tasks that are skipped"
+    (let ((el-secretario-tasks-files (list (buffer-file-name file)))
+          (el-secretario--y-or-no-p-input-list '(nil nil y)))
+      (el-secretario-tasks-choose-task))
+    (with-current-buffer file
+      (widen)
+      (goto-char 0)
+      (search-forward  "EL-SECRETARIO-PRIORITY")
+
+
+      (expect (string-to-number (org-entry-get (point)
+                                               "EL-SECRETARIO-PRIORITY"))
+              :to-be-greater-than
+              74)
+      (search-forward  "EL-SECRETARIO-PRIORITY")
+
+
+      (expect (string-to-number (org-entry-get (point)
+                                               "EL-SECRETARIO-PRIORITY"))
+              :to-be-greater-than
+              85)
+      (search-forward  "EL-SECRETARIO-PRIORITY")
+
+
+      (expect (string-to-number (org-entry-get (point)
+                                               "EL-SECRETARIO-PRIORITY"))
+              :to-equal
+              106)))
+  (describe "Subtasks"))
 
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here
