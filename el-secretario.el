@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://github.com/Zetagon/el-secretario
-;; Package-Requires: ((emacs 26.1) (cl-lib "0.5"))
+;; Package-Requires: ((emacs 26.1) (cl-lib "0.5") (hydra "0.15.0")(org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -18,7 +18,13 @@
 ;;
 ;;
 ;;; Code:
-
+(require 'hydra)
+(require 'org-ql)
+(require 'el-secretario-org)
+(require 'el-secretario-message)
+(require 'el-secretario-notmuch)
+(require 'el-secretario-space)
+(require 'el-secretario-tasks)
 (defvar el-secretario-is-testing nil
   "Determines if code is running in testing mode.
 
