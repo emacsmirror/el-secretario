@@ -2,13 +2,13 @@
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
-;; Author: Leo <http://github/leo>
-;; Maintainer: Leo <leo@leo-B85-HD3>
+;; Author: Leo <https://github.com/Zetagon>
+;; Maintainer: Leo <github@relevant-information.com>
 ;; Created: February 17, 2021
 ;; Modified: February 17, 2021
 ;; Version: 0.0.1
 ;; Keywords:
-;; Homepage: https://github.com/leo/test-el-secretario
+;; Homepage: https://github.com/Zetagon/el-secretario
 ;; Package-Requires: ((emacs 26.1) (cl-lib "0.5"))
 ;;
 ;; This file is not part of GNU Emacs.
@@ -23,6 +23,7 @@
 (require 'hydra)
 (require 'el-secretario)
 (require 'el-secretario-org)
+(require 'el-secretario-space)
 
 (setq buttercup-colors '((black . 30)
                          (red . 31)
@@ -76,7 +77,8 @@
        (delete-region (point-min) (point-max))
        (org-mode)
        (insert ,s)
-       (save-buffer))))
+       (save-buffer)
+       (goto-char 0))))
 
 (describe "Org module"
   :var* (file source next-item-fun review-item-fun)
@@ -158,6 +160,50 @@
               :to-equal
               106)))
   (describe "Subtasks"))
+
+(describe "spaced repetition module"
+  :var (file)
+  (before-each
+
+    (test-el-secretario-reset-file
+     (concat
+      "* TODO write a test
+SCHEDULED: "
+      (ts-format "<%Y-%m-%d %a>" (ts-dec 'day 3 (ts-now)))
+      "
+:PROPERTIES:
+:EL-SECRETARIO-DELTA: 3
+:END:
+") file))
+  (it "can increment the delta value"
+    (with-current-buffer file
+      (el-secretario-space--increment)
+      (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
+              :to-equal
+              4)))
+  (it "can schedule a todo on the day `delta' days in the future"
+    (with-current-buffer file
+      (outline-next-heading)
+      (el-secretario-space--increment)
+      (el-secretario-space-reschedule)
+      (let ((actual (->> (org-entry-get (point) "SCHEDULED")
+                         (ts-parse)))
+            (expected (->> (ts-now)
+                           (ts-inc 'day 4))))
+        (expect (ts-year actual)
+                :to-be
+                (ts-year expected))
+        (expect (ts-day-of-year actual)
+                :to-be
+                (ts-day-of-year expected)))))
+
+  (it "can reset the delta value to 1"
+    (with-current-buffer file
+      (outline-next-heading)
+      (el-secretario-space--reset)
+      (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
+              :to-equal
+              1))))
 
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here
