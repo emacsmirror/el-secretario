@@ -22,7 +22,7 @@
 (defun el-secretario-space--increment ()
   (--> (org-entry-get (point)
                       "EL-SECRETARIO-DELTA")
-    (or it "1")
+    (or it "0")
     (string-to-number it)
     (1+ it)
     (number-to-string it)
