@@ -126,7 +126,10 @@ HYDRA is an hydra to use during review of this source."
 
 (defun el-secretario-org-remove-tag (&rest tags)
   "Add TAGS to headline."
-  (org-set-tags (--keep (string-equal tags it) (org-get-tags nil 't))))
+  (org-set-tags (--filter
+                 (let ((-compare-fn #'string-equal))
+                   (not (-contains? tags it)))
+                   (org-get-tags nil 't))))
 
 (defun el-secretario-org-up-heading (arg)
   "Call `outline-up-heading' but return position if succeeds and nil otherwise"
