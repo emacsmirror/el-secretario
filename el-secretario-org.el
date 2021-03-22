@@ -33,17 +33,36 @@
   ("/" nil "disable hydra"  :exit t))
 
 
+(defvar el-secretario-org-narrow-function #'org-narrow-to-subtree
+  "Function to use for narrowing when goint to the next item.
+For example `el-secretario-org-narrow-to-highest-todo' might be
+useful for when you have defined projects to be a todo entry with
+subtrees that are also todos. It can then be useful to see the context when reviewing.")
+(defun el-secretario-org-narrow ()
+  (funcall el-secretario-org-narrow-function))
+
+(defun el-secretario-org-narrow-to-highest-todo ()
+  "Narrow to highest grandparent heading that is a todo."
+  (save-excursion
+    (let ((closest-todo-upwards (point)))
+      (while (el-secretario-org-up-heading 1)
+        ;; TODO Error recovery if there is no parent heading with project todo state
+        (when (org-get-todo-state)
+          (setq closest-todo-upwards (point))))
+      (goto-char closest-todo-upwards)
+      (org-narrow-to-subtree))))
+
 (defun el-secretario-org-make-source (query files &optional next-item-hook hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
   (make-el-secretario-source
    :init-function  (lambda () (el-secretario-org-init query files))
-    :next-function  #'el-secretario-org-next-item
-    :prev-function  #'el-secretario-org-previous-item
-    :hydra-body (or hydra #'el-secretario-org-hydra/body)
-    :finished-hook #'widen
-    :next-item-hook (or next-item-hook (lambda ()))) )
+   :next-function  #'el-secretario-org-next-item
+   :prev-function  #'el-secretario-org-previous-item
+   :hydra-body (or hydra #'el-secretario-org-hydra/body)
+   :finished-hook #'widen
+   :next-item-hook (or next-item-hook (lambda ()))) )
 
 
 (defvar el-secretario--org-items-left nil
@@ -74,7 +93,7 @@ HYDRA is an hydra to use during review of this source."
         (switch-to-buffer buf)
         (widen)
         (goto-char pos)
-        (org-narrow-to-subtree)
+        (el-secretario-org-narrow)
 
         (funcall (el-secretario-source-next-item-hook
                   (car el-secretario-current-source-list)))
@@ -103,7 +122,7 @@ HYDRA is an hydra to use during review of this source."
       (--each scheduleds
         (insert "Scheduled: " it "\n")))))
 
-  (defun el-secretario-org-previous-item ()
+(defun el-secretario-org-previous-item ()
   "TODO"
   (pop el-secretario--org-items-done)
   (unless (car el-secretario--org-items-done)
@@ -112,7 +131,7 @@ HYDRA is an hydra to use during review of this source."
       (widen)
       (set-window-buffer (selected-window) buf)
       (goto-char pos)
-      (org-narrow-to-subtree)
+      (el-secretario-org-narrow)
       't)
     (message "No next item!")
     nil))
