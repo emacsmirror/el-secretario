@@ -187,9 +187,9 @@ SCHEDULED: "
       (el-secretario-space--increment)
       (el-secretario-space-reschedule)
       (let ((actual (->> (org-entry-get (point) "SCHEDULED")
-                         (ts-parse)))
+                      (ts-parse)))
             (expected (->> (ts-now)
-                           (ts-inc 'day 4))))
+                        (ts-inc 'day 4))))
         (expect (ts-year actual)
                 :to-be
                 (ts-year expected))
@@ -203,7 +203,54 @@ SCHEDULED: "
       (el-secretario-space--reset)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
-              1))))
+              1)))
+  (it "can reset the delta value when the delta value reaches a cap"
+    (test-el-secretario-reset-file
+     (concat
+      "* TODO write a test
+:PROPERTIES:
+:EL-SECRETARIO-DELTA: 1
+:EL-SECRETARIO-DELTA-RESET-CAP: 4
+:END:") file)
+
+    (with-current-buffer file
+      (outline-next-heading)
+      (el-secretario-space--increment)
+      (el-secretario-space--increment)
+      (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
+              :to-equal
+              3)
+
+      (el-secretario-space--increment)
+      (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
+              :to-equal
+              1)))
+  (it "can stop incrementing when it reaches a cap"
+    (test-el-secretario-reset-file
+     (concat
+      "* TODO write a test
+:PROPERTIES:
+:EL-SECRETARIO-DELTA: 1
+:EL-SECRETARIO-DELTA-CAP: 4
+:END:") file)
+
+    (with-current-buffer file
+      (outline-next-heading)
+      (el-secretario-space--increment)
+      (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
+              :to-equal
+              2)
+      (el-secretario-space--increment)
+      (el-secretario-space--increment)
+      (el-secretario-space--increment)
+      (el-secretario-space--increment)
+      (el-secretario-space--increment)
+      (el-secretario-space--increment)
+
+      (el-secretario-space--increment)
+      (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
+              :to-equal
+              4))))
 
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here

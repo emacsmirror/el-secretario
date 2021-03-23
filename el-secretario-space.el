@@ -20,13 +20,26 @@
 ;;; Code:
 
 (defun el-secretario-space--increment ()
-  (--> (org-entry-get (point)
-                      "EL-SECRETARIO-DELTA")
-    (or it "0")
-    (string-to-number it)
-    (1+ it)
-    (number-to-string it)
-    (org-set-property "EL-SECRETARIO-DELTA" it)))
+  (let ((cap
+         (-some-> (org-entry-get (point)
+                                 "EL-SECRETARIO-DELTA-CAP")
+           string-to-number))
+        (reset-cap
+         (-some-> (org-entry-get (point)
+                                 "EL-SECRETARIO-DELTA-RESET-CAP")
+           string-to-number)))
+    (--> (org-entry-get (point)
+                        "EL-SECRETARIO-DELTA")
+      (or it "0")
+      (string-to-number it)
+      (if (and cap (>= it cap))
+          it
+        (1+ it))
+      (if (and reset-cap (>= it reset-cap))
+          1
+        it)
+      (number-to-string it)
+      (org-set-property "EL-SECRETARIO-DELTA" it))))
 
 (defun el-secretario-space--reset ()
  (org-set-property "EL-SECRETARIO-DELTA" "1") )
