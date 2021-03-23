@@ -70,6 +70,10 @@ of the headline. When you finish *baz* the secretary also will run ~(insert
 #+end_src
 * Contribute
 
+I am currently trying out sourcehut so please send any contributions to https://git.sr.ht/~zetagon/el-secretario if you can.
+
 There's probably not much to do right now because I'm still figuring things out. The most helpful thing you can do right now is probably to test this out and point out any deficiencies in documentation or design.
+
+It would be very nice to have a mascot for the project though, so I would be very happy if you would contribute with a nice drawing.
 ** Loading in Emacs
 I still don't know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a pull request. In the meantime I will not prioritize this and just load everything when the main module is loaded.
