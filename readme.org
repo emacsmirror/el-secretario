@@ -1,16 +1,18 @@
 #+TITLE: Readme
 
-A framework for daily/weekly reviews.
-* Example Configuration
+A framework for reviewing your tasks.
+
+* Basic idea
+The basic idea is that there are a bunch of decisions you don't want to make, so
+you have hired a secretary to do them for you. Your secretary will help you go
+through your list of tasks by showing you the relevant tasks one by one. This
+eliminates the information overload and decision paralysis you get from 10 000
+line todo file, and it lets you focus on each task in an isolated controlled environment.
+
+This was all very abstract so let's move on to a concrete example:
+
+** Simple Configuration
 #+BEGIN_SRC emacs-lisp
-(use-package! el-secretario-org
-  :after (el-secretario org-ql))
-(use-package! el-secretario-notmuch
-  :after (el-secretario))
-
-
-(use-package! el-secretario
-:after (hydra)
 (defun my/dailyreview-secretary ()
   (list
 
@@ -19,8 +21,6 @@ A framework for daily/weekly reviews.
    ;; Then Take care of inbox
    (el-secretario-org-make-source nil ("~/org/Inbox.org"))
 
-   ;; Check if any waiting items are done
-   (el-secretario-org-make-source (todo "WAITING") ("~/org/orgzly/Todo.org"))
    ;; Go through TODOs
    (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))
 
@@ -28,8 +28,59 @@ A framework for daily/weekly reviews.
 (defun el-secretario-daily-review ()
   (interactive)
   (el-secretario-start-session (my/dailyreview-secretary)))
-:commands (el-secretario-daily-review))
 #+END_SRC
+
+Calling ~el-secretario-daily-review~ will open up your oldest email. Pressing
+~n~ in the [[https://github.com/abo-abo/hydra][hydra]] prompt will take you to the next email sorted chronologically.
+In this way your secretary will make sure you go through all your email without
+having to worry about which or how many emails you will read.
+
+Then when your secretary has gone through all your email for you, they will next
+go through your todo inbox. Pressing ~n~ will in a similar way take you to the
+next item in your inbox. When you've refiled your tasks appropriately your
+secretary will go through all your existing todos over in =Todo.org=
+
+A more complete configuration can be found at [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my configuration]].
+* The modules
+
+=el-secretario= comes with a set of modules that will help you with reviewing
+various parts of your system.
+
+In general functions and variables that are for users follow the format
+~el-secretario-MODULE-NAME~ and names for developers follow the format ~el-secretario-MODULE--NAME~ (notice the two dashes).
+
+** Notmuch
+A very simple module that goes through your email in chronological order. The
+relevant function is just ~el-secretario-notmuch-make-source~, look at it's
+docstring for more info.
+** Org
+:PROPERTIES:
+:ID:       e378a8e0-2701-41e7-8814-b6a0b0186664
+:END:
+A very simple module that goes through your todos. The relevant function is just
+~el-secretario-org-make-source~, look at it's docstring for more info.
+*** Convenience functions
+This module has some convenience functions:
+- ~el-secretario-org-remove-tag~
+- ~el-secretario-org-up-heading~
+
+** Space
+A spaced repetition module for tasks (and not memorization!). When you begin to
+have lots of todos it becomes very tiring to review all of them all the time.
+This module provides a way to defer todos into the future using a crude spaced
+repetition algorithm (the length of the deferral is incremented by one day each time).
+
+Currently this module doesn't stand on it's own and serves more as a library
+that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my config]] for an example of how to use it.
+
+*** Relevant variables
+- ~el-secretario-space-increment-percentage~
+*** Relevant functions
+- ~el-secretario-space-reschedule~
+- ~el-secretario-space-schedule-and-reset~
+** TODO Tasks
+This one is still a little bit weird and I don't exactly know what it's supposed
+to do so ignore it for now!
 
 
 * Each source needs these functions
@@ -72,7 +123,9 @@ of the headline. When you finish *baz* the secretary also will run ~(insert
 
 I am currently trying out sourcehut so please send any contributions to https://git.sr.ht/~zetagon/el-secretario if you can.
 
-There's probably not much to do right now because I'm still figuring things out. The most helpful thing you can do right now is probably to test this out and point out any deficiencies in documentation or design.
+Use it and come with feedback on basically everything! Usability, features, bugs
+etc. I have a hard time figuring out what's unclear in the documentation so
+feedback on that is especially welcome.
 
 It would be very nice to have a mascot for the project though, so I would be very happy if you would contribute with a nice drawing.
 ** Loading in Emacs
