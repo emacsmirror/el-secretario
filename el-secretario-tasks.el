@@ -53,7 +53,7 @@ HYDRA is an hydra to use during review of this source."
 (defvar el-secretario-tasks--tasks-skipped nil)
 
 (defun el-secretario-tasks--init (query files)
-  "TODO"
+  "The initialization function for the tasks source"
   (interactive)
   ;; Bypass the caching for org-ql as it breaks some stuff
   (dolist (f files)
@@ -74,6 +74,8 @@ HYDRA is an hydra to use during review of this source."
   (el-secretario-tasks--skip-task))
 
 (defun el-secretario-tasks--skip-task (&optional decrease-priority)
+  "Skip a task.
+If DECREASE-PRIORITY is non-nil also decrease its priority."
   (interactive)
   (if-let ((task (pop el-secretario-tasks--tasks-left)))
       (progn
@@ -96,6 +98,8 @@ HYDRA is an hydra to use during review of this source."
 
 
 (defun el-secretario-tasks-begin-task ()
+  "Begin working on a task.
+In particular, run it's begin task hook."
   (interactive)
   (el-secretario-tasks--run-begin-task-hook (el-secretario-tasks--parse-headline)))
 
@@ -138,6 +142,9 @@ dismissed will get their priority decreased.
           (cl-return))))))
 
 (defun el-secretario-tasks--normalize-priorities (tasks)
+  "Normalize the priorities of TASKS.
+This is done by subtracting every priority with the lowest
+priority."
   (-->
       (-min-by (-on #'> (lambda (x) (plist-get x :EL-SECRETARIO-PRIORITY))) tasks)
     (save-excursion
@@ -147,7 +154,7 @@ dismissed will get their priority decreased.
                 (org-set-property "EL-SECRETARIO-PRIORITY"
                                   (-> (- (plist-get t :EL-SECRETARIO-PRIORITY)
                                          (plist-get it :EL-SECRETARIO-PRIORITY))
-                                      (number-to-string))))) tasks))))
+                                    (number-to-string))))) tasks))))
 
 (defun el-secretario-tasks--run-task-hook (task hook-name &optional default-hook)
   "Run a hook defined in the property of a org subtree.
@@ -180,6 +187,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
      (el-secretario-tasks--parse-headline)
      :EL-SECRETARIO-FINISH-TASK-HOOK el-secretario-tasks-default-finish-task-action)))
 
+;; TODO: Maybe this should be a user option so that loading the module doesn't change behaviour.
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
 
 (defun el-secretario-tasks-subtask-begin (&optional hydra)

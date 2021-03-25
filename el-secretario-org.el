@@ -108,6 +108,8 @@ HYDRA is an hydra to use during review of this source."
 
 (defvar date nil)
 (defun el-secretario-org-update-status-buffer ()
+  "Update the status buffer with useful information.
+That information is the currently visible schedule dates and deadlines "
   (interactive)
   (let ((date (calendar-current-date))
         deadlines
@@ -137,14 +139,14 @@ HYDRA is an hydra to use during review of this source."
     nil))
 
 (defun el-secretario-org-add-tag (&rest tags)
-  "Add TAGS to headline."
+  "Add TAGS to current headline."
   (org-set-tags (cl-remove-duplicates
                  (append tags (or (org-get-tags nil 't)
                                   '()))
                  :test #'string-equal)))
 
 (defun el-secretario-org-remove-tag (&rest tags)
-  "Add TAGS to headline."
+  "Remove TAGS from current headline."
   (org-set-tags (--filter
                  (let ((-compare-fn #'string-equal))
                    (not (-contains? tags it)))

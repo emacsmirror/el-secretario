@@ -83,6 +83,7 @@ be nil. Set it to `t' if in testing
   (el-secretario-status-buffer-deactivate))
 
 (defun el-secretario-next-item ()
+  "Go to the next item of this session."
   (interactive)
   (when el-secretario-current-source-list
     (funcall (el-secretario-source-next-function
@@ -90,6 +91,7 @@ be nil. Set it to `t' if in testing
 
 
 (defun el-secretario--next-source ()
+  "Switch to the next source in this session."
   (if el-secretario-current-source-list
       (progn
         (push el-secretario-current-source-list-done
@@ -105,11 +107,13 @@ be nil. Set it to `t' if in testing
 
 
 (defun el-secretario-status-buffer-activate ()
+  "Activate the status buffer."
   (el-secretario-status-buffer-deactivate)
   (display-buffer-in-side-window (get-buffer-create el-secretario-status-buffer-name)
                                  '((side . top))))
 
 (defun el-secretario-status-buffer-deactivate ()
+  "Deactivate the status buffer."
   (-some-> (get-buffer-window el-secretario-status-buffer-name)
     (delete-window)))
 
@@ -120,14 +124,9 @@ be nil. Set it to `t' if in testing
   "The list `el-secretario-y-or-no-p' will take from if in testing mode")
 
 (defun el-secretario--y-or-n-p (prompt)
+  "A version of `y-or-n-p' that is testable."
   (if el-secretario-is-testing
       (pop el-secretario--y-or-no-p-input-list)
     (y-or-n-p prompt)))
-;; (let ((el-secretario-is-testing t)
-;;       (el-secretario--y-or-no-p-input-list '(n n y)))
-;;   (el-secretario--y-or-n-p "foo")
-;;   (el-secretario--y-or-n-p "foo")
-;;   (el-secretario--y-or-n-p "foo")
-;;   (el-secretario--y-or-n-p "foo"))
 (provide 'el-secretario)
 ;;; el-secretario.el ends here
