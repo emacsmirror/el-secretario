@@ -23,7 +23,7 @@
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
-  `(make-el-secretario-source
+  (make-el-secretario-source
     :init-function  (lambda () (el-secretario-tasks--init query files ))
     :next-function #'el-secretario-tasks--skip-task
     :prev-function (lambda ())
@@ -32,7 +32,7 @@ HYDRA is an hydra to use during review of this source."
     :next-item-hook (lambda ())) )
 
 (defhydra el-secretario-tasks-hydra ()
-  ("s" el-secretario-tasks--skip-task "Skip task" :exit t)
+  ("s" (el-secretario-tasks--skip-task t) "Skip task" :exit t)
   ("b" el-secretario-tasks-begin-task "Begin task" :exit t)
   ("t" (el-secretario-message--with-pre-buffer (org-todo)) "TODO" ))
 
@@ -47,7 +47,9 @@ HYDRA is an hydra to use during review of this source."
                              it
                              :EL-SECRETARIO-PRIORITY)
                      (string-to-number))
-                   1))))
+                   (progn
+                     (org-set-property "EL-SECRETARIO-PRIORITY" "1")
+                     1)))))
 
 (defvar el-secretario-tasks--tasks-left nil)
 (defvar el-secretario-tasks--tasks-skipped nil)
@@ -62,8 +64,7 @@ HYDRA is an hydra to use during review of this source."
       (basic-save-buffer)))
   ;; Sort according to priority
   (setq el-secretario-tasks--tasks-left
-        (org-ql-select files `(and (property "EL-SECRETARIO-PRIORITY")
-                                   ,query)
+        (org-ql-select files query
           :action #'el-secretario-tasks--parse-headline
           :sort (lambda (x y)
                   (< (plist-get x :EL-SECRETARIO-PRIORITY)
@@ -175,7 +176,7 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
 (defun el-secretario-tasks--run-begin-task-hook (task)
   "Run the begin task hook.
 See `el-secretario-tasks--run-task-hook' for more info. "
-  (el-secretario-tasks--run-task-hook task :EL-SECRETARIO-BEGIN-TASK-HOOK '(message "Mock clock in")))
+  (el-secretario-tasks--run-task-hook task :EL-SECRETARIO-BEGIN-TASK-HOOK '(org-clock-in)))
 
 (defvar el-secretario-tasks-default-finish-task-action '()
   "An s-exp (i.e. a list) to be run when a task is finished.")
