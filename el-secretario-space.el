@@ -39,20 +39,20 @@ nil means 100% are defered")
              string-to-number)))
       (--> (org-entry-get (point)
                           "EL-SECRETARIO-DELTA")
-        (or it "0")
+        (or it "1")
         (string-to-number it)
         (if (and cap (>= it cap))
             it
           (1+ it))
         (if (and reset-cap (>= it reset-cap))
-            1
+            2
           it)
         (number-to-string it)
         (org-set-property "EL-SECRETARIO-DELTA" it)))))
 
 (defun el-secretario-space--reset ()
   "Reset the delta value to the default value"
- (org-set-property "EL-SECRETARIO-DELTA" "1") )
+ (org-set-property "EL-SECRETARIO-DELTA" "2") )
 
 (defun el-secretario-space-reschedule ()
   "Reschedule org entry at point n days into the future.
