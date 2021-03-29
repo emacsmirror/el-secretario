@@ -51,6 +51,7 @@ nil means 100% are defered")
         (org-set-property "EL-SECRETARIO-DELTA" it)))))
 
 (defun el-secretario-space--reset ()
+  "Reset the delta value to the default value"
  (org-set-property "EL-SECRETARIO-DELTA" "1") )
 
 (defun el-secretario-space-reschedule ()
