@@ -50,7 +50,9 @@ subtrees that are also todos. It can then be useful to see the context when revi
         (when (org-get-todo-state)
           (setq closest-todo-upwards (point))))
       (goto-char closest-todo-upwards)
-      (org-narrow-to-subtree))))
+      (org-narrow-to-subtree)
+      (outline-hide-leaves)))
+  (outline-show-entry))
 
 (defun el-secretario-org-make-source (query files &optional next-item-hook hydra)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
