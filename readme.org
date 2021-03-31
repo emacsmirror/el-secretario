@@ -29,6 +29,7 @@ This was all very abstract so let's move on to a concrete example:
   (interactive)
   (el-secretario-start-session (my/dailyreview-secretary)))
 #+END_SRC
+Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where it's used in action.
 
 Calling ~el-secretario-daily-review~ will open up your oldest email. Pressing
 ~n~ in the [[https://github.com/abo-abo/hydra][hydra]] prompt will take you to the next email sorted chronologically.
