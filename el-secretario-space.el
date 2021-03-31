@@ -27,8 +27,8 @@ nil means 100% are defered")
 
 (defun el-secretario-space--increment ()
   "Increment the delta value of the delta property with a spaced repetition algorithm."
-  (when (and el-secretario-space-increment-percentage
-             (> el-secretario-space-increment-percentage (random 100)))
+  (unless (and el-secretario-space-increment-percentage
+             (<= el-secretario-space-increment-percentage (random 100)))
     (let ((cap
            (-some-> (org-entry-get (point)
                                    "EL-SECRETARIO-DELTA-CAP")
