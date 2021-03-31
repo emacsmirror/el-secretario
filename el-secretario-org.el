@@ -91,6 +91,7 @@ HYDRA is an hydra to use during review of this source."
 
   (if-let ((item (pop el-secretario--org-items-left)))
       (cl-destructuring-bind (buf pos) item
+        (outline-show-all)
         (push (list buf pos) el-secretario--org-items-done)
         (switch-to-buffer buf)
         (widen)
