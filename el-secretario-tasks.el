@@ -47,9 +47,7 @@ HYDRA is an hydra to use during review of this source."
                              it
                              :EL-SECRETARIO-PRIORITY)
                      (string-to-number))
-                   (progn
-                     (org-set-property "EL-SECRETARIO-PRIORITY" "1")
-                     1)))))
+                   1))))
 
 (defvar el-secretario-tasks--tasks-left nil)
 (defvar el-secretario-tasks--tasks-skipped nil)
