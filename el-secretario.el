@@ -103,6 +103,7 @@ be nil. Set it to `t' if in testing
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
+    (el-secretario-status-buffer-deactivate)
     (el-secretario-end-sesion)))
 
 

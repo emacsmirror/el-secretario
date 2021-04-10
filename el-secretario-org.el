@@ -125,7 +125,10 @@ That information is the currently visible schedule dates and deadlines "
       (--each deadlines
         (insert "Deadline: " it "\n"))
       (--each scheduleds
-        (insert "Scheduled: " it "\n")))))
+        (insert "Scheduled: " it "\n"))))
+  (with-selected-window (get-buffer-window
+                         (get-buffer-create el-secretario-status-buffer-name))
+    (fit-window-to-buffer)))
 
 (defun el-secretario-org-previous-item ()
   "TODO"
