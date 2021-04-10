@@ -184,8 +184,6 @@ See `el-secretario-tasks--run-task-hook' for more info. "
      (el-secretario-tasks--parse-headline)
      :EL-SECRETARIO-FINISH-TASK-HOOK)))
 
-;; TODO: Maybe this should be a user option so that loading the module doesn't change behaviour.
-(add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
 
 (defun el-secretario-tasks-subtask-begin (&optional hydra)
   "TODO"

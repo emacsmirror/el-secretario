@@ -64,7 +64,30 @@ A very simple module that goes through your todos. The relevant function is just
 This module has some convenience functions:
 - ~el-secretario-org-remove-tag~
 - ~el-secretario-org-up-heading~
+*** Property hooks
+Property hooks are similar to normal [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Hooks.html][hooks]] in that they allow the user to run
+custom code at specific points in time. The difference is that property hooks
+are defined by setting a property to a headline which means that they are local
+to the headline. You can set a property hook by adding the corresponding
+property with unquoted lisp code as value. You can run your own property hooks
+with the function ~el-secretario-tasks--run-task-hook~.
 
+| Property                       | Run condition                                   |
+|--------------------------------+-------------------------------------------------|
+| EL-SECRETARIO-REVIEW-TASK-HOOK | When shown in a review                          |
+| EL-SECRETARIO-FINISH-TASK-HOOK | When a task is marked as done                   |
+| EL-SECRETARIO-BEGIN-TASK-HOOK  | When ~el-secretario-tasks-begin-task~ is called |
+**** EL-SECRETARIO-FINISH-TASK-HOOK
+In order to make this work add the following to your config.
+#+begin_src emacs-lisp
+(add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
+#+end_src
+
+**** EL-SECRETARIO-BEGIN-TASK-HOOK
+This hook has a default value that is ~(org-clock-in)~ which means you can use
+~el-secretario-tasks-begin-task~ instead of ~org-clock-in~. Keep in mind though
+that if you set this property you have to use the value ~(progn (org-clock-in)
+...)~ to retain the clock in behaviour.
 ** Space
 A spaced repetition module for tasks (and not memorization!). When you begin to
 have lots of todos it becomes very tiring to review all of them all the time.
