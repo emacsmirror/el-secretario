@@ -176,15 +176,13 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
 See `el-secretario-tasks--run-task-hook' for more info. "
   (el-secretario-tasks--run-task-hook task :EL-SECRETARIO-BEGIN-TASK-HOOK '(org-clock-in)))
 
-(defvar el-secretario-tasks-default-finish-task-action '()
-  "An s-exp (i.e. a list) to be run when a task is finished.")
 
 ;; TODO rename to something better
 (defun el-secretario-tasks--finish-task-hook ()
   (when (member org-state org-done-keywords)
     (el-secretario-tasks--run-task-hook
      (el-secretario-tasks--parse-headline)
-     :EL-SECRETARIO-FINISH-TASK-HOOK el-secretario-tasks-default-finish-task-action)))
+     :EL-SECRETARIO-FINISH-TASK-HOOK)))
 
 ;; TODO: Maybe this should be a user option so that loading the module doesn't change behaviour.
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
