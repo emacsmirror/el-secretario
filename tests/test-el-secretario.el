@@ -53,7 +53,13 @@
 :END:
 
 ** TODO subtask1
+:PROPERTIES:
+:ID:       sub-task1
+:END:
 ** TODO subtask2
+:PROPERTIES:
+:ID:       sub-task2
+:END:
 * TODO Daily review
 :PROPERTIES:
 :EL-SECRETARIO-BEGIN-TASK-HOOK: (progn  (el-secretario-tasks-subtask-begin))
@@ -110,10 +116,26 @@
   (it "runs the review-item hook on each todo heading"
     (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
                                                                       (list file)
-                                                                      #'next-item-fun)))
+                                                                      #'next-item-fun
+                                                                      nil
+                                                                      nil
+                                                                      "sub-task1")))
     (dotimes (_ 7)
       (el-secretario-next-item))
-    (expect 'review-item-fun :to-have-been-called-times 1)))
+    (expect 'review-item-fun :to-have-been-called-times 1))
+
+  (it "uses the directly provided ids"
+    (el-secretario-start-session
+     (list (el-secretario-org-make-source '(not (todo))
+                                          (list file)
+                                          #'next-item-fun
+                                          nil
+                                          nil
+                                          "sub-task1"
+                                          "sub-task2")))
+    (dotimes (_ 7)
+      (el-secretario-next-item))
+    (expect 'next-item-fun :to-have-been-called-times 2)))
 
 (describe "Tasks module"
   :var* (file source next-item-fun review-item-fun)

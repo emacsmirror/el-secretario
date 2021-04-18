@@ -129,5 +129,20 @@ be nil. Set it to `t' if in testing
   (if el-secretario-is-testing
       (pop el-secretario--y-or-no-p-input-list)
     (y-or-n-p prompt)))
+
+;; Shuffling a list. Credit: https://kitchingroup.cheme.cmu.edu/blog/2014/09/06/Randomize-a-list-in-Emacs/
+(defun el-secretario--swap (LIST x y)
+  "Swap item X and Y in LIST."
+  (cl-psetf (elt LIST y) (elt LIST x)
+            (elt LIST x) (elt LIST y)))
+
+(defun el-secretario--shuffle (LIST)
+  "Shuffle the elements in LIST.
+shuffling is done in place."
+  (cl-loop for i in (reverse (number-sequence 1 (1- (length LIST))))
+           do (let ((j (random (+ i 1))))
+                (el-secretario--swap LIST i j)))
+  LIST)
+
 (provide 'el-secretario)
 ;;; el-secretario.el ends here

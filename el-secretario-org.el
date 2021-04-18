@@ -54,12 +54,12 @@ subtrees that are also todos. It can then be useful to see the context when revi
       (outline-hide-leaves)))
   (outline-show-entry))
 
-(defun el-secretario-org-make-source (query files &optional next-item-hook hydra)
+(defun el-secretario-org-make-source (query files &optional next-item-hook hydra shuffle-p &rest ids)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
   (make-el-secretario-source
-   :init-function  (lambda () (el-secretario-org-init query files))
+   :init-function  (lambda () (el-secretario-org-init query files shuffle-p ids))
    :next-function  #'el-secretario-org-next-item
    :prev-function  #'el-secretario-org-previous-item
    :hydra-body (or hydra #'el-secretario-org-hydra/body)
@@ -73,14 +73,20 @@ HYDRA is an hydra to use during review of this source."
 (defvar el-secretario--org-items-done nil
   "A list of items that has been reviewed")
 
-
-(defun el-secretario-org-init (query &optional files)
+(defun el-secretario-org-init (query &optional files shuffle-p ids)
   "TODO"
   (setq el-secretario--org-items-left
-        (org-ql-select (or files
-                           (org-agenda-files)) query
-                           :action '(list (current-buffer)
-                                          (point-marker))))
+        (append (-map (lambda (id)
+                        (let ((tmp (org-id-find id t)))
+                          (list (marker-buffer tmp)
+                                tmp)))
+                      ids)
+                (org-ql-select (or files
+                                   (org-agenda-files)) query
+                                   :action '(list (current-buffer)
+                                                  (point-marker)))))
+  (when shuffle-p
+    (el-secretario--shuffle el-secretario--org-items-left))
   (setq el-secretario--org-items-done nil)
   (funcall (el-secretario-source-hydra-body
             (car el-secretario-current-source-list)))
