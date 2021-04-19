@@ -219,13 +219,13 @@ SCHEDULED: "
                 :to-be
                 (ts-day-of-year expected)))))
 
-  (it "can reset the delta value to 1"
+  (it "can reset the delta value to 2"
     (with-current-buffer file
       (outline-next-heading)
       (el-secretario-space--reset)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
-              1)))
+              2)))
   (it "can reset the delta value when the delta value reaches a cap"
     (test-el-secretario-reset-file
      (concat
@@ -246,7 +246,7 @@ SCHEDULED: "
       (el-secretario-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
-              1)))
+              2)))
   (it "can stop incrementing when it reaches a cap"
     (test-el-secretario-reset-file
      (concat
