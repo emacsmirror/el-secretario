@@ -130,7 +130,41 @@
                                                  "sub-task2"))))
     (dotimes (_ 7)
       (el-secretario-next-item))
-    (expect 'next-item-fun :to-have-been-called-times 2)))
+    (expect 'next-item-fun :to-have-been-called-times 2))
+
+  (it "sorts the queried items"
+    (el-secretario-start-session
+     (list (el-secretario-org-make-source '(todo)
+                                          (list file)
+                                          :next-item-hook #'next-item-fun
+                                          :sort-fun (lambda (x y)
+                                                      (< (plist-get x :marker)
+                                                         (plist-get y :marker)))
+                                          :shuffle-p t)))
+
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO bar")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO baz")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "** TODO subtask1")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "** TODO subtask2")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO Daily review")))
 
 (describe "Tasks module"
   :var* (file source next-item-fun review-item-fun)
