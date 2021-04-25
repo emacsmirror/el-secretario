@@ -54,7 +54,7 @@ subtrees that are also todos. It can then be useful to see the context when revi
       (outline-hide-leaves)))
   (outline-show-entry))
 
-(defun el-secretario-org-make-source (query files &optional next-item-hook hydra shuffle-p &rest ids)
+(cl-defun el-secretario-org-make-source (query files &key next-item-hook hydra shuffle-p ids)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."

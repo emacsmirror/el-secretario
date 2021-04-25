@@ -102,7 +102,7 @@
 
     (setq source (list (el-secretario-org-make-source '(todo)
                                                       (list file)
-                                                      #'next-item-fun))))
+                                                      :next-item-hook #'next-item-fun))))
 
   (it "can run a test!"
     (expect t :to-be t))
@@ -116,23 +116,18 @@
   (it "runs the review-item hook on each todo heading"
     (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
                                                                       (list file)
-                                                                      #'next-item-fun
-                                                                      nil
-                                                                      nil
-                                                                      "sub-task1")))
+                                                                      :next-item-hook #'next-item-fun
+                                                                      :ids '("sub-task1"))))
     (dotimes (_ 7)
       (el-secretario-next-item))
     (expect 'review-item-fun :to-have-been-called-times 1))
-
   (it "uses the directly provided ids"
     (el-secretario-start-session
      (list (el-secretario-org-make-source '(not (todo))
                                           (list file)
-                                          #'next-item-fun
-                                          nil
-                                          nil
-                                          "sub-task1"
-                                          "sub-task2")))
+                                          :next-item-hook #'next-item-fun
+                                          :ids '("sub-task1"
+                                                 "sub-task2"))))
     (dotimes (_ 7)
       (el-secretario-next-item))
     (expect 'next-item-fun :to-have-been-called-times 2)))
@@ -152,7 +147,7 @@
 
     (setq source (list (el-secretario-org-make-source '(todo)
                                                       (list file)
-                                                      #'next-item-fun))))
+                                                      :next-item-hook #'next-item-fun))))
   (it "can increase the priority value of tasks that are skipped"
     (let ((el-secretario-tasks-files (list (buffer-file-name file)))
           (el-secretario--y-or-no-p-input-list '(nil nil y)))
