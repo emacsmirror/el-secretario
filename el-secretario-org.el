@@ -77,14 +77,16 @@ HYDRA is an hydra to use during review of this source."
   "TODO"
   (setq el-secretario--org-items-left
         (append (-map (lambda (id)
-                        (let ((tmp (org-id-find id t)))
-                          (list (marker-buffer tmp)
-                                tmp)))
+                        (let ((m (org-id-find id 'marker)))
+                          (when m
+                            (with-current-buffer (marker-buffer m)
+                              (save-excursion
+                                (goto-char m)
+                                (el-secretario-org--parse-headline))))))
                       ids)
                 (org-ql-select (or files
                                    (org-agenda-files)) query
-                                   :action '(list (current-buffer)
-                                                  (point-marker)))))
+                                   :action #'el-secretario-org--parse-headline)))
   (when shuffle-p
     (el-secretario--shuffle el-secretario--org-items-left))
   (setq el-secretario--org-items-done nil)
@@ -96,7 +98,8 @@ HYDRA is an hydra to use during review of this source."
   "TODO"
 
   (if-let ((item (pop el-secretario--org-items-left)))
-      (cl-destructuring-bind (buf pos) item
+      (let ((buf (plist-get item :buffer ))
+            (pos (plist-get item :marker)))
         (outline-show-all)
         (push (list buf pos) el-secretario--org-items-done)
         (switch-to-buffer buf)
@@ -110,15 +113,15 @@ HYDRA is an hydra to use during review of this source."
         (funcall (el-secretario-source-hydra-body
                   (car el-secretario-current-source-list)))
         (el-secretario-tasks--run-task-hook
-                             (el-secretario-tasks--parse-headline)
-                             :EL-SECRETARIO-REVIEW-TASK-HOOK))
+         (el-secretario-org--parse-headline)
+         :EL-SECRETARIO-REVIEW-TASK-HOOK))
     (message "No next item!")
     (el-secretario--next-source)))
 
 (defvar date nil)
 (defun el-secretario-org-update-status-buffer ()
   "Update the status buffer with useful information.
-That information is the currently visible schedule dates and deadlines "
+That information is the currently visible schedule dates and deadlines."
   (interactive)
   (let ((date (calendar-current-date))
         deadlines
@@ -172,6 +175,20 @@ That information is the currently visible schedule dates and deadlines "
         (outline-up-heading arg)
         (point))
     (error nil)))
+
+(defun el-secretario-org--parse-headline ()
+  "Parse headline at point and put in some more relevant information."
+  (--> (org-element-headline-parser (line-end-position))
+    (nth 1 it)
+    (plist-put it :file-name (buffer-file-name))
+    (plist-put it :buffer (current-buffer))
+    (plist-put it :marker (point-marker))
+    (plist-put it :EL-SECRETARIO-PRIORITY
+               (or (-some-> (plist-get
+                             it
+                             :EL-SECRETARIO-PRIORITY)
+                     (string-to-number))
+                   1))))
 
 (provide 'el-secretario-org)
 ;;; el-secretario-org.el ends here

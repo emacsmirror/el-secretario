@@ -36,18 +36,6 @@ HYDRA is an hydra to use during review of this source."
   ("b" el-secretario-tasks-begin-task "Begin task" :exit t)
   ("t" (el-secretario-message--with-pre-buffer (org-todo)) "TODO" ))
 
-(defun el-secretario-tasks--parse-headline ()
-  "Parse headline at point and put in some more relevant information"
-  (--> (org-element-headline-parser (line-end-position))
-    (nth 1 it)
-    (plist-put it :file-name (buffer-file-name))
-    (plist-put it :buffer (current-buffer))
-    (plist-put it :EL-SECRETARIO-PRIORITY
-               (or (-some-> (plist-get
-                             it
-                             :EL-SECRETARIO-PRIORITY)
-                     (string-to-number))
-                   1))))
 
 (defvar el-secretario-tasks--tasks-left nil)
 (defvar el-secretario-tasks--tasks-skipped nil)
@@ -63,7 +51,7 @@ HYDRA is an hydra to use during review of this source."
   ;; Sort according to priority
   (setq el-secretario-tasks--tasks-left
         (org-ql-select files query
-          :action #'el-secretario-tasks--parse-headline
+          :action #'el-secretario-org--parse-headline
           :sort (lambda (x y)
                   (< (plist-get x :EL-SECRETARIO-PRIORITY)
                      (plist-get y :EL-SECRETARIO-PRIORITY)))))
@@ -100,7 +88,7 @@ If DECREASE-PRIORITY is non-nil also decrease its priority."
   "Begin working on a task.
 In particular, run it's begin task hook."
   (interactive)
-  (el-secretario-tasks--run-begin-task-hook (el-secretario-tasks--parse-headline)))
+  (el-secretario-tasks--run-begin-task-hook (el-secretario-org--parse-headline)))
 
 (defvar el-secretario-tasks-files nil
   "The files that `el-secretario-tasks-choose-task'a will search through")
@@ -121,7 +109,7 @@ dismissed will get their priority decreased.
                 (basic-save-buffer)))
             ;; Sort according to priority
             (org-ql-select el-secretario-tasks-files '(property "EL-SECRETARIO-PRIORITY")
-              :action #'el-secretario-tasks--parse-headline
+              :action #'el-secretario-org--parse-headline
               :sort (lambda (x y)
                       (< (plist-get x :EL-SECRETARIO-PRIORITY)
                          (plist-get y :EL-SECRETARIO-PRIORITY)))))))
@@ -159,7 +147,7 @@ priority."
   "Run a hook defined in the property of a org subtree.
 The hook will be called at the beginning of the line of the headline.
 
-TASK is a plist from `el-secretario-tasks--parse-headline'.
+TASK is a plist from `el-secretario-org--parse-headline'.
 HOOK-NAME is the org property that the hook is stored in.
 DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
   (with-current-buffer (plist-get task :buffer)
@@ -181,7 +169,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
 (defun el-secretario-tasks--finish-task-hook ()
   (when (member org-state org-done-keywords)
     (el-secretario-tasks--run-task-hook
-     (el-secretario-tasks--parse-headline)
+     (el-secretario-org--parse-headline)
      :EL-SECRETARIO-FINISH-TASK-HOOK)))
 
 
@@ -197,7 +185,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
           :finished-hook #'widen
           :next-item-hook (lambda ()
                             (el-secretario-tasks--run-task-hook
-                             (el-secretario-tasks--parse-headline)
+                             (el-secretario-org--parse-headline)
                              :EL-SECRETARIO-REVIEW-TASK-HOOK))))) )
 
 
@@ -223,7 +211,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
           (org-narrow-to-subtree)
           (while (outline-next-heading)
             (when (member (org-get-todo-state) org-not-done-keywords)
-              (push (el-secretario-tasks--parse-headline) el-secretario-tasks--tasks-left)))))))
+              (push (el-secretario-org--parse-headline) el-secretario-tasks--tasks-left)))))))
   (setq el-secretario-tasks--items-done nil)
   (setq el-secretario-tasks--tasks-left (nreverse el-secretario-tasks--tasks-left))
   (funcall (el-secretario-source-hydra-body
