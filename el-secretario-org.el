@@ -54,12 +54,12 @@ subtrees that are also todos. It can then be useful to see the context when revi
       (outline-hide-leaves)))
   (outline-show-entry))
 
-(cl-defun el-secretario-org-make-source (query files &key next-item-hook hydra shuffle-p ids)
+(cl-defun el-secretario-org-make-source (query files &key next-item-hook sort-fun hydra shuffle-p ids)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source."
   (make-el-secretario-source
-   :init-function  (lambda () (el-secretario-org-init query files shuffle-p ids))
+   :init-function  (lambda () (el-secretario-org-init query files sort-fun shuffle-p ids))
    :next-function  #'el-secretario-org-next-item
    :prev-function  #'el-secretario-org-previous-item
    :hydra-body (or hydra #'el-secretario-org-hydra/body)
@@ -73,7 +73,7 @@ HYDRA is an hydra to use during review of this source."
 (defvar el-secretario--org-items-done nil
   "A list of items that has been reviewed")
 
-(defun el-secretario-org-init (query &optional files shuffle-p ids)
+(defun el-secretario-org-init (query &optional files sort-fun shuffle-p ids )
   "TODO"
   (setq el-secretario--org-items-left
         (append (-map (lambda (id)
@@ -89,6 +89,8 @@ HYDRA is an hydra to use during review of this source."
                                    :action #'el-secretario-org--parse-headline)))
   (when shuffle-p
     (el-secretario--shuffle el-secretario--org-items-left))
+  (when sort-fun
+    (setq el-secretario--org-items-left (sort el-secretario--org-items-left sort-fun)))
   (setq el-secretario--org-items-done nil)
   (funcall (el-secretario-source-hydra-body
             (car el-secretario-current-source-list)))
