@@ -75,8 +75,8 @@ be nil. Set it to `t' if in testing
   (setq el-secretario-current-source-list source-list)
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
-  (funcall (el-secretario-source-init-function (car source-list)))
-  (el-secretario-status-buffer-activate))
+  (el-secretario-status-buffer-activate)
+  (funcall (el-secretario-source-init-function (car source-list))))
 
 (defun el-secretario-end-sesion ()
   (switch-to-buffer el-secretario--original-buffer)

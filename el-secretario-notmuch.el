@@ -72,8 +72,67 @@ HYDRA is an hydra to use during review of this source"
                                      (truncate-string-to-width subject 30 nil nil t)
                                      "*"))
                (funcall (el-secretario-source-hydra-body
-                         (car el-secretario-current-source-list))))
+                         (car el-secretario-current-source-list)))
+               (el-secretario-notmuch--open-link-for-current-email))
       (message "End of search results.")
       (el-secretario--next-source))))
+
+(defun el-secretario-notmuch-reverse-capture (file)
+  "Capture a back-linked entry to FILE.
+When you review an email in a thread that you have captured to
+with this function you will see that capture in the status
+window.
+
+You can use your own template by calling `el-secretario-notmuch--reverse-capture' yourself.
+ "
+  (el-secretario-notmuch--reverse-capture file (concat "\n* WAITING for email: [[notmuch:id:" message-id "][Email: " subject "]]"
+                                  "\n:PROPERTIES:"
+                                  "\n:ID: " notmuch-show-thread-id
+                                  "\n:From: \"" from
+                                  "\"\n:END:\n")))
+
+(defmacro el-secretario-notmuch--reverse-capture (file template)
+  "Capture a back-linked entry to FILE using TEMPLATE.
+See `el-secretario-notmuch-reverse-capture' for more details.
+
+TEMPLATE should be a s-exp that returns the entry you want to
+capture. The template is expanded in the buffer this is
+called (which should be the notmuch-show buffer you want to
+capture). The following special variables are recognized:
+
+- message-id :: The id of the capture message
+- subject :: The subject line
+- to :: The to: adress
+- from :: The from: adress
+- date :: The date the email was sent
+
+NOTE that the entry MUST have the :ID: property set to
+'notmuch-show-thread-id'. See
+`el-secretario-notmuch-reverse-capture' for an example.
+
+"
+  `(let* ((message-id (notmuch-show-get-message-id t))
+          (subject (notmuch-show-get-subject))
+          (to (notmuch-show-get-to))
+          (from (notmuch-show-get-from))
+          (date (org-trim (notmuch-show-get-date)))
+
+          (s ,template ))
+     (with-current-buffer (find-file-noselect ,file)
+       (save-excursion
+         (save-restriction
+           (widen)
+           (goto-char (point-max))
+           (insert s)
+           (save-buffer))))))
+
+(defun el-secretario-notmuch--open-link-for-current-email ()
+  (let* ((location (org-id-find notmuch-show-thread-id))
+         (buf (find-file-noselect (car location))))
+    (display-buffer-in-side-window buf
+                                   '((side . top)))
+    (with-current-buffer buf
+      (goto-char (cdr location))
+      (org-narrow-to-subtree))))
 (provide 'el-secretario-notmuch)
 ;;; el-secretario-notmuch.el ends here
