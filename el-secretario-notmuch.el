@@ -91,48 +91,42 @@ You can use your own template by calling `el-secretario-notmuch--reverse-capture
                                   "\n:From: \"" from
                                   "\"\n:END:\n")))
 
-(defmacro el-secretario-notmuch--reverse-capture (file template)
-  "Capture a back-linked entry to FILE using TEMPLATE.
-See `el-secretario-notmuch-reverse-capture' for more details.
 
-TEMPLATE should be a s-exp that returns the entry you want to
-capture. The template is expanded in the buffer this is
-called (which should be the notmuch-show buffer you want to
-capture). The following special variables are recognized:
+(defun el-secretario-notmuch-capture-get-thread-link ()
+  "Get a link to the thread of the captured email.
 
-- message-id :: The id of the capture message
-- subject :: The subject line
-- to :: The to: adress
-- from :: The from: adress
-- date :: The date the email was sent
+To be used in a capture template. "
+  (with-current-buffer (org-capture-get :original-buffer)
+    (concat "[[notmuch:" notmuch-show-thread-id "][Thread]]")))
 
-NOTE that the entry MUST have the :ID: property set to
-'notmuch-show-thread-id'. See
-`el-secretario-notmuch-reverse-capture' for an example.
-
-"
-  `(let* ((message-id (notmuch-show-get-message-id t))
-          (subject (notmuch-show-get-subject))
-          (to (notmuch-show-get-to))
-          (from (notmuch-show-get-from))
-          (date (org-trim (notmuch-show-get-date)))
-
-          (s ,template ))
-     (with-current-buffer (find-file-noselect ,file)
-       (save-excursion
-         (save-restriction
-           (widen)
-           (goto-char (point-max))
-           (insert s)
-           (save-buffer))))))
 
 (defun el-secretario-notmuch--open-link-for-current-email ()
-  (let* ((location (org-id-find notmuch-show-thread-id))
-         (buf (find-file-noselect (car location))))
-    (display-buffer-in-side-window buf
-                                   '((side . top)))
-    (with-current-buffer buf
-      (goto-char (cdr location))
-      (org-narrow-to-subtree))))
+  (let ((id notmuch-show-thread-id))
+    (let ((entries (org-ql-select '("~/org/orgzly/InboxComputer.org") `(link ,id)
+                     :action 'element-with-markers))
+          (prev-mesg (when (notmuch-show-goto-message-previous)
+                       (let ((x (org-ql-select '("~/org/orgzly/InboxComputer.org")
+                                  `(link ,(notmuch-show-get-message-id))
+                                  :action 'element-with-markers)))
+                         (notmuch-show-goto-message-next)
+                         x))))
+
+      (dolist (x prev-mesg)
+        (with-current-buffer (get-buffer-create el-secretario-status-buffer-name)
+          (insert "\nPrevious message:\n" (org-ql-view--format-element x))))
+      (dolist (x entries)
+        (with-current-buffer (get-buffer-create el-secretario-status-buffer-name)
+          (org-agenda-mode)
+          (delete-region (point-min)
+                         (point-max))
+          (insert "Same thread:\n" (org-ql-view--format-element
+                                    x))))
+      ;; TODO Abstract this into common status-buffer logic
+      (when-let ((win (get-buffer-window
+                       (get-buffer-create el-secretario-status-buffer-name))))
+        (with-selected-window win
+          (fit-window-to-buffer))) )))
+
+
 (provide 'el-secretario-notmuch)
 ;;; el-secretario-notmuch.el ends here

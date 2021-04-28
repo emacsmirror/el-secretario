@@ -54,6 +54,14 @@ In general functions and variables that are for users follow the format
 A very simple module that goes through your email in chronological order. The
 relevant function is just ~el-secretario-notmuch-make-source~, look at it's
 docstring for more info.
+
+*** Capturing
+#+begin_src emacs-lisp
+(setq org-capture-templates
+      '(("e" "Email" entry (file "~/org/orgzly/InboxComputer.org")
+         "* TODO %a
+[[notmuch:%(el-secretario-notmuch-capture-get-thread-link)][Thread]]")))
+#+end_src
 ** Org
 :PROPERTIES:
 :ID:       e378a8e0-2701-41e7-8814-b6a0b0186664
