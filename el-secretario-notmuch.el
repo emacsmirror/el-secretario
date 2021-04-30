@@ -99,6 +99,10 @@ To be used in a capture template. "
   (with-current-buffer (org-capture-get :original-buffer)
     (concat "[[notmuch:" notmuch-show-thread-id "][Thread]]")))
 
+(defun el-secretario-notmuch-open-link-for-current-email ()
+  (interactive)
+  (el-secretario-status-buffer-activate)
+  (el-secretario-notmuch--open-link-for-current-email))
 
 (defun el-secretario-notmuch--open-link-for-current-email ()
   (let ((id notmuch-show-thread-id))

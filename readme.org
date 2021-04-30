@@ -55,13 +55,23 @@ A very simple module that goes through your email in chronological order. The
 relevant function is just ~el-secretario-notmuch-make-source~, look at it's
 docstring for more info.
 
-*** Capturing
+*** Capturing and backlinks
+=el-secretario-notmuch-capture-get-thread-link= can be used in a capture
+template to get a link to the thread of the current email message. During review
+org entries that link to the current thread or message will automatically show
+in the status buffer as backlinks.
 #+begin_src emacs-lisp
 (setq org-capture-templates
-      '(("e" "Email" entry (file "~/org/orgzly/InboxComputer.org")
+      '(("e" "Email" entry (file "~/org/Inbox.org")
          "* TODO %a
-[[notmuch:%(el-secretario-notmuch-capture-get-thread-link)][Thread]]")))
+%(el-secretario-notmuch-capture-get-thread-link)")))
 #+end_src
+
+Note that the backlinks buffer will only be populated when
+=el-secretario--notmuch-search-show-thread= (our own version of
+=notmuch-show-next-thread-show=) is called. =M-x
+el-secretario-notmuch-open-link-for-current-email= can be used to open and
+populate the backlinks buffer manually.
 ** Org
 :PROPERTIES:
 :ID:       e378a8e0-2701-41e7-8814-b6a0b0186664
