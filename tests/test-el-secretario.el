@@ -137,7 +137,7 @@
      (list (el-secretario-org-make-source '(todo)
                                           (list file)
                                           :next-item-hook #'next-item-fun
-                                          :sort-fun (lambda (x y)
+                                          :compare-fun (lambda (x y)
                                                       (< (plist-get x :marker)
                                                          (plist-get y :marker)))
                                           :shuffle-p t)))
@@ -334,7 +334,7 @@ SCHEDULED: <2021-02-02>
      (list (el-secretario-org-make-source '(todo)
                                           (list file)
                                           :next-item-hook #'next-item-fun
-                                          :sort-fun #'el-secretario-space-compare-le
+                                          :compare-fun #'el-secretario-space-compare-le
                                           :shuffle-p t)))
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))

@@ -54,12 +54,31 @@ subtrees that are also todos. It can then be useful to see the context when revi
       (outline-hide-leaves)))
   (outline-show-entry))
 
-(cl-defun el-secretario-org-make-source (query files &key next-item-hook sort-fun hydra shuffle-p ids)
-  "QUERY is an arbitrary org-ql query. FILES is the files to search through.
+(cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun hydra shuffle-p ids)
+  "
+
+QUERY is an arbitrary org-ql query.
+
+FILES is the files to search through.
+
 NEXT-ITEM-HOOk is called on each heading.
-HYDRA is an hydra to use during review of this source."
+
+HYDRA is an hydra to use during review of this source.
+
+IDS is a list of IDs of elements that should be added to the list
+of queried items.
+
+If SHUFFLE-P is non-nil, shuffle the list of queried items before
+reviewing.
+
+If COMPARE-FUN is non-nil, sort the list of queried items using
+that function. Sorting happens after shuffling if SHUFFLE-P is
+non-nil. COMPARE-FUN should take two arguments which are returned
+by `el-secretario-org--parse-headline' See
+`el-secretario-space-compare-le' for an example sorting
+function."
   (make-el-secretario-source
-   :init-function  (lambda () (el-secretario-org-init query files sort-fun shuffle-p ids))
+   :init-function  (lambda () (el-secretario-org-init query files compare-fun shuffle-p ids))
    :next-function  #'el-secretario-org-next-item
    :prev-function  #'el-secretario-org-previous-item
    :hydra-body (or hydra #'el-secretario-org-hydra/body)
@@ -73,7 +92,7 @@ HYDRA is an hydra to use during review of this source."
 (defvar el-secretario--org-items-done nil
   "A list of items that has been reviewed")
 
-(defun el-secretario-org-init (query &optional files sort-fun shuffle-p ids )
+(defun el-secretario-org-init (query &optional files compare-fun shuffle-p ids )
   "TODO"
   (setq el-secretario--org-items-left
         (append (-map (lambda (id)
@@ -89,8 +108,8 @@ HYDRA is an hydra to use during review of this source."
                                    :action #'el-secretario-org--parse-headline)))
   (when shuffle-p
     (el-secretario--shuffle el-secretario--org-items-left))
-  (when sort-fun
-    (setq el-secretario--org-items-left (sort el-secretario--org-items-left sort-fun)))
+  (when compare-fun
+    (setq el-secretario--org-items-left (sort el-secretario--org-items-left compare-fun)))
   (setq el-secretario--org-items-done nil)
   (funcall (el-secretario-source-hydra-body
             (car el-secretario-current-source-list)))
@@ -179,7 +198,9 @@ That information is the currently visible schedule dates and deadlines."
     (error nil)))
 
 (defun el-secretario-org--parse-headline ()
-  "Parse headline at point and put in some more relevant information."
+  "Parse headline at point and put in some more relevant information.
+This is like `org-element-headline-parser' but with some extra properties put in.
+"
   (--> (org-element-headline-parser (line-end-position))
     (nth 1 it)
     (plist-put it :file-name (buffer-file-name))

@@ -122,6 +122,11 @@ that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [
 - ~el-secretario-space-schedule-and-reset~
 - ~el-secretario-space-compare-le~
 
+  Passing this function as a comparison function to ~make-el-secretario-source~
+  will ensure that you review your items sorted so that the earliest scheduled
+  items comes first. This can be useful to create a queue of tasks that are
+  roughly sorted by how relevant they are.
+
 ** TODO Tasks
 This one is still a little bit weird and I don't exactly know what it's supposed
 to do so ignore it for now!
