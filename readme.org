@@ -120,6 +120,8 @@ that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [
 *** Relevant functions
 - ~el-secretario-space-reschedule~
 - ~el-secretario-space-schedule-and-reset~
+- ~el-secretario-space-compare-le~
+
 ** TODO Tasks
 This one is still a little bit weird and I don't exactly know what it's supposed
 to do so ignore it for now!

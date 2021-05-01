@@ -301,7 +301,55 @@ SCHEDULED: "
       (el-secretario-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
-              4))))
+              4)))
+  (it "can sort according to scheduled time"
+    (test-el-secretario-reset-file
+     (concat
+      "* TODO Third task
+SCHEDULED: <2021-03-03>
+* TODO Second task
+SCHEDULED: <2021-02-02>
+
+* TODO First task")
+     file)
+    (with-current-buffer file
+      (goto-char (point-min))
+      (let (x y)
+        (setq x (el-secretario-org--parse-headline))
+        (setq y (progn (outline-next-heading)
+                       (el-secretario-org--parse-headline) ))
+        (expect (el-secretario-space-compare-le x y)
+                :to-be nil)
+        (expect (el-secretario-space-compare-le y x)
+                :to-be t)
+        (setq x (el-secretario-org--parse-headline))
+        (setq y (progn (outline-next-heading)
+                      (el-secretario-org--parse-headline) ))
+        (expect (el-secretario-space-compare-le x y)
+                :to-be nil)
+        (expect (el-secretario-space-compare-le y x)
+                :to-be t)))
+
+    (el-secretario-start-session
+     (list (el-secretario-org-make-source '(todo)
+                                          (list file)
+                                          :next-item-hook #'next-item-fun
+                                          :sort-fun #'el-secretario-space-compare-le
+                                          :shuffle-p t)))
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO First task")
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :not :to-equal "* TODO Second task")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO Second task")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO Third task")))
 
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here

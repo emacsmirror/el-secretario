@@ -70,5 +70,22 @@ Resetting is done with `el-secretario-space-reset'"
   (el-secretario-space--reset)
   (call-interactively #'org-schedule))
 
+(defun el-secretario-space-compare-le (x y)
+  "Return t if X is scheduled before Y, nil otherwise.
+
+An unscheduled element is considered to be scheduled before all other elemens.
+
+The usecase for this is to pass it as sorting function to
+`el-secretario-org-make-source'.
+
+X and Y should be elements as returned by `el-secretario-org--parse-headline'.
+"
+  (if-let ((x-scheduled (plist-get x :scheduled)))
+      (if-let ((y-scheduled (plist-get y :scheduled)))
+          (time-less-p (org-timestamp-to-time x-scheduled)
+                       (org-timestamp-to-time y-scheduled))
+        nil)
+    t))
+
 (provide 'el-secretario-space)
 ;;; el-secretario-space.el ends here
