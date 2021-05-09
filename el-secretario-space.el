@@ -62,13 +62,13 @@ Where n is incremented by 1 for each time this function is called on that entry"
     (org-schedule nil (concat "+" delta "d")))
   (el-secretario-space--increment))
 
-(defun el-secretario-space-schedule-and-reset (&optional time)
+(defun el-secretario-space-schedule-and-reset (arg &optional time)
   "Like `org-schedule' but it also resets the delta property.
 TIME is passed through to `org-schedule'
 Resetting is done with `el-secretario-space-reset'"
-  (interactive)
+  (interactive "P")
   (el-secretario-space--reset)
-  (call-interactively #'org-schedule))
+  (org-schedule arg time))
 
 (defun el-secretario-space-compare-le (x y)
   "Return t if X is scheduled before Y, nil otherwise.
