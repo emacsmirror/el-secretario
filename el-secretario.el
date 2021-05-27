@@ -18,13 +18,22 @@
 ;;
 ;;
 ;;; Code:
+(require 'eieio)
+(require 'eieio-base)
+(require 'cl-lib)
 (require 'hydra)
 (require 'org-ql)
+(defclass el-secretario-source (eieio-named)
+  ((hydra :initarg :hydra
+          :protection :protected))
+  :abstract t)
 (require 'el-secretario-org)
 (require 'el-secretario-message)
 (require 'el-secretario-notmuch)
 (require 'el-secretario-space)
 (require 'el-secretario-tasks)
+
+
 (defvar el-secretario-is-testing nil
   "Determines if code is running in testing mode.
 
@@ -32,26 +41,19 @@ When a user is interacting with el-secretario this should always
 be nil. Set it to `t' if in testing
 ")
 
-
 (defhydra el-secretario-default-hydra ()
   ("n" el-secretario-next-item "next" :exit t)
   ("q" (el-secretario-end-sesion) "Quit" :exit t)
   ("/" nil "disable hydra"  :exit t))
 
+(cl-defmethod el-secretario--source-hydra ((obj el-secretario-org-source))
+  "Activate hydra of OBJ."
+  (funcall (oref obj hydra)))
+
 (defun el-secretario-activate-hydra ()
   (interactive)
   (when el-secretario-current-source-list
-    (funcall (el-secretario-source-hydra-body
-              (car el-secretario-current-source-list)))))
-
-
-(cl-defstruct el-secretario-source
-  init-function
-  next-function
-  prev-function
-  hydra-body
-  finished-hook
-  next-item-hook)
+    (el-secretario--source-hydra (car el-secretario-current-source-list))))
 
 (defvar el-secretario-current-source-list nil
   "TODO")
@@ -91,7 +93,7 @@ be nil. Set it to `t' if in testing
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
   (el-secretario-status-buffer-activate)
-  (funcall (el-secretario-source-init-function (car source-list))))
+  (el-secretario-init (car source-list)))
 
 (defun el-secretario-end-sesion ()
   (setq el-secretario--sesion-active nil)
@@ -102,8 +104,8 @@ be nil. Set it to `t' if in testing
   "Go to the next item of this session."
   (interactive)
   (when el-secretario-current-source-list
-    (funcall (el-secretario-source-next-function
-              (car el-secretario-current-source-list)))))
+    (el-secretario-source-next-item
+     (car el-secretario-current-source-list))))
 
 
 (defun el-secretario--next-source ()
@@ -114,8 +116,7 @@ be nil. Set it to `t' if in testing
               (car el-secretario-current-source-list))
         (pop el-secretario-current-source-list)
         (if el-secretario-current-source-list
-            (funcall (el-secretario-source-init-function
-                      (car el-secretario-current-source-list)))
+            (el-secretario-init (car el-secretario-current-source-list))
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))

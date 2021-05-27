@@ -54,6 +54,17 @@ subtrees that are also todos. It can then be useful to see the context when revi
       (outline-hide-leaves)))
   (outline-show-entry))
 
+(defclass el-secretario-org-source (el-secretario-source)
+  ((query :initarg :query)
+   (files :initarg :files)
+   (compare-fun :initarg :compare-fun)
+   (shuffle-p :initarg :shuffle-p)
+   (:next-item-hook :initarg :next-item-hook)
+   (ids :initarg :ids)
+   (items-left :initform '())
+   (items-done :initform '())))
+
+
 (cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun hydra shuffle-p ids)
   "
 
@@ -77,67 +88,61 @@ non-nil. COMPARE-FUN should take two arguments which are returned
 by `el-secretario-org--parse-headline' See
 `el-secretario-space-compare-le' for an example sorting
 function."
-  (make-el-secretario-source
-   :init-function  (lambda () (el-secretario-org-init query files compare-fun shuffle-p ids))
-   :next-function  #'el-secretario-org-next-item
-   :prev-function  #'el-secretario-org-previous-item
-   :hydra-body (or hydra #'el-secretario-org-hydra/body)
-   :finished-hook #'widen
-   :next-item-hook (or next-item-hook (lambda ()))) )
+  (el-secretario-org-source
+   :query query
+   :files files
+   :compare-fun compare-fun
+   :shuffle-p shuffle-p
+   :next-item-hook next-item-hook
+   :ids ids
+   :hydra (or hydra #'el-secretario-org-hydra/body)))
 
 
-(defvar el-secretario--org-items-left nil
-  "A list of items that should be reviewed")
-
-(defvar el-secretario--org-items-done nil
-  "A list of items that has been reviewed")
-
-(defun el-secretario-org-init (query &optional files compare-fun shuffle-p ids )
+(cl-defmethod el-secretario-init ((obj el-secretario-org-source))
   "TODO"
-  (setq el-secretario--org-items-left
-        (append (-map (lambda (id)
-                        (let ((m (org-id-find id 'marker)))
-                          (when m
-                            (with-current-buffer (marker-buffer m)
-                              (save-excursion
-                                (goto-char m)
-                                (el-secretario-org--parse-headline))))))
-                      ids)
-                (org-ql-select (or files
-                                   (org-agenda-files)) query
-                                   :action #'el-secretario-org--parse-headline)))
-  (when shuffle-p
-    (el-secretario--shuffle el-secretario--org-items-left))
-  (when compare-fun
-    (setq el-secretario--org-items-left (sort el-secretario--org-items-left compare-fun)))
-  (setq el-secretario--org-items-done nil)
-  (funcall (el-secretario-source-hydra-body
-            (car el-secretario-current-source-list)))
-  (el-secretario-org-next-item))
+  (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done) obj
+      (setq items-left
+            (append (-map (lambda (id)
+                            (let ((m (org-id-find id 'marker)))
+                              (when m
+                                (with-current-buffer (marker-buffer m)
+                                  (save-excursion
+                                    (goto-char m)
+                                    (el-secretario-org--parse-headline))))))
+                          ids)
+                    (org-ql-select (or files
+                                       (org-agenda-files)) query
+                                       :action #'el-secretario-org--parse-headline)))
+    (when shuffle-p
+      (el-secretario--shuffle items-left))
+    (when compare-fun
+      (setq items-left (sort items-left compare-fun)))
+    (setq items-done nil)
+    (el-secretario-activate-hydra)
+    (el-secretario-source-next-item obj)))
 
-(defun el-secretario-org-next-item ()
+
+(cl-defmethod el-secretario-source-next-item ((obj el-secretario-org-source))
   "TODO"
+  (with-slots (items-left items-done) obj
+    (if-let ((item (pop items-left)))
+        (let ((buf (plist-get item :buffer ))
+              (pos (plist-get item :marker)))
+          (outline-show-all)
+          (push (list buf pos) items-done)
+          (switch-to-buffer buf)
+          (widen)
+          (goto-char pos)
+          (el-secretario-org-narrow)
+          (funcall (oref obj :next-item-hook))
 
-  (if-let ((item (pop el-secretario--org-items-left)))
-      (let ((buf (plist-get item :buffer ))
-            (pos (plist-get item :marker)))
-        (outline-show-all)
-        (push (list buf pos) el-secretario--org-items-done)
-        (switch-to-buffer buf)
-        (widen)
-        (goto-char pos)
-        (el-secretario-org-narrow)
-
-        (funcall (el-secretario-source-next-item-hook
-                  (car el-secretario-current-source-list)))
-        (el-secretario-org-update-status-buffer)
-        (funcall (el-secretario-source-hydra-body
-                  (car el-secretario-current-source-list)))
-        (el-secretario-tasks--run-task-hook
-         (el-secretario-org--parse-headline)
-         :EL-SECRETARIO-REVIEW-TASK-HOOK))
-    (message "No next item!")
-    (el-secretario--next-source)))
+          (el-secretario-org-update-status-buffer)
+          (el-secretario-activate-hydra)
+          (el-secretario-tasks--run-task-hook
+           (el-secretario-org--parse-headline)
+           :EL-SECRETARIO-REVIEW-TASK-HOOK))
+      (message "No next item!")
+      (el-secretario--next-source))))
 
 (defvar date nil)
 (defun el-secretario-org-update-status-buffer ()

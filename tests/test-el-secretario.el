@@ -91,6 +91,7 @@
 
 
   (before-each
+    (setq org-directory "/tmp/el-secretario")
 
     (test-el-secretario-reset-file el-secretario-org-buffer-s file)
 
