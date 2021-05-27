@@ -35,18 +35,18 @@
                          (white . 37))
      el-secretario-is-testing t)
 (defvar el-secretario-org-buffer-s  "
-* TODO FOO
+* TODO FOO :a:
 :PROPERTIES:
 :EL-SECRETARIO-PRIORITY: 74
 :END:
 
-* TODO bar
+* TODO bar :b:
 :PROPERTIES:
 :EL-SECRETARIO-PRIORITY: 85
 :EL-SECRETARIO-BEGIN-TASK-HOOK: (insert \"foobar\")
 :END:
 
-* TODO baz
+* TODO baz :a:
 :PROPERTIES:
 :EL-SECRETARIO-PRIORITY: 106
 :EL-SECRETARIO-FINISH-TASK-HOOK: (insert \"foobar\")
@@ -60,7 +60,7 @@
 :PROPERTIES:
 :ID:       sub-task2
 :END:
-* TODO Daily review
+* TODO Daily review :b:
 :PROPERTIES:
 :EL-SECRETARIO-BEGIN-TASK-HOOK: (progn  (el-secretario-tasks-subtask-begin))
 :END:
@@ -86,6 +86,17 @@
        (save-buffer)
        (goto-char 0))))
 
+(defun foo ()
+  (interactive)
+  (el-secretario-start-session (list (el-secretario-org-make-source '(tags "a")
+                                                                    (list (find-file-noselect
+                                                                           "/tmp/el-secretario/tmp-test.org"))
+                                                                      :next-item-hook #'next-item-fun)
+                                       (el-secretario-org-make-source '(tags "b")
+                                                                      (list (find-file-noselect
+                                                                           "/tmp/el-secretario/tmp-test.org"))
+                                                                      :next-item-hook #'next-item-fun))))
+
 (describe "Org module"
   :var* (file source next-item-fun review-item-fun)
 
@@ -107,6 +118,11 @@
 
   (it "can run a test!"
     (expect t :to-be t))
+
+  (it "Starting a session only calls next-item once"
+    (el-secretario-start-session source)
+    (expect 'next-item-fun :to-have-been-called-times 1))
+
 
   (it "runs the next-item hook on each todo heading"
     (el-secretario-start-session source)
@@ -131,7 +147,7 @@
     (el-secretario-previous-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO FOO"))
+            :to-equal "* TODO FOO :a:"))
 
   (it "should only call the next-item hook once on each todo heading"
     (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
@@ -142,6 +158,30 @@
     (el-secretario-previous-item)
     (el-secretario-next-item)
     (expect 'next-item-fun :to-have-been-called-times 2))
+  (it "can go backwards and forwards across sources"
+    (el-secretario-start-session (list (el-secretario-org-make-source '(tags "a")
+                                                                      (list file)
+                                                                      :next-item-hook #'next-item-fun)
+                                       (el-secretario-org-make-source '(tags "b")
+                                                                      (list file)
+                                                                      :next-item-hook #'next-item-fun)))
+
+    (el-secretario-next-item)
+    (el-secretario-next-item)
+    (el-secretario-next-item)
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO bar :b:")
+    (el-secretario-previous-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO baz :a:")
+    (el-secretario-next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO bar :b:")
+    (expect 'next-item-fun :to-have-been-called-times 2) )
 
   (it "uses the directly provided ids"
     (el-secretario-start-session
@@ -165,15 +205,15 @@
 
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO FOO")
+            :to-equal "* TODO FOO :a:")
     (el-secretario-next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO bar")
+            :to-equal "* TODO bar :b:")
     (el-secretario-next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO baz")
+            :to-equal "* TODO baz :a:")
     (el-secretario-next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
@@ -185,7 +225,7 @@
     (el-secretario-next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO Daily review")))
+            :to-equal "* TODO Daily review :b:")))
 
 (describe "Tasks module"
   :var* (file source next-item-fun review-item-fun)

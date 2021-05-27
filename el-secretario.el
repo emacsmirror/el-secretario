@@ -119,9 +119,8 @@ be nil. Set it to `t' if in testing
   "Switch to the next source in this session."
   (if el-secretario-current-source-list
       (progn
-        (push el-secretario-current-source-list-done
-              (car el-secretario-current-source-list))
-        (pop el-secretario-current-source-list)
+        (push (pop el-secretario-current-source-list)
+              el-secretario-current-source-list-done)
         (if el-secretario-current-source-list
             (el-secretario-source-init (car el-secretario-current-source-list))
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
@@ -129,6 +128,16 @@ be nil. Set it to `t' if in testing
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
     (el-secretario-status-buffer-deactivate)
     (el-secretario-end-sesion)))
+
+(defun el-secretario--previous-source ()
+  (if el-secretario-current-source-list-done
+      (progn
+        (push (pop el-secretario-current-source-list-done)
+              el-secretario-current-source-list)
+        (if el-secretario-current-source-list
+            (el-secretario-previous-item)
+          (message "ooflakjdlkf")))
+    (message "No more previous sources!")))
 
 
 (defun el-secretario-status-buffer-activate ()
