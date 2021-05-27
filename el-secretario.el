@@ -64,13 +64,28 @@ be nil. Set it to `t' if in testing
 (defvar el-secretario--original-buffer nil
   "The buffer the user was in before activating el-secretario.")
 
+(defvar el-secretario--sesion-active nil
+  "t when a session is active")
+
+(defvar el-secretario-sources '())
+
 (defhydra el-secretario--hydra-quit (:exit t
-                                     :foreign-keys run)
+                        :foreign-keys run)
   ("q"  (when el-secretario--original-buffer
           (switch-to-buffer el-secretario--original-buffer)) "Quit"))
 
+(defun secretary ()
+  (interactive)
+  (if el-secretario--sesion-active
+      (progn
+        (el-secretario-activate-hydra))
+    (el-secretario-start-session
+     (alist-get (completing-read "Choose what to do" el-secretario-sources)
+                el-secretario-sources nil nil #'equal))))
+
 ;;;###autoload
 (defun el-secretario-start-session (source-list)
+  (setq el-secretario--sesion-active t)
   (setq el-secretario--original-buffer (current-buffer))
   (setq el-secretario-current-source-list source-list)
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
@@ -79,6 +94,7 @@ be nil. Set it to `t' if in testing
   (funcall (el-secretario-source-init-function (car source-list))))
 
 (defun el-secretario-end-sesion ()
+  (setq el-secretario--sesion-active nil)
   (switch-to-buffer el-secretario--original-buffer)
   (el-secretario-status-buffer-deactivate))
 
