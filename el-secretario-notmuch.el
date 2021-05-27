@@ -19,30 +19,34 @@
 ;;
 ;;; Code:
 
+(defclass el-secretario-notmuch-source (el-secretario-source)
+  ((query :initarg :query)
+   (:next-item-hook :initarg :next-item-hook)))
+
 (defun el-secretario-notmuch-make-source (query &optional next-item-hook hydra)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source"
   (make-el-secretario-source
-    :init-function  (lambda () (el-secretario--notmuch-init query))
-    :next-function  #'el-secretario--notmuch-show-next-thread
-    :prev-function  #'notmuch-show-previous-thread-show
-    :hydra-body (or hydra #'el-secretario-default-hydra/body)
-    :finished-hook (lambda ())
-    :next-item-hook (or next-item-hook (lambda ()))) )
+   :hydra-body (or hydra #'el-secretario-default-hydra/body)
+   :next-item-hook (or next-item-hook (lambda ()))) )
 
-(defun el-secretario--notmuch-init (&optional query)
-  (notmuch-search (or query "tag:unread")
-                  't
-                  nil
-                  0
-                  nil)
-  (notmuch-search-first-thread)
-  (sit-for 0.1)
-  (el-secretario--notmuch-search-show-thread)
-  (funcall (el-secretario-source-hydra-body
-            (car el-secretario-current-source-list))))
+(cl-defmethod el-secretario-source-init ((obj el-secretario-notmuch-source))
+  (with-slots (&optional query) obj
+    (notmuch-search (or query "tag:unread")
+                    't
+                    nil
+                    0
+                    nil)
+    (notmuch-search-first-thread)
+    (sit-for 0.1)
+    (el-secretario--notmuch-search-show-thread)
+    (funcall (el-secretario-source-hydra-body
+              (car el-secretario-current-source-list)))))
+
+(cl-defmethod el-secretario-source-next-item ((obj el-secretario-notmuch-source))
+  (el-secretario--notmuch-show-next-thread))
 
 (defun el-secretario--notmuch-show-next-thread (&optional previous)
   "Like `notmuch-show-next-thread' but call `el-secretario--notmuch-search-show-thread' instead"
