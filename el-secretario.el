@@ -93,7 +93,7 @@ be nil. Set it to `t' if in testing
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
   (el-secretario-status-buffer-activate)
-  (el-secretario-init (car source-list)))
+  (el-secretario-source-init (car source-list)))
 
 (defun el-secretario-end-sesion ()
   (setq el-secretario--sesion-active nil)
@@ -107,6 +107,13 @@ be nil. Set it to `t' if in testing
     (el-secretario-source-next-item
      (car el-secretario-current-source-list))))
 
+(defun el-secretario-previous-item ()
+  "Go to the previous item of this session."
+  (interactive)
+  (when el-secretario-current-source-list
+    (el-secretario-source-previous-item
+     (car el-secretario-current-source-list))))
+
 
 (defun el-secretario--next-source ()
   "Switch to the next source in this session."
@@ -116,7 +123,7 @@ be nil. Set it to `t' if in testing
               (car el-secretario-current-source-list))
         (pop el-secretario-current-source-list)
         (if el-secretario-current-source-list
-            (el-secretario-init (car el-secretario-current-source-list))
+            (el-secretario-source-init (car el-secretario-current-source-list))
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))

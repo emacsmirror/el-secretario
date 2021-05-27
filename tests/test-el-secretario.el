@@ -122,6 +122,27 @@
     (dotimes (_ 7)
       (el-secretario-next-item))
     (expect 'review-item-fun :to-have-been-called-times 1))
+  (it "can forwards and backwards"
+    (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                      (list file)
+                                                                      :next-item-hook #'next-item-fun)))
+
+    (el-secretario-next-item)
+    (el-secretario-previous-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO"))
+
+  (it "should only call the next-item hook once on each todo heading"
+    (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                      (list file)
+                                                                      :next-item-hook #'next-item-fun)))
+
+    (el-secretario-next-item)
+    (el-secretario-previous-item)
+    (el-secretario-next-item)
+    (expect 'next-item-fun :to-have-been-called-times 2))
+
   (it "uses the directly provided ids"
     (el-secretario-start-session
      (list (el-secretario-org-make-source '(not (todo))
@@ -132,15 +153,14 @@
     (dotimes (_ 7)
       (el-secretario-next-item))
     (expect 'next-item-fun :to-have-been-called-times 2))
-
   (it "sorts the queried items"
     (el-secretario-start-session
      (list (el-secretario-org-make-source '(todo)
                                           (list file)
                                           :next-item-hook #'next-item-fun
                                           :compare-fun (lambda (x y)
-                                                      (< (plist-get x :marker)
-                                                         (plist-get y :marker)))
+                                                         (< (plist-get x :marker)
+                                                            (plist-get y :marker)))
                                           :shuffle-p t)))
 
     (expect (buffer-substring-no-properties (line-beginning-position)

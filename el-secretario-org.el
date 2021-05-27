@@ -64,6 +64,7 @@ subtrees that are also todos. It can then be useful to see the context when revi
    (shuffle-p :initarg :shuffle-p)
    (:next-item-hook :initarg :next-item-hook)
    (ids :initarg :ids)
+   (current-item :initform nil)
    (items-left :initform '())
    (items-done :initform '())))
 
@@ -101,7 +102,7 @@ function."
    :hydra (or hydra #'el-secretario-org-hydra/body)))
 
 
-(cl-defmethod el-secretario-init ((obj el-secretario-org-source))
+(cl-defmethod el-secretario-source-init ((obj el-secretario-org-source))
   "TODO"
   (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done) obj
       (setq items-left
@@ -127,17 +128,20 @@ function."
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-org-source))
   "TODO"
-  (with-slots (items-left items-done) obj
+  (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-left)))
         (let ((buf (plist-get item :buffer ))
               (pos (plist-get item :marker)))
           (outline-show-all)
-          (push (list buf pos) items-done)
           (switch-to-buffer buf)
           (widen)
           (goto-char pos)
           (el-secretario-org-narrow)
-          (funcall (oref obj :next-item-hook))
+          (unless (plist-get item :called-next-item-hook)
+            (funcall (oref obj :next-item-hook)))
+          (when current-item
+            (push current-item items-done))
+          (setq current-item (plist-put item :called-next-item-hook t) )
 
           (el-secretario-org-update-status-buffer)
           (el-secretario-activate-hydra)
@@ -146,6 +150,29 @@ function."
            :EL-SECRETARIO-REVIEW-TASK-HOOK))
       (message "No next item!")
       (el-secretario--next-source))))
+
+(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-org-source))
+  "TODO"
+  (with-slots (items-left items-done current-item) obj
+    (if-let ((item (pop items-done)))
+        (let ((buf (plist-get item :buffer))
+              (pos (plist-get item :marker)))
+          (outline-show-all)
+          (switch-to-buffer buf)
+          (widen)
+          (goto-char pos)
+          (el-secretario-org-narrow)
+          (when current-item
+            (push current-item items-left))
+          (setq current-item item)
+
+          (el-secretario-org-update-status-buffer)
+          (el-secretario-activate-hydra)
+          (el-secretario-tasks--run-task-hook
+           (el-secretario-org--parse-headline)
+           :EL-SECRETARIO-REVIEW-TASK-HOOK))
+      (message "No previous item!")
+      (el-secretario--previous-source))))
 
 (defvar date nil)
 (defun el-secretario-org-update-status-buffer ()
