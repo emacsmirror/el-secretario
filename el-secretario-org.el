@@ -125,29 +125,36 @@ function."
     (el-secretario-activate-hydra)
     (el-secretario-source-next-item obj)))
 
+(cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
+  (with-slots (current-item) obj
+
+    (let ((buf (plist-get current-item :buffer ))
+          (pos (plist-get current-item :marker)))
+      (outline-show-all)
+      (switch-to-buffer buf)
+      (widen)
+      (goto-char pos)
+      (el-secretario-org-narrow)
+      (unless (plist-get current-item :called-next-item-hook)
+        (funcall (oref obj :next-item-hook)))
+      (setq current-item (plist-put current-item :called-next-item-hook t))
+
+      (el-secretario-org-update-status-buffer)
+      (el-secretario-activate-hydra)
+      (el-secretario-tasks--run-task-hook
+       (el-secretario-org--parse-headline)
+       :EL-SECRETARIO-REVIEW-TASK-HOOK))))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-org-source))
   "TODO"
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-left)))
-        (let ((buf (plist-get item :buffer ))
-              (pos (plist-get item :marker)))
-          (outline-show-all)
-          (switch-to-buffer buf)
-          (widen)
-          (goto-char pos)
-          (el-secretario-org-narrow)
-          (unless (plist-get item :called-next-item-hook)
-            (funcall (oref obj :next-item-hook)))
+        (progn
           (when current-item
             (push current-item items-done))
-          (setq current-item (plist-put item :called-next-item-hook t) )
+          (setq current-item item)
+          (el-secretario-source-activate-item obj))
 
-          (el-secretario-org-update-status-buffer)
-          (el-secretario-activate-hydra)
-          (el-secretario-tasks--run-task-hook
-           (el-secretario-org--parse-headline)
-           :EL-SECRETARIO-REVIEW-TASK-HOOK))
       (message "No next item!")
       (el-secretario--next-source))))
 
@@ -155,22 +162,11 @@ function."
   "TODO"
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-done)))
-        (let ((buf (plist-get item :buffer))
-              (pos (plist-get item :marker)))
-          (outline-show-all)
-          (switch-to-buffer buf)
-          (widen)
-          (goto-char pos)
-          (el-secretario-org-narrow)
+        (progn
           (when current-item
             (push current-item items-left))
           (setq current-item item)
-
-          (el-secretario-org-update-status-buffer)
-          (el-secretario-activate-hydra)
-          (el-secretario-tasks--run-task-hook
-           (el-secretario-org--parse-headline)
-           :EL-SECRETARIO-REVIEW-TASK-HOOK))
+          (el-secretario-source-activate-item obj))
       (message "No previous item!")
       (el-secretario--previous-source))))
 
