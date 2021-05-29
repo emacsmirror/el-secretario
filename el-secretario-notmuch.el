@@ -28,8 +28,9 @@
 QUERY is a normal notmuch query.
 NEXT-ITEM-HOOk is called on each heading.
 HYDRA is an hydra to use during review of this source"
-  (make-el-secretario-source
-   :hydra-body (or hydra #'el-secretario-default-hydra/body)
+  (el-secretario-notmuch-source
+   :hydra (or hydra #'el-secretario-default-hydra/body)
+   :query query
    :next-item-hook (or next-item-hook (lambda ()))) )
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-notmuch-source))
