@@ -23,6 +23,7 @@
   ((query :initarg :query)
    (:next-item-hook :initarg :next-item-hook)))
 
+
 (defun el-secretario-notmuch-make-source (query &optional next-item-hook hydra)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
@@ -33,21 +34,45 @@ HYDRA is an hydra to use during review of this source"
    :query query
    :next-item-hook (or next-item-hook (lambda ()))) )
 
-(cl-defmethod el-secretario-source-init ((obj el-secretario-notmuch-source))
-  (with-slots (&optional query) obj
+(cl-defmethod el-secretario-source-activate ((obj el-secretario-notmuch-source) &optional backwards)
+  (el-secretario-source-init obj backwards))
+
+(cl-defmethod el-secretario-source-init ((obj el-secretario-notmuch-source) &optional backwards)
+  (with-slots (query) obj
     (notmuch-search (or query "tag:unread")
-                    't
+                    t
                     nil
                     0
                     nil)
-    (notmuch-search-first-thread)
     (sit-for 0.1)
+    (if backwards
+        (notmuch-search-last-thread)
+      (notmuch-search-first-thread))
     (el-secretario--notmuch-search-show-thread)
-    (funcall (el-secretario-source-hydra-body
-              (car el-secretario-current-source-list)))))
+    (el-secretario-activate-hydra)))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-notmuch-source))
   (el-secretario--notmuch-show-next-thread))
+(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-notmuch-source))
+  (el-secretario--notmuch-show-next-thread t))
+
+;;
+;; The logic for detecting when to call next-source or previous-source is quite
+;; unintuitive. The text below is the content after calling `notmuch-search'.
+;; The cursor is on the first line. `(el-secretario-notmuch--notmuch-show-next-thread t)' will try to
+;; go up and fail because `(notmuch-search-previous-thread)' tries to up one
+;; line and fails. In that case it returns nil and we should call
+;; `el-secretario--previous-source'.
+;;
+;; The other case is when the cursor is on the second line.
+;; `(el-secretario-notmuch--notmuch-show-next-thread)' will succed and place the cursor on the third
+;; line. There `el-secretario--notmuch-search-show-thread' will fail because it
+;; can't get a thread-id because it isn't on a line with a thread. In that case
+;; we call `el-secretario--next-source'
+;;
+;; 2020-02-13 [1/1]   Sender foo    Subject a           (tagA)
+;; 2020-06-08 [1/1]   Sender bar    Subject b           (tagB)
+;; End of search results.
 
 (defun el-secretario--notmuch-show-next-thread (&optional previous)
   "Like `notmuch-show-next-thread' but call `el-secretario--notmuch-search-show-thread' instead"
@@ -57,9 +82,12 @@ HYDRA is an hydra to use during review of this source"
     (when (buffer-live-p parent-buffer)
       (switch-to-buffer parent-buffer)
       (and (if previous
-	       (notmuch-search-previous-thread)
+	       (if (notmuch-search-previous-thread)
+                   t
+                 (el-secretario--previous-source)
+                 nil)
 	     (notmuch-search-next-thread))
-	   (el-secretario--notmuch-search-show-thread)))))
+	   (el-secretario--notmuch-search-show-thread previous)))))
 
 
 (defun el-secretario--notmuch-search-show-thread (&optional elide-toggle)
