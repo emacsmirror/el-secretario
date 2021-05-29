@@ -119,6 +119,19 @@ be nil. Set it to `t' if in testing
   "Activate hydra of OBJ."
   (oref obj is-initialized))
 
+(cl-defmethod el-secretario-source-init :after ((obj el-secretario-source) &optional backwards)
+  "Set the `is-initialized' flag after a source has been initialized."
+  (with-slots (is-initialized) obj
+    (setq is-initialized t)))
+
+(cl-defmethod el-secretario-source-init :around ((obj el-secretario-source) &optional backwards)
+  "Make sure that a source is only initialized once. If a source
+is already initialized and this method is called, call `el-secretario-source-activate' instead."
+  (if (el-secretario-source-initialized-p obj)
+      (el-secretario-source-activate obj backwards)
+    (cl-call-next-method)))
+
+
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-source))
   (display-warning "This source doesn't implement the activate-item method!"))
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-source))
@@ -135,9 +148,7 @@ be nil. Set it to `t' if in testing
         (push (pop el-secretario-current-source-list)
               el-secretario-current-source-list-done)
         (if el-secretario-current-source-list
-            (if (el-secretario-source-initialized-p (car el-secretario-current-source-list))
-                (el-secretario-source-activate (car el-secretario-current-source-list))
-              (el-secretario-source-init (car el-secretario-current-source-list)))
+            (el-secretario-source-init (car el-secretario-current-source-list))
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
@@ -150,7 +161,7 @@ be nil. Set it to `t' if in testing
         (push (pop el-secretario-current-source-list-done)
               el-secretario-current-source-list)
         (if el-secretario-current-source-list
-            (el-secretario-source-activate (car el-secretario-current-source-list) 'backward)
+            (el-secretario-source-init (car el-secretario-current-source-list) 'backward)
           (message "ooflakjdlkf")))
     (message "No more previous sources!")))
 

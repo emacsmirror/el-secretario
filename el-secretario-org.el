@@ -108,30 +108,27 @@ function."
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional backwards)
   "TODO"
-  (if (el-secretario-source-initialized-p obj)
-
-      (el-secretario-source-activate-item obj)
-    (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done is-initialized) obj
-      (setq is-initialized t)
-      (setq items-left
-            (append (-map (lambda (id)
-                            (let ((m (org-id-find id 'marker)))
-                              (when m
-                                (with-current-buffer (marker-buffer m)
-                                  (save-excursion
-                                    (goto-char m)
-                                    (el-secretario-org--parse-headline))))))
-                          ids)
-                    (org-ql-select (or files
-                                       (org-agenda-files)) query
-                                       :action #'el-secretario-org--parse-headline)))
-      (when shuffle-p
-        (el-secretario--shuffle items-left))
-      (when compare-fun
-        (setq items-left (sort items-left compare-fun)))
-      (setq items-done nil))
-    (el-secretario-activate-hydra)
-    (el-secretario-source-next-item obj)))
+  (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done is-initialized) obj
+    (setq is-initialized t)
+    (setq items-left
+          (append (-map (lambda (id)
+                          (let ((m (org-id-find id 'marker)))
+                            (when m
+                              (with-current-buffer (marker-buffer m)
+                                (save-excursion
+                                  (goto-char m)
+                                  (el-secretario-org--parse-headline))))))
+                        ids)
+                  (org-ql-select (or files
+                                     (org-agenda-files)) query
+                                     :action #'el-secretario-org--parse-headline)))
+    (when shuffle-p
+      (el-secretario--shuffle items-left))
+    (when compare-fun
+      (setq items-left (sort items-left compare-fun)))
+    (setq items-done nil))
+  (el-secretario-activate-hydra)
+  (el-secretario-source-next-item obj))
 
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
   (with-slots (current-item) obj
