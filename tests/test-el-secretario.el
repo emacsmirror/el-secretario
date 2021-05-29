@@ -176,12 +176,12 @@
     (el-secretario-previous-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO baz :a:")
+            :to-equal "** TODO subtask2")
     (el-secretario-next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO bar :b:")
-    (expect 'next-item-fun :to-have-been-called-times 2) )
+    (expect 'next-item-fun :to-have-been-called-times 5) )
 
   (it "uses the directly provided ids"
     (el-secretario-start-session

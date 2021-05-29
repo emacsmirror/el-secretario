@@ -25,7 +25,8 @@
 (require 'org-ql)
 (defclass el-secretario-source (eieio-named)
   ((hydra :initarg :hydra
-          :protection :protected))
+          :protection :protected)
+   (is-initialized :initform nil))
   :abstract t)
 (require 'el-secretario-org)
 (require 'el-secretario-message)
@@ -46,7 +47,7 @@ be nil. Set it to `t' if in testing
   ("q" (el-secretario-end-sesion) "Quit" :exit t)
   ("/" nil "disable hydra"  :exit t))
 
-(cl-defmethod el-secretario--source-hydra ((obj el-secretario-org-source))
+(cl-defmethod el-secretario--source-hydra ((obj el-secretario-source))
   "Activate hydra of OBJ."
   (funcall (oref obj hydra)))
 
@@ -114,6 +115,18 @@ be nil. Set it to `t' if in testing
     (el-secretario-source-previous-item
      (car el-secretario-current-source-list))))
 
+(cl-defmethod el-secretario-source-initialized-p ((obj el-secretario-source))
+  "Activate hydra of OBJ."
+  (oref obj is-initialized))
+
+(cl-defmethod el-secretario-source-activate-item ((obj el-secretario-source))
+  (display-warning "This source doesn't implement the activate-item method!"))
+(cl-defmethod el-secretario-source-next-item ((obj el-secretario-source))
+  (display-warning "This source doesn't implement the next-item method!"))
+(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-source))
+  (display-warning "This source doesn't implement the previous-item method!"))
+(cl-defmethod el-secretario-source-activate ((obj el-secretario-source))
+  (display-warning "This source doesn't implement the activate"))
 
 (defun el-secretario--next-source ()
   "Switch to the next source in this session."
@@ -122,7 +135,9 @@ be nil. Set it to `t' if in testing
         (push (pop el-secretario-current-source-list)
               el-secretario-current-source-list-done)
         (if el-secretario-current-source-list
-            (el-secretario-source-init (car el-secretario-current-source-list))
+            (if (el-secretario-source-initialized-p (car el-secretario-current-source-list))
+                (el-secretario-source-activate (car el-secretario-current-source-list))
+              (el-secretario-source-init (car el-secretario-current-source-list)))
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
@@ -135,7 +150,7 @@ be nil. Set it to `t' if in testing
         (push (pop el-secretario-current-source-list-done)
               el-secretario-current-source-list)
         (if el-secretario-current-source-list
-            (el-secretario-previous-item)
+            (el-secretario-source-activate (car el-secretario-current-source-list) 'backward)
           (message "ooflakjdlkf")))
     (message "No more previous sources!")))
 
