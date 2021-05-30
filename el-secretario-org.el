@@ -76,7 +76,7 @@ QUERY is an arbitrary org-ql query.
 
 FILES is the files to search through.
 
-NEXT-ITEM-HOOk is called on each heading.
+NEXT-ITEM-HOOK is called on each heading.
 
 HYDRA is an hydra to use during review of this source.
 
@@ -197,19 +197,7 @@ That information is the currently visible schedule dates and deadlines."
       (with-selected-window win
         (fit-window-to-buffer))))
 
-(defun el-secretario-org-previous-item ()
-  "TODO"
-  (pop el-secretario--org-items-done)
-  (unless (car el-secretario--org-items-done)
-    (cl-destructuring-bind (buf pos) (car el-secretario--org-items-done)
-      (push (list buf pos) el-secretario--org-items-left)
-      (widen)
-      (set-window-buffer (selected-window) buf)
-      (goto-char pos)
-      (el-secretario-org-narrow)
-      't)
-    (message "No next item!")
-    nil))
+
 
 (defun el-secretario-org-add-tag (&rest tags)
   "Add TAGS to current headline."
