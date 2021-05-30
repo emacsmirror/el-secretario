@@ -13,21 +13,20 @@ This was all very abstract so let's move on to a concrete example:
 
 ** Simple Configuration
 #+BEGIN_SRC emacs-lisp
-(defun my/dailyreview-secretary ()
-  (list
-
-   ;; First take care of email
-   (el-secretario-notmuch-make-source "tag:lists/emacs-orgmode")
-   ;; Then Take care of inbox
-   (el-secretario-org-make-source nil ("~/org/Inbox.org"))
-
-   ;; Go through TODOs
-   (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))
-
 ;; Create a function to start the review
 (defun el-secretario-daily-review ()
   (interactive)
-  (el-secretario-start-session (my/dailyreview-secretary)))
+  (el-secretario-start-session
+   (lambda ()
+     (list
+
+      ;; First take care of email
+      (el-secretario-notmuch-make-source "tag:lists/emacs-orgmode")
+      ;; Then Take care of inbox
+      (el-secretario-org-make-source nil ("~/org/Inbox.org"))
+
+      ;; Go through TODOs
+      (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))))
 #+END_SRC
 Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where it's used in action.
 
@@ -42,6 +41,22 @@ next item in your inbox. When you've refiled your tasks appropriately your
 secretary will go through all your existing todos over in =Todo.org=
 
 A more complete configuration can be found at [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my configuration]].
+
+* Vocabulary
+** Item
+:PROPERTIES:
+:ID:       42f4d0df-0e55-40ad-b881-eb36e40fdf7e
+:END:
+
+The fundamental building block. Items are the thing that you review from each
+source, for example an email or a todo.
+
+** Source
+
+A session consists of a list of sources. Each source consists of a list of items.
+
+The example above has one notmuch source, and two org sources.
+
 * The modules
 
 =el-secretario= comes with a set of modules that will help you with reviewing
@@ -140,6 +155,20 @@ to do so ignore it for now!
 - A hydra for actions to do on an item
 - A function that is called when a source is finished
 - A function that is called when arriving at the next item
+* Creating a new source
+A source is a [[info:eieio#Top][eieio]] class that inherits from ~el-secretario-source~. It needs to
+implement the following methods:
+- ~el-secretario-source-next-item~
+- ~el-secretario-source-previous-item~
+- ~el-secretario-source-activate~
+
+Optionally ~el-secretario-source-init~ can be implemented if your source needs
+to do some setup only once (e.g. setup some state).
+
+See the docstrings for respective method for what they are supposed to do.
+
+Each source should fill the ~hydra~ slot (as defined in ~el-secretario-source~)
+with a hydra.
 
 * Tasks
 Main entry point is ~el-secretario-tasks-choose-task~. See it's docstring for more info.

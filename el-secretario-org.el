@@ -109,7 +109,6 @@ function."
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional backwards)
   "TODO"
   (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done is-initialized) obj
-    (setq is-initialized t)
     (dolist (f files)
       (if (bufferp f)
           (with-current-buffer f

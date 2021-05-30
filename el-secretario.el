@@ -157,7 +157,10 @@ is already initialized and this method is called, call `el-secretario-source-act
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-source))
   "Go to the next item of source OBJ.
 
-It should call `el-secretario--next-source' if there are no more items."
+It should call `el-secretario--next-source' if there are no more items.
+
+Example:
+ For the notmuch module, this method goes to the next email."
   (display-warning "This source doesn't implement the next-item method!"))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-source))
@@ -174,7 +177,8 @@ activated. Subsequenct calls will redirect to
 `el-secretario-source-activate'.
 
 Implement this method if you need to setup state etc. for your
-source that only needs to happen once. The default behaviour is
+source that only needs to happen once. The default
+behaviour (i.e. if your source doesn 't implement this method) is
 to call `el-secretario-source-activate'.
 
 It should also do whatever is needed to bring up the relevant item to the user."
@@ -183,13 +187,12 @@ It should also do whatever is needed to bring up the relevant item to the user."
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-source))
   "Activate source OBJ.
 
-This method is called when an item from source OBJ is shown for
-the first time.
+This method is called when el-secretario switches to source
+OBJ (for example when the user calls `el-secretario-next-item'
+with no items left, so el-secretario switches to source OBJ).
 
 For example, the org module implements this method to bring up
-the correct org buffer, and go to the correct heading.
-
-"
+the correct org buffer, and go to the correct heading."
   (display-warning "This source doesn't implement the activate method"))
 
 (defun el-secretario--next-source ()
