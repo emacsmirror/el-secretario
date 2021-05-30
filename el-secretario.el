@@ -100,15 +100,22 @@ be nil. Set it to `t' if in testing
 (defun el-secretario-start-session (source-list)
   "Start session specified by SOURCE-LIST.
 
-Source list should be a list of newly instantiated sources.
-"
+SOURCE-LIST should be a list of newly instantiated sources, or
+SOURCE-LIST is a function that returns a list of newly instantiated sources."
   (setq el-secretario--sesion-active t)
   (setq el-secretario--original-buffer (current-buffer))
-  (setq el-secretario-current-source-list source-list)
+  (setq el-secretario-current-source-list
+        (--> (if (functionp source-list)
+                 (funcall source-list)
+               source-list)
+          (if (listp it)
+              it
+            (list it))))
+  (setq el-secretario-current-source-list-done nil)
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
   (el-secretario-status-buffer-activate)
-  (el-secretario-source-init (car source-list)))
+  (el-secretario-source-init (car el-secretario-current-source-list)))
 
 (defun el-secretario-end-sesion ()
   (setq el-secretario--sesion-active nil)

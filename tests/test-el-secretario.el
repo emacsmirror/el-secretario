@@ -137,6 +137,7 @@
                                                                       :ids '("sub-task1"))))
     (dotimes (_ 7)
       (el-secretario-next-item))
+    (expect 'next-item-fun :to-have-been-called-times 8)
     (expect 'review-item-fun :to-have-been-called-times 1))
   (it "can forwards and backwards"
     (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
@@ -225,7 +226,50 @@
     (el-secretario-next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
-            :to-equal "* TODO Daily review :b:")))
+            :to-equal "* TODO Daily review :b:"))
+  (describe "el-secretario-start-session"
+    (it "can accept a function as argument"
+      (el-secretario-start-session (lambda ()
+                                     (el-secretario-org-make-source
+                                      '(todo)
+                                      (list file)
+                                      :next-item-hook #'next-item-fun
+                                      :ids '("sub-task1"))))
+      (dotimes (_ 6)
+        (el-secretario-next-item))
+      (expect 'next-item-fun :to-have-been-called-times 7))
+
+    (it "can reuse a function accepted as an argument"
+      (let ((my-source (lambda ()
+                         (el-secretario-org-make-source
+                          '(todo)
+                          (list file)
+                          :next-item-hook #'next-item-fun
+                          :ids '("sub-task1")))))
+
+        (el-secretario-start-session my-source)
+
+        (expect (buffer-substring-no-properties (line-beginning-position)
+                                                (line-end-position))
+                :to-equal "** TODO subtask1")
+
+        (dotimes (_ 6)
+          (el-secretario-next-item))
+
+        (with-current-buffer file
+          ;; Invalidate org-ql's cache
+          (set-buffer-modified-p t))
+
+        (el-secretario-start-session my-source)
+
+        (expect (buffer-substring-no-properties (line-beginning-position)
+                                                (line-end-position))
+                :to-equal "** TODO subtask1")
+
+        (dotimes (_ 6)
+          (el-secretario-next-item))
+
+        (expect 'next-item-fun :to-have-been-called-times 14)))))
 
 (describe "Tasks module"
   :var* (file source next-item-fun review-item-fun)
