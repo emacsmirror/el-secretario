@@ -110,6 +110,12 @@ function."
   "TODO"
   (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done is-initialized) obj
     (setq is-initialized t)
+    (dolist (f files)
+      (if (bufferp f)
+          (with-current-buffer f
+            (widen))
+        (with-current-buffer (find-file-noselect f)
+          (widen))))
     (setq items-left
           (append (-map (lambda (id)
                           (let ((m (org-id-find id 'marker)))
