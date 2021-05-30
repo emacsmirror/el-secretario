@@ -25,6 +25,7 @@
 (require 'org-ql)
 (defclass el-secretario-source (eieio-named)
   ((hydra :initarg :hydra
+          :initform #'el-secretario-default-hydra/body
           :protection :protected)
    (is-initialized :initform nil))
   :abstract t
