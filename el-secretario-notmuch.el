@@ -35,9 +35,6 @@ HYDRA is an hydra to use during review of this source"
    :next-item-hook (or next-item-hook (lambda ()))) )
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-notmuch-source) &optional backwards)
-  (el-secretario-source-init obj backwards))
-
-(cl-defmethod el-secretario-source-init ((obj el-secretario-notmuch-source) &optional backwards)
   (with-slots (query) obj
     (notmuch-search (or query "tag:unread")
                     t

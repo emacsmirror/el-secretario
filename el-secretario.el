@@ -138,6 +138,17 @@ is already initialized and this method is called, call `el-secretario-source-act
   (display-warning "This source doesn't implement the next-item method!"))
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-source))
   (display-warning "This source doesn't implement the previous-item method!"))
+(cl-defmethod el-secretario-source-init ((obj el-secretario-source))
+  "Initialize source OBJ.
+
+This method is called only once. Subsequenct calls will redirect
+to `el-secretario-source-activate'.
+
+Implement this method if you need to setup state etc. for your
+source that only needs to happen once.
+
+It should also do whatever is needed to bring up the relevant item to the user."
+  (el-secretario-source-activate obj backwards))
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-source))
   (display-warning "This source doesn't implement the activate"))
 
