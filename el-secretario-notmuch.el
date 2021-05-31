@@ -45,8 +45,8 @@ HYDRA is an hydra to use during review of this source"
     (if backwards
         (notmuch-search-last-thread)
       (notmuch-search-first-thread))
-    (el-secretario--notmuch-search-show-thread)
-    (el-secretario-activate-hydra)))
+    (el-secretario-notmuch--search-show-thread)
+    (el-secretario/activate-hydra)))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-notmuch-source))
   (el-secretario--notmuch-show-next-thread))
@@ -63,7 +63,7 @@ HYDRA is an hydra to use during review of this source"
 ;;
 ;; The other case is when the cursor is on the second line.
 ;; `(el-secretario-notmuch--notmuch-show-next-thread)' will succed and place the cursor on the third
-;; line. There `el-secretario--notmuch-search-show-thread' will fail because it
+;; line. There `el-secretario-notmuch--search-show-thread' will fail because it
 ;; can't get a thread-id because it isn't on a line with a thread. In that case
 ;; we call `el-secretario--next-source'
 ;;
@@ -72,7 +72,7 @@ HYDRA is an hydra to use during review of this source"
 ;; End of search results.
 
 (defun el-secretario--notmuch-show-next-thread (&optional previous)
-  "Like `notmuch-show-next-thread' but call `el-secretario--notmuch-search-show-thread' instead"
+  "Like `notmuch-show-next-thread' but call `el-secretario-notmuch--search-show-thread' instead"
   (interactive "P")
   (let ((parent-buffer notmuch-show-parent-buffer))
     (notmuch-bury-or-kill-this-buffer)
@@ -84,10 +84,10 @@ HYDRA is an hydra to use during review of this source"
                  (el-secretario--previous-source)
                  nil)
 	     (notmuch-search-next-thread))
-	   (el-secretario--notmuch-search-show-thread previous)))))
+	   (el-secretario-notmuch--search-show-thread previous)))))
 
 
-(defun el-secretario--notmuch-search-show-thread (&optional elide-toggle)
+(defun el-secretario-notmuch--search-show-thread (&optional elide-toggle)
   "Like `notmuch-search-show-thread' but call `el-secretario--next-source' if there are no more mail."
   (interactive "P")
   (let ((thread-id (notmuch-search-find-thread-id))
@@ -102,7 +102,7 @@ HYDRA is an hydra to use during review of this source"
                                      (truncate-string-to-width subject 30 nil nil t)
                                      "*"))
                (funcall (el-secretario-source-hydra-body
-                         (car el-secretario-current-source-list)))
+                         (car el-secretario--current-source-list)))
                (el-secretario-notmuch--open-link-for-current-email))
       (message "End of search results.")
       (el-secretario--next-source))))
@@ -129,9 +129,9 @@ To be used in a capture template. "
   (with-current-buffer (org-capture-get :original-buffer)
     (concat "[[notmuch:" notmuch-show-thread-id "][Thread]]")))
 
-(defun el-secretario-notmuch-open-link-for-current-email ()
+(defun el-secretario-notmuch/open-link-for-current-email ()
   (interactive)
-  (el-secretario-status-buffer-activate)
+  (el-secretario--status-buffer-activate)
   (el-secretario-notmuch--open-link-for-current-email))
 
 (defun el-secretario-notmuch--open-link-for-current-email ()
@@ -146,10 +146,10 @@ To be used in a capture template. "
                          x))))
 
       (dolist (x prev-mesg)
-        (with-current-buffer (get-buffer-create el-secretario-status-buffer-name)
+        (with-current-buffer (get-buffer-create el-secretario--status-buffer-name)
           (insert "\nPrevious message:\n" (org-ql-view--format-element x))))
       (dolist (x entries)
-        (with-current-buffer (get-buffer-create el-secretario-status-buffer-name)
+        (with-current-buffer (get-buffer-create el-secretario--status-buffer-name)
           (org-agenda-mode)
           (delete-region (point-min)
                          (point-max))
@@ -157,7 +157,7 @@ To be used in a capture template. "
                                     x))))
       ;; TODO Abstract this into common status-buffer logic
       (when-let ((win (get-buffer-window
-                       (get-buffer-create el-secretario-status-buffer-name))))
+                       (get-buffer-create el-secretario--status-buffer-name))))
         (with-selected-window win
           (fit-window-to-buffer))) )))
 

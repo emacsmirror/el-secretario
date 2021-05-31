@@ -57,7 +57,7 @@ HYDRA is an hydra to use during review of this source."
                      (plist-get y :EL-SECRETARIO-PRIORITY)))))
   (setq el-secretario-tasks--items-done nil)
   (funcall (el-secretario-source-hydra-body
-            (car el-secretario-current-source-list)))
+            (car el-secretario--current-source-list)))
   (el-secretario-tasks--skip-task))
 
 (defun el-secretario-tasks--skip-task (&optional decrease-priority)
@@ -78,9 +78,9 @@ If DECREASE-PRIORITY is non-nil also decrease its priority."
                               (number-to-string (+ (max (round  (* 0.2 priority)) 1)
                                                    priority)))))
         (funcall (el-secretario-source-next-item-hook
-                  (car el-secretario-current-source-list)))
+                  (car el-secretario--current-source-list)))
         (funcall (el-secretario-source-hydra-body
-                  (car el-secretario-current-source-list))))
+                  (car el-secretario--current-source-list))))
     (el-secretario--next-source)))
 
 
@@ -215,7 +215,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
   (setq el-secretario-tasks--items-done nil)
   (setq el-secretario-tasks--tasks-left (nreverse el-secretario-tasks--tasks-left))
   (funcall (el-secretario-source-hydra-body
-            (car el-secretario-current-source-list)))
+            (car el-secretario--current-source-list)))
   (el-secretario-tasks--skip-task))
 
 

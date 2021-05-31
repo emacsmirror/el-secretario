@@ -22,11 +22,11 @@
 (require 'org-ql)
 
 (defhydra el-secretario-org-hydra ()
-  ("n" el-secretario-next-item "next" :exit t)
-  ("r" (progn (org-refile) (el-secretario-next-item)) "Refile" :exit t)
+  ("n" el-secretario/next-item "next" :exit t)
+  ("r" (progn (org-refile) (el-secretario/next-item)) "Refile" :exit t)
   ("R" (let ((org-reverse-note-order t))
          (org-refile)
-         (el-secretario-next-item)) "Refile to top" :exit t)
+         (el-secretario/next-item)) "Refile to top" :exit t)
   ("t" org-set-tags-command "Tags")
   ("T" org-todo"Tags")
   ("s" org-schedule "Schedule")
@@ -102,7 +102,7 @@ function."
    :hydra (or hydra #'el-secretario-org-hydra/body)))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional backwards)
-  (el-secretario-activate-hydra)
+  (el-secretario/activate-hydra)
   (el-secretario-source-activate-item obj))
 
 
@@ -132,7 +132,7 @@ function."
     (when compare-fun
       (setq items-left (sort items-left compare-fun)))
     (setq items-done nil))
-  (el-secretario-activate-hydra)
+  (el-secretario/activate-hydra)
   (el-secretario-source-next-item obj))
 
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
@@ -149,8 +149,8 @@ function."
         (funcall (oref obj :next-item-hook)))
       (setq current-item (plist-put current-item :called-next-item-hook t))
 
-      (el-secretario-org-update-status-buffer)
-      (el-secretario-activate-hydra)
+      (el-secretario-org--update-status-buffer)
+      (el-secretario/activate-hydra)
       (el-secretario-tasks--run-task-hook
        (el-secretario-org--parse-headline)
        :EL-SECRETARIO-REVIEW-TASK-HOOK))))
@@ -181,7 +181,7 @@ function."
       (el-secretario--previous-source))))
 
 (defvar date nil)
-(defun el-secretario-org-update-status-buffer ()
+(defun el-secretario-org--update-status-buffer ()
   "Update the status buffer with useful information.
 That information is the currently visible schedule dates and deadlines."
   (interactive)
@@ -191,14 +191,14 @@ That information is the currently visible schedule dates and deadlines."
     (save-excursion
       (setq deadlines (org-agenda-get-deadlines))
       (setq scheduleds (org-agenda-get-scheduled)))
-    (with-current-buffer (get-buffer-create el-secretario-status-buffer-name)
+    (with-current-buffer (get-buffer-create el-secretario--status-buffer-name)
       (delete-region (point-min) (point-max))
       (--each deadlines
         (insert "Deadline: " it "\n"))
       (--each scheduleds
         (insert "Scheduled: " it "\n"))))
   (when-let ((win (get-buffer-window
-                 (get-buffer-create el-secretario-status-buffer-name))))
+                 (get-buffer-create el-secretario--status-buffer-name))))
       (with-selected-window win
         (fit-window-to-buffer))))
 

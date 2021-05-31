@@ -45,7 +45,7 @@ the `el-secretario-source-init') only once\" is kept.
 (require 'el-secretario-tasks)
 
 
-(defvar el-secretario-is-testing nil
+(defvar el-secretario--is-testing nil
   "Determines if code is running in testing mode.
 
 When a user is interacting with el-secretario this should always
@@ -53,7 +53,7 @@ be nil. Set it to `t' if in testing
 ")
 
 (defhydra el-secretario-default-hydra ()
-  ("n" el-secretario-next-item "next" :exit t)
+  ("n" el-secretario/next-item "next" :exit t)
   ("q" (el-secretario-end-sesion) "Quit" :exit t)
   ("/" nil "disable hydra"  :exit t))
 
@@ -61,19 +61,19 @@ be nil. Set it to `t' if in testing
   "Activate hydra of OBJ."
   (funcall (oref obj hydra)))
 
-(defun el-secretario-activate-hydra ()
+(defun el-secretario/activate-hydra ()
   "Activate the hydra of the currently active source."
   (interactive)
-  (when el-secretario-current-source-list
-    (el-secretario--source-hydra (car el-secretario-current-source-list))))
+  (when el-secretario--current-source-list
+    (el-secretario--source-hydra (car el-secretario--current-source-list))))
 
-(defvar el-secretario-current-source-list nil
+(defvar el-secretario--current-source-list nil
   "TODO")
 
-(defvar el-secretario-current-source-list-done nil
+(defvar el-secretario--current-source-list-done nil
   "TODO")
 
-(defvar el-secretario-status-buffer-name "*el-secretario-status*"
+(defvar el-secretario--status-buffer-name "*el-secretario-status*"
   "TODO")
 (defvar el-secretario--original-buffer nil
   "The buffer the user was in before activating el-secretario.")
@@ -81,7 +81,7 @@ be nil. Set it to `t' if in testing
 (defvar el-secretario--sesion-active nil
   "t when a session is active")
 
-(defvar el-secretario-sources '())
+(defvar el-secretario--sources '())
 
 (defhydra el-secretario--hydra-quit (:exit t
                         :foreign-keys run)
@@ -94,8 +94,8 @@ be nil. Set it to `t' if in testing
       (progn
         (el-secretario-activate-hydra))
     (el-secretario-start-session
-     (alist-get (completing-read "Choose what to do" el-secretario-sources)
-                el-secretario-sources nil nil #'equal))))
+     (alist-get (completing-read "Choose what to do" el-secretario--sources)
+                el-secretario--sources nil nil #'equal))))
 
 ;;;###autoload
 (defun el-secretario-start-session (source-list)
@@ -105,39 +105,39 @@ SOURCE-LIST should be a list of newly instantiated sources, or
 SOURCE-LIST is a function that returns a list of newly instantiated sources."
   (setq el-secretario--sesion-active t)
   (setq el-secretario--original-buffer (current-buffer))
-  (setq el-secretario-current-source-list
+  (setq el-secretario--current-source-list
         (--> (if (functionp source-list)
                  (funcall source-list)
                source-list)
           (if (listp it)
               it
             (list it))))
-  (setq el-secretario-current-source-list-done nil)
+  (setq el-secretario--current-source-list-done nil)
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
-  (el-secretario-status-buffer-activate)
-  (el-secretario-source-init (car el-secretario-current-source-list)))
+  (el-secretario--status-buffer-activate)
+  (el-secretario-source-init (car el-secretario--current-source-list)))
 
 (defun el-secretario-end-sesion ()
   (setq el-secretario--sesion-active nil)
   (switch-to-buffer el-secretario--original-buffer)
   (el-secretario-status-buffer-deactivate))
 
-(defun el-secretario-next-item ()
+(defun el-secretario/next-item ()
   "Go to the next item of this session."
   (interactive)
-  (when el-secretario-current-source-list
+  (when el-secretario--current-source-list
     (el-secretario-source-next-item
-     (car el-secretario-current-source-list))))
+     (car el-secretario--current-source-list))))
 
-(defun el-secretario-previous-item ()
+(defun el-secretario/previous-item ()
   "Go to the previous item of this session."
   (interactive)
-  (when el-secretario-current-source-list
+  (when el-secretario--current-source-list
     (el-secretario-source-previous-item
-     (car el-secretario-current-source-list))))
+     (car el-secretario--current-source-list))))
 
-(cl-defmethod el-secretario-source-initialized-p ((obj el-secretario-source))
+(cl-defmethod el-secretario--source-initialized-p ((obj el-secretario-source))
   "Return `t' if OBJ is initialized"
   (oref obj is-initialized))
 
@@ -149,7 +149,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
 (cl-defmethod el-secretario-source-init :around ((obj el-secretario-source) &optional backwards)
   "Make sure that a source is only initialized once. If a source
 is already initialized and this method is called, call `el-secretario-source-activate' instead."
-  (if (el-secretario-source-initialized-p obj)
+  (if (el-secretario--source-initialized-p obj)
       (el-secretario-source-activate obj backwards)
     (cl-call-next-method)))
 
@@ -189,7 +189,7 @@ It should also do whatever is needed to bring up the relevant item to the user."
   "Activate source OBJ.
 
 This method is called when el-secretario switches to source
-OBJ (for example when the user calls `el-secretario-next-item'
+OBJ (for example when the user calls `el-secretario/next-item'
 with no items left, so el-secretario switches to source OBJ).
 
 For example, the org module implements this method to bring up
@@ -198,12 +198,12 @@ the correct org buffer, and go to the correct heading."
 
 (defun el-secretario--next-source ()
   "Switch to the next source in this session."
-  (if el-secretario-current-source-list
+  (if el-secretario--current-source-list
       (progn
-        (push (pop el-secretario-current-source-list)
-              el-secretario-current-source-list-done)
-        (if el-secretario-current-source-list
-            (el-secretario-source-init (car el-secretario-current-source-list))
+        (push (pop el-secretario--current-source-list)
+              el-secretario--current-source-list-done)
+        (if el-secretario--current-source-list
+            (el-secretario-source-init (car el-secretario--current-source-list))
           (with-current-buffer (get-buffer-create "*el-secretario-en*")
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
@@ -212,25 +212,25 @@ the correct org buffer, and go to the correct heading."
 
 (defun el-secretario--previous-source ()
   "Switch to the previous source in this session."
-  (if el-secretario-current-source-list-done
+  (if el-secretario--current-source-list-done
       (progn
-        (push (pop el-secretario-current-source-list-done)
-              el-secretario-current-source-list)
-        (if el-secretario-current-source-list
-            (el-secretario-source-init (car el-secretario-current-source-list) 'backward)
+        (push (pop el-secretario--current-source-list-done)
+              el-secretario--current-source-list)
+        (if el-secretario--current-source-list
+            (el-secretario-source-init (car el-secretario--current-source-list) 'backward)
           (message "ooflakjdlkf")))
     (message "No more previous sources!")))
 
 
-(defun el-secretario-status-buffer-activate ()
+(defun el-secretario--status-buffer-activate ()
   "Activate the status buffer."
   (el-secretario-status-buffer-deactivate)
-  (display-buffer-in-side-window (get-buffer-create el-secretario-status-buffer-name)
+  (display-buffer-in-side-window (get-buffer-create el-secretario--status-buffer-name)
                                  '((side . top))))
 
 (defun el-secretario-status-buffer-deactivate ()
   "Deactivate the status buffer."
-  (-some-> (get-buffer-window el-secretario-status-buffer-name)
+  (-some-> (get-buffer-window el-secretario--status-buffer-name)
     (delete-window)))
 
 ;;; Utility functions
@@ -241,7 +241,7 @@ the correct org buffer, and go to the correct heading."
 
 (defun el-secretario--y-or-n-p (prompt)
   "A version of `y-or-n-p' that is testable."
-  (if el-secretario-is-testing
+  (if el-secretario--is-testing
       (pop el-secretario--y-or-no-p-input-list)
     (y-or-n-p prompt)))
 

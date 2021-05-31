@@ -33,7 +33,7 @@
                          (magenta . 35)
                          (cyan . 36)
                          (white . 37))
-     el-secretario-is-testing t)
+     el-secretario--is-testing t)
 (defvar el-secretario-org-buffer-s  "
 * TODO FOO :a:
 :PROPERTIES:
@@ -127,7 +127,7 @@
   (it "runs the next-item hook on each todo heading"
     (el-secretario-start-session source)
     (dotimes (_ 6)
-      (el-secretario-next-item))
+      (el-secretario/next-item))
     (expect 'next-item-fun :to-have-been-called-times 7))
 
   (it "runs the review-item hook on each todo heading"
@@ -136,7 +136,7 @@
                                                                       :next-item-hook #'next-item-fun
                                                                       :ids '("sub-task1"))))
     (dotimes (_ 7)
-      (el-secretario-next-item))
+      (el-secretario/next-item))
     (expect 'next-item-fun :to-have-been-called-times 8)
     (expect 'review-item-fun :to-have-been-called-times 1))
   (it "can forwards and backwards"
@@ -144,8 +144,8 @@
                                                                       (list file)
                                                                       :next-item-hook #'next-item-fun)))
 
-    (el-secretario-next-item)
-    (el-secretario-previous-item)
+    (el-secretario/next-item)
+    (el-secretario/previous-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO FOO :a:"))
@@ -155,9 +155,9 @@
                                                                       (list file)
                                                                       :next-item-hook #'next-item-fun)))
 
-    (el-secretario-next-item)
-    (el-secretario-previous-item)
-    (el-secretario-next-item)
+    (el-secretario/next-item)
+    (el-secretario/previous-item)
+    (el-secretario/next-item)
     (expect 'next-item-fun :to-have-been-called-times 2))
   (it "can go backwards and forwards across sources"
     (el-secretario-start-session (list (el-secretario-org-make-source '(tags "a")
@@ -167,18 +167,18 @@
                                                                       (list file)
                                                                       :next-item-hook #'next-item-fun)))
 
-    (el-secretario-next-item)
-    (el-secretario-next-item)
-    (el-secretario-next-item)
-    (el-secretario-next-item)
+    (el-secretario/next-item)
+    (el-secretario/next-item)
+    (el-secretario/next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO bar :b:")
-    (el-secretario-previous-item)
+    (el-secretario/previous-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "** TODO subtask2")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO bar :b:")
@@ -192,7 +192,7 @@
                                           :ids '("sub-task1"
                                                  "sub-task2"))))
     (dotimes (_ 7)
-      (el-secretario-next-item))
+      (el-secretario/next-item))
     (expect 'next-item-fun :to-have-been-called-times 2))
   (it "sorts the queried items"
     (el-secretario-start-session
@@ -207,23 +207,23 @@
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO FOO :a:")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO bar :b:")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO baz :a:")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "** TODO subtask1")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "** TODO subtask2")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO Daily review :b:"))
@@ -236,7 +236,7 @@
                                       :next-item-hook #'next-item-fun
                                       :ids '("sub-task1"))))
       (dotimes (_ 6)
-        (el-secretario-next-item))
+        (el-secretario/next-item))
       (expect 'next-item-fun :to-have-been-called-times 7))
 
     (it "can reuse a function accepted as an argument"
@@ -254,7 +254,7 @@
                 :to-equal "** TODO subtask1")
 
         (dotimes (_ 6)
-          (el-secretario-next-item))
+          (el-secretario/next-item))
 
         (with-current-buffer file
           ;; Invalidate org-ql's cache
@@ -267,7 +267,7 @@
                 :to-equal "** TODO subtask1")
 
         (dotimes (_ 6)
-          (el-secretario-next-item))
+          (el-secretario/next-item))
 
         (expect 'next-item-fun :to-have-been-called-times 14)))))
 
@@ -447,11 +447,11 @@ SCHEDULED: <2021-02-02>
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :not :to-equal "* TODO Second task")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO Second task")
-    (el-secretario-next-item)
+    (el-secretario/next-item)
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO Third task")))
