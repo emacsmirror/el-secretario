@@ -286,34 +286,6 @@
     (setq source (list (el-secretario-org-make-source '(todo)
                                                       (list file)
                                                       :next-item-hook #'next-item-fun))))
-  (it "can increase the priority value of tasks that are skipped"
-    (let ((el-secretario-tasks-files (list (buffer-file-name file)))
-          (el-secretario--y-or-no-p-input-list '(nil nil y)))
-      (el-secretario-tasks-choose-task))
-    (with-current-buffer file
-      (widen)
-      (goto-char 0)
-      (search-forward  "EL-SECRETARIO-PRIORITY")
-
-
-      (expect (string-to-number (org-entry-get (point)
-                                               "EL-SECRETARIO-PRIORITY"))
-              :to-be-greater-than
-              74)
-      (search-forward  "EL-SECRETARIO-PRIORITY")
-
-
-      (expect (string-to-number (org-entry-get (point)
-                                               "EL-SECRETARIO-PRIORITY"))
-              :to-be-greater-than
-              85)
-      (search-forward  "EL-SECRETARIO-PRIORITY")
-
-
-      (expect (string-to-number (org-entry-get (point)
-                                               "EL-SECRETARIO-PRIORITY"))
-              :to-equal
-              106)))
   (describe "Subtasks"))
 
 (describe "spaced repetition module"

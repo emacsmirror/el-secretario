@@ -24,20 +24,52 @@
    (tasks-left :initform nil)
    (tasks-skipped :initform nil)))
 
-
 (defvar el-secretario-tasks-keymap (make-sparse-keymap))
 (general-define-key
  :keymaps 'el-secretario-tasks-keymap
  "s" '((lambda () (el-secretario-tasks--skip-task t)) :which-key "Skip task")
- "b" '((lambda () el-secretario-tasks-begin-task) :which-key "Begin task")
+ "b" '(#'el-secretario-tasks-begin-task :which-key "Begin task")
  "t" '((lambda () (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" ))
 
+(defun el-secretario-tasks-begin (&optional keymap next-item-hook)
+  "TODO"
+  (interactive)
+  (el-secretario-start-session
+   (el-secretario-tasks-source
+    :keymap-body (or keymap #'el-secretario-tasks-keymap)
+    :next-item-hook (or next-item-hook (lambda ())))))
+
+;; TODO Take an optional marker argument. Go to that marker instead of clocking task. If nil, goto clocking task
+(cl-defmethod el-secretario-source-init ((obj el-secretario-tasks-source) &optional ARG)
+  "TODO"
+  ;; Sort according to priority
+  (with-slots (tasks-left tasks-skipped) obj
+    (setq tasks-left nil)
+    (save-excursion
+      (unless ARG (org-clock-goto))
+      (save-restriction
+        (org-save-outline-visibility t
+          (org-show-all)
+          (let ((closest-todo-upwards (point)))
+            (while (and (el-secretario-org-up-heading 1)
+                        (not (org-get-todo-state)))
+              ;; TODO Error recovery if there is no parent heading with project todo state
+              (when (org-get-todo-state)
+                (setq closest-todo-upwards (point))))
+            (goto-char closest-todo-upwards)
+            (org-narrow-to-subtree)
+            (while (outline-next-heading)
+              (when (member (org-get-todo-state) org-not-done-keywords)
+                (push (el-secretario-org--parse-headline) tasks-left)))))))
+    (setq items-done nil)
+    (setq tasks-left (nreverse tasks-left))
+    (el-secretario/activate-keymap)
+    (el-secretario-tasks--skip-task)))
 
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-tasks-source))
   "Skip a task.
 If DECREASE-PRIORITY is non-nil also decrease its priority."
-  (interactive)
   (with-slots (tasks-left tasks-skipped next-item-hook) obj
     (if-let ((task (pop tasks-left)))
         (progn
@@ -93,42 +125,6 @@ See `el-secretario-tasks--run-task-hook' for more info. "
                      :EL-SECRETARIO-FINISH-TASK-HOOK)))
 
 
-(defun el-secretario-tasks-subtask-begin (&optional keymap next-item-hook)
-  "TODO"
-  (interactive)
-  (el-secretario-start-session
-   (el-secretario-tasks-source
-    :keymap-body (or keymap #'el-secretario-tasks-keymap)
-    :next-item-hook (or next-item-hook (lambda ())))))
-
-
-
-;; TODO Take an optional marker argument. Go to that marker instead of clocking task. If nil, goto clocking task
-(cl-defmethod el-secretario-source-init ((obj el-secretario-tasks-source) &optional ARG)
-  "TODO"
-  ;; Sort according to priority
-  (with-slots (tasks-left tasks-skipped) obj
-    (setq tasks-left nil)
-    (save-excursion
-      (unless ARG (org-clock-goto))
-      (save-restriction
-        (org-save-outline-visibility t
-          (org-show-all)
-          (let ((closest-todo-upwards (point)))
-            (while (and (el-secretario-org-up-heading 1)
-                        (not (org-get-todo-state)))
-              ;; TODO Error recovery if there is no parent heading with project todo state
-              (when (org-get-todo-state)
-                (setq closest-todo-upwards (point))))
-            (goto-char closest-todo-upwards)
-            (org-narrow-to-subtree)
-            (while (outline-next-heading)
-              (when (member (org-get-todo-state) org-not-done-keywords)
-                (push (el-secretario-org--parse-headline) tasks-left)))))))
-    (setq items-done nil)
-    (setq tasks-left (nreverse tasks-left))
-    (el-secretario/activate-keymap)
-    (el-secretario-tasks--skip-task)))
 
 
 (provide 'el-secretario-tasks)
