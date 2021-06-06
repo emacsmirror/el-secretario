@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (hydra "0.15.0")(org-ql "0.6-pre"))
+;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -23,36 +23,38 @@
 (defvar el-secretario-message-pre-message-marker nil
   "The marker to return to before a message has been displayed")
 
-(defvar el-secretario-message-hydra nil
-  "The hydra to be used for current message")
+(defvar el-secretario-message-keymap nil
+  "The keymap to be used for current message")
 
 (defvar el-secretario-message-buffer-name "*el-secretario message*")
 
-(defun el-secretario-message--display-message-prompt (message &optional hydra)
+(defun el-secretario-message--display-message-prompt (message &optional keymap)
   "Display MESSAGE in a dedicated buffer.
-If HYDRA is nil, use `el-secretario-message-message-hydra'.
+If KEYMAP is nil, use `el-secretario-message-message-keymap'.
 
-If HYDRA is non-nil, use that as prompt. Keep in mind that it
-should probably have one head that calls
+If KEYMAP is non-nil, use that as prompt. Keep in mind that it
+should probably have one keybind that calls
 `el-secretario-message--back-to-pre-message'"
   (setq el-secretario-message-pre-message-marker (point-marker))
   (switch-to-buffer (get-buffer-create el-secretario-message-buffer-name))
   (delete-region (point-min) (point-max))
   (insert message)
-  (setq el-secretario-message-hydra (or hydra #'el-secretario-message-message-hydra/body))
-  (funcall el-secretario-message-hydra))
+  (setq el-secretario-message-keymap (or keymap #'el-secretario-message-message-keymap))
+  (hercules--show el-secretario-message-keymap t t))
 
 (defun el-secretario-message--back-to-pre-message ()
   "Quit from the message and reset state."
   (interactive)
   (switch-to-buffer (marker-buffer el-secretario-message-pre-message-marker))
   (goto-char (marker-position el-secretario-message-pre-message-marker))
-  (setq el-secretario-message-hydra nil))
+  (setq el-secretario-message-keymap nil))
 
-(defhydra el-secretario-message-message-hydra nil
-  "Default hydra for exiting a message.
-Only one head which is for removing the message buffer."
-  ("q" el-secretario-message--back-to-pre-message :exit t))
+(defvar el-secretario-message-message-keymap (make-sparse-keymap)
+  "Default keymap for exiting a message.
+Only one head which is for removing the message buffer.")
+(general-define-key
+ :keymaps 'el-secretario-message-message-keymap
+ "q" '(el-secretario-message--back-to-pre-message :which-key "quit" ) )
 
 (defmacro el-secretario-message--with-pre-buffer (&rest body)
   `(if (string-equal (buffer-name)

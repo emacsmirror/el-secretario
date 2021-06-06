@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (hydra "0.15.0")(org-ql "0.6-pre"))
+;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -21,20 +21,24 @@
 
 (require 'org-ql)
 
-(defhydra el-secretario-org-hydra ()
-  ("n" el-secretario/next-item "next" :exit t)
-  ("r" (progn (org-refile) (el-secretario/next-item)) "Refile" :exit t)
-  ("R" (let ((org-reverse-note-order t))
-         (org-refile)
-         (el-secretario/next-item)) "Refile to top" :exit t)
-  ("t" org-set-tags-command "Tags")
-  ("T" org-todo"Tags")
-  ("s" org-schedule "Schedule")
-  ("d" org-deadline  "Deadline")
-  ("D" (delete-region (point-min) (point-max)) "Delete visible")
-  ("q" (el-secretario-end-sesion) "Quit" :exit t)
-  ("/" nil "disable hydra"  :exit t))
 
+(defvar el-secretario-org-keymap (make-sparse-keymap))
+
+(general-define-key
+ :keymaps 'el-secretario-org-keymap
+ "n" '(el-secretario/next-item :which-key "next")
+ "r" '((lambda () (org-refile) (el-secretario/next-item)) :wk "Refile")
+ "R" '((lambda ()
+         (let ((org-reverse-note-order t))
+           (org-refile)
+           (el-secretario/next-item))) :wk "Refile to top")
+ "t" '(org-set-tags-command :wk "Tags")
+ "T" '(org-todo :wk "Tags")
+ "s" '(org-schedule :wk "Schedule")
+ "d" '(org-deadline :wk  "Deadline")
+ "D" '((lambda () (delete-region (point-min) (point-max))) :wk "Delete visible")
+ "q" '((lambda () (el-secretario-end-sesion)) :wk "Quit")
+ "/" '(nil :wk "disable which-key pop"))
 
 (defvar el-secretario-org-narrow-function #'org-narrow-to-subtree
   "Function to use for narrowing when goint to the next item.
@@ -69,7 +73,7 @@ subtrees that are also todos. It can then be useful to see the context when revi
    (items-done :initform '())))
 
 
-(cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun hydra shuffle-p ids)
+(cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun keymap shuffle-p ids keymap)
   "
 
 QUERY is an arbitrary org-ql query.
@@ -78,7 +82,7 @@ FILES is the files to search through.
 
 NEXT-ITEM-HOOK is called on each heading.
 
-HYDRA is an hydra to use during review of this source.
+KEYMAP is an keymap to use during review of this source.
 
 IDS is a list of IDs of elements that should be added to the list
 of queried items.
@@ -99,16 +103,16 @@ function."
    :shuffle-p shuffle-p
    :next-item-hook next-item-hook
    :ids ids
-   :hydra (or hydra #'el-secretario-org-hydra/body)))
+   :keymap (or keymap #'el-secretario-org-keymap)))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional backwards)
-  (el-secretario/activate-hydra)
+  (el-secretario/activate-keymap)
   (el-secretario-source-activate-item obj))
 
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional backwards)
   "TODO"
-  (with-slots (query files compare-fun shuffle-p ids hydra items-left items-done is-initialized) obj
+  (with-slots (query files compare-fun shuffle-p ids items-left items-done) obj
     (dolist (f files)
       (if (bufferp f)
           (with-current-buffer f
@@ -132,7 +136,7 @@ function."
     (when compare-fun
       (setq items-left (sort items-left compare-fun)))
     (setq items-done nil))
-  (el-secretario/activate-hydra)
+  (el-secretario/activate-keymap)
   (el-secretario-source-next-item obj))
 
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
@@ -150,7 +154,7 @@ function."
       (setq current-item (plist-put current-item :called-next-item-hook t))
 
       (el-secretario-org--update-status-buffer)
-      (el-secretario/activate-hydra)
+      (el-secretario/activate-keymap)
       (el-secretario-tasks--run-task-hook
        (el-secretario-org--parse-headline)
        :EL-SECRETARIO-REVIEW-TASK-HOOK))))

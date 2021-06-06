@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (hydra "0.15.0")(org-ql "0.6-pre"))
+;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -24,13 +24,13 @@
    (:next-item-hook :initarg :next-item-hook)))
 
 
-(defun el-secretario-notmuch-make-source (query &optional next-item-hook hydra)
+(defun el-secretario-notmuch-make-source (query &optional next-item-hook keymap)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
 NEXT-ITEM-HOOk is called on each heading.
-HYDRA is an hydra to use during review of this source"
+KEYMAP is a keymap to use during review of this source"
   (el-secretario-notmuch-source
-   :hydra (or hydra #'el-secretario-default-hydra/body)
+   :keymap (or keymap 'el-secretario-default-keymap)
    :query query
    :next-item-hook (or next-item-hook (lambda ()))) )
 
@@ -46,7 +46,7 @@ HYDRA is an hydra to use during review of this source"
         (notmuch-search-last-thread)
       (notmuch-search-first-thread))
     (el-secretario-notmuch--search-show-thread)
-    (el-secretario/activate-hydra)))
+    (el-secretario/activate-keymap)))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-notmuch-source))
   (el-secretario--notmuch-show-next-thread))
@@ -101,8 +101,7 @@ HYDRA is an hydra to use during review of this source"
                              (concat "*"
                                      (truncate-string-to-width subject 30 nil nil t)
                                      "*"))
-               (funcall (el-secretario-source-hydra-body
-                         (car el-secretario--current-source-list)))
+               (el-secretario/activate-keymap)
                (el-secretario-notmuch--open-link-for-current-email))
       (message "End of search results.")
       (el-secretario--next-source))))

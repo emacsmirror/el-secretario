@@ -31,7 +31,7 @@ This was all very abstract so let's move on to a concrete example:
 Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where it's used in action.
 
 Calling ~el-secretario-daily-review~ will open up your oldest email. Pressing
-~n~ in the [[https://github.com/abo-abo/hydra][hydra]] prompt will take you to the next email sorted chronologically.
+~n~ in the [[https://melpa.org/#/hercules][hercules]] prompt will take you to the next email sorted chronologically.
 In this way your secretary will make sure you go through all your email without
 having to worry about which or how many emails you will read.
 
@@ -147,14 +147,6 @@ This one is still a little bit weird and I don't exactly know what it's supposed
 to do so ignore it for now!
 
 
-* Each source needs these functions
-
-- A function that is called when initializing a source
-- A function for going to the next review item, e.g. next email or nest todo
-- A function for going back one review item
-- A hydra for actions to do on an item
-- A function that is called when a source is finished
-- A function that is called when arriving at the next item
 * Creating a new source
 A source is a [[info:eieio#Top][eieio]] class that inherits from ~el-secretario-source~. It needs to
 implement the following methods:
@@ -167,8 +159,8 @@ to do some setup only once (e.g. setup some state).
 
 See the docstrings for respective method for what they are supposed to do.
 
-Each source should fill the ~hydra~ slot (as defined in ~el-secretario-source~)
-with a hydra.
+Each source can fill the ~keymap~ slot (as defined in ~el-secretario-source~)
+with a keymap. Otherwise the default keymap will be used.
 
 * Tasks
 Main entry point is ~el-secretario-tasks-choose-task~. See it's docstring for more info.

@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (hydra "0.15.0")(org-ql "0.6-pre"))
+;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -21,11 +21,12 @@
 (require 'eieio)
 (require 'eieio-base)
 (require 'cl-lib)
-(require 'hydra)
 (require 'org-ql)
+(require 'hercules)
+(require 'general)
 (defclass el-secretario-source (eieio-named)
-  ((hydra :initarg :hydra
-          :initform #'el-secretario-default-hydra/body
+  ((keymap :initarg :keymap
+          :initform #'el-secretario-default-map
           :protection :protected)
    (is-initialized :initform nil))
   :abstract t
@@ -44,6 +45,8 @@ the `el-secretario-source-init') only once\" is kept.
 (require 'el-secretario-space)
 (require 'el-secretario-tasks)
 
+(defvar el-secretario-default-map (make-sparse-keymap)
+  "The default hercules-style keymap for sources.")
 
 (defvar el-secretario--is-testing nil
   "Determines if code is running in testing mode.
@@ -52,20 +55,17 @@ When a user is interacting with el-secretario this should always
 be nil. Set it to `t' if in testing
 ")
 
-(defhydra el-secretario-default-hydra ()
-  ("n" el-secretario/next-item "next" :exit t)
-  ("q" (el-secretario-end-sesion) "Quit" :exit t)
-  ("/" nil "disable hydra"  :exit t))
 
-(cl-defmethod el-secretario--source-hydra ((obj el-secretario-source))
-  "Activate hydra of OBJ."
-  (funcall (oref obj hydra)))
+(cl-defmethod el-secretario--source-keymap-activate ((obj el-secretario-source))
+  "Activate keymap of OBJ."
+  (hercules--show (oref obj keymap)
+                  t t))
 
-(defun el-secretario/activate-hydra ()
-  "Activate the hydra of the currently active source."
+(defun el-secretario/activate-keymap ()
+  "Activate the keymap of the currently active source."
   (interactive)
   (when el-secretario--current-source-list
-    (el-secretario--source-hydra (car el-secretario--current-source-list))))
+    (el-secretario--source-keymap-activate (car el-secretario--current-source-list))))
 
 (defvar el-secretario--current-source-list nil
   "TODO")
@@ -83,16 +83,12 @@ be nil. Set it to `t' if in testing
 
 (defvar el-secretario--sources '())
 
-(defhydra el-secretario--hydra-quit (:exit t
-                        :foreign-keys run)
-  ("q"  (when el-secretario--original-buffer
-          (switch-to-buffer el-secretario--original-buffer)) "Quit"))
 
 (defun secretary ()
   (interactive)
   (if el-secretario--sesion-active
       (progn
-        (el-secretario-activate-hydra))
+        (el-secretario/activate-keymap))
     (el-secretario-start-session
      (alist-get (completing-read "Choose what to do" el-secretario--sources)
                 el-secretario--sources nil nil #'equal))))

@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (hydra "0.15.0")(org-ql "0.6-pre"))
+;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -19,22 +19,24 @@
 ;; (el-secretario-start-session (list (el-secretario-tasks-make-source (todo) ("~/Documents/el-secretario/test/test.org"))))
 ;;; Code:
 
-(defun el-secretario-tasks-make-source (query files &optional hydra)
+(defun el-secretario-tasks-make-source (query files &optional keymap)
   "QUERY is an arbitrary org-ql query. FILES is the files to search through.
 NEXT-ITEM-HOOk is called on each heading.
-HYDRA is an hydra to use during review of this source."
+KEYMAP is a keymap to use during review of this source."
   (make-el-secretario-source
     :init-function  (lambda () (el-secretario-tasks--init query files ))
     :next-function #'el-secretario-tasks--skip-task
     :prev-function (lambda ())
-    :hydra-body (or hydra #'el-secretario-tasks-hydra/body)
+    :keymap-body (or keymap #'el-secretario-tasks-keymap)
     :finished-hook #'widen
     :next-item-hook (lambda ())) )
 
-(defhydra el-secretario-tasks-hydra ()
-  ("s" (el-secretario-tasks--skip-task t) "Skip task" :exit t)
-  ("b" el-secretario-tasks-begin-task "Begin task" :exit t)
-  ("t" (el-secretario-message--with-pre-buffer (org-todo)) "TODO" ))
+(defvar el-secretario-tasks-keymap (make-sparse-keymap))
+(general-define-key
+ :keymaps 'el-secretario-tasks-keymap
+ "s" '((lambda () (el-secretario-tasks--skip-task t)) :which-key "Skip task")
+ "b" '((lambda () el-secretario-tasks-begin-task) :which-key "Begin task")
+ "t" '((lambda () (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" ))
 
 
 (defvar el-secretario-tasks--tasks-left nil)
@@ -56,8 +58,7 @@ HYDRA is an hydra to use during review of this source."
                   (< (plist-get x :EL-SECRETARIO-PRIORITY)
                      (plist-get y :EL-SECRETARIO-PRIORITY)))))
   (setq el-secretario-tasks--items-done nil)
-  (funcall (el-secretario-source-hydra-body
-            (car el-secretario--current-source-list)))
+  (el-secretario/activate-keymap)
   (el-secretario-tasks--skip-task))
 
 (defun el-secretario-tasks--skip-task (&optional decrease-priority)
@@ -79,8 +80,7 @@ If DECREASE-PRIORITY is non-nil also decrease its priority."
                                                    priority)))))
         (funcall (el-secretario-source-next-item-hook
                   (car el-secretario--current-source-list)))
-        (funcall (el-secretario-source-hydra-body
-                  (car el-secretario--current-source-list))))
+        (el-secretario/activate-keymap))
     (el-secretario--next-source)))
 
 
@@ -173,7 +173,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
      :EL-SECRETARIO-FINISH-TASK-HOOK)))
 
 
-(defun el-secretario-tasks-subtask-begin (&optional hydra)
+(defun el-secretario-tasks-subtask-begin (&optional keymap)
   "TODO"
   (interactive)
   (el-secretario-start-session
@@ -181,7 +181,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
           :init-function  (lambda () (el-secretario-tasks--subtask-init))
           :next-function #'el-secretario-tasks--skip-task
           :prev-function (lambda ())
-          :hydra-body (or hydra #'el-secretario-tasks-hydra/body)
+          :keymap-body (or keymap #'el-secretario-tasks-keymap)
           :finished-hook #'widen
           :next-item-hook (lambda ()
                             (el-secretario-tasks--run-task-hook
@@ -214,8 +214,7 @@ See `el-secretario-tasks--run-task-hook' for more info. "
               (push (el-secretario-org--parse-headline) el-secretario-tasks--tasks-left)))))))
   (setq el-secretario-tasks--items-done nil)
   (setq el-secretario-tasks--tasks-left (nreverse el-secretario-tasks--tasks-left))
-  (funcall (el-secretario-source-hydra-body
-            (car el-secretario--current-source-list)))
+  (el-secretario/activate-keymap)
   (el-secretario-tasks--skip-task))
 
 

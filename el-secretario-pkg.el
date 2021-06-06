@@ -2,5 +2,5 @@
   "The Emacs secretary"
   '((emacs 27.1)
     (cl-lib "0.5")
-    (hydra "0.15.0")
+    (hercules)
     (org-ql "0.6-pre")))

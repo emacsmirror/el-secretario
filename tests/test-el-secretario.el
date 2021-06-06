@@ -20,7 +20,6 @@
 ;;; Code:
 
 (require 'buttercup)
-(require 'hydra)
 (require 'el-secretario)
 (require 'el-secretario-org)
 (require 'el-secretario-space)
