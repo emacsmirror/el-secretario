@@ -34,6 +34,11 @@
 (defvar el-secretario-default-map (make-sparse-keymap)
   "The default hercules-style keymap for sources.")
 
+(general-define-key
+ :keymaps 'el-secretario-default-map
+ "n" '(el-secretario/next-item :which-key "next")
+ "p" '(el-secretario/previous-item :which-key "previous"))
+
 (defvar el-secretario--is-testing nil
   "Determines if code is running in testing mode.
 
@@ -101,6 +106,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
   (el-secretario-source-init (car el-secretario--current-source-list)))
 
 (defun el-secretario-end-sesion ()
+  (interactive)
   (setq el-secretario--sesion-active nil)
   (switch-to-buffer el-secretario--original-buffer)
   (el-secretario-status-buffer-deactivate))
@@ -152,7 +158,7 @@ Example:
 It should call `el-secretario--previous-source' if there are no more items."
   (display-warning "This source doesn't implement the previous-item method!"))
 
-(cl-defmethod el-secretario-source-init ((obj el-secretario-source))
+(cl-defmethod el-secretario-source-init ((obj el-secretario-source) &optional backwards)
   "Initialize source OBJ.
 
 This method is called only once, the first time source OBJ is
@@ -167,7 +173,7 @@ to call `el-secretario-source-activate'.
 It should also do whatever is needed to bring up the relevant item to the user."
   (el-secretario-source-activate obj backwards))
 
-(cl-defmethod el-secretario-source-activate ((obj el-secretario-source))
+(cl-defmethod el-secretario-source-activate ((obj el-secretario-source) &optional backwards)
   "Activate source OBJ.
 
 This method is called when el-secretario switches to source

@@ -28,6 +28,7 @@
 (general-define-key
  :keymaps 'el-secretario-org-keymap
  "n" '(el-secretario/next-item :which-key "next")
+ "p" '(el-secretario/previous-item :which-key "previous")
  "r" '((lambda () (org-refile) (el-secretario/next-item)) :wk "Refile")
  "R" '((lambda ()
          (let ((org-reverse-note-order t))
@@ -38,8 +39,7 @@
  "s" '(org-schedule :wk "Schedule")
  "d" '(org-deadline :wk  "Deadline")
  "D" '((lambda () (delete-region (point-min) (point-max))) :wk "Delete visible")
- "q" '((lambda () (el-secretario-end-sesion)) :wk "Quit")
- "/" '(nil :wk "disable which-key pop"))
+ "q" '((lambda () (el-secretario-end-sesion)) :wk "Quit"))
 
 (defvar el-secretario-org-narrow-function #'org-narrow-to-subtree
   "Function to use for narrowing when goint to the next item.
@@ -151,7 +151,8 @@ function."
       (goto-char pos)
       (el-secretario-org-narrow)
       (unless (plist-get current-item :called-next-item-hook)
-        (funcall (oref obj :next-item-hook)))
+        (when-let ((hook (oref obj :next-item-hook)))
+          (funcall hook)))
       (setq current-item (plist-put current-item :called-next-item-hook t))
 
       (el-secretario-org--update-status-buffer)
