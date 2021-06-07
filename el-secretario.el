@@ -24,21 +24,7 @@
 (require 'org-ql)
 (require 'hercules)
 (require 'general)
-(defclass el-secretario-source (eieio-named)
-  ((keymap :initarg :keymap
-          :initform #'el-secretario-default-map
-          :protection :protected)
-   (is-initialized :initform nil))
-  :abstract t
-  :documentation
-  "Base class for sources. All sources should inherit from this
-one.
-
-It makes sure that the invariant \"A source is initialized (via
-the `el-secretario-source-init') only once\" is kept.
-
-
-")
+(require 'el-secretario-source)
 (require 'el-secretario-org)
 (require 'el-secretario-message)
 (require 'el-secretario-notmuch)

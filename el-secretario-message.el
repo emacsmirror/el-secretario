@@ -18,6 +18,7 @@
 ;;  description
 ;;
 ;;; Code:
+(require 'el-secretario-source)
 
 
 (defvar el-secretario-message-pre-message-marker nil

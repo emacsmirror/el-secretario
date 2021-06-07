@@ -18,6 +18,7 @@
 ;;
 ;; (el-secretario-start-session (list (el-secretario-tasks-make-source (todo) ("~/Documents/el-secretario/test/test.org"))))
 ;;; Code:
+(require 'el-secretario-source)
 (defclass el-secretario-tasks-source (el-secretario-source)
   ((next-item-hook :initarg :next-item-hook
                    :initform nil)

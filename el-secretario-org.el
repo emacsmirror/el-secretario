@@ -20,6 +20,7 @@
 ;;; Code:
 
 (require 'org-ql)
+(require 'el-secretario-source)
 
 
 (defvar el-secretario-org-keymap (make-sparse-keymap))

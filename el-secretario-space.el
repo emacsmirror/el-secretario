@@ -18,6 +18,7 @@
 ;;  Spaced repetition module of el-secretario
 ;;
 ;;; Code:
+(require 'el-secretario-source)
 
 
 

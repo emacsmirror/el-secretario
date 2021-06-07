@@ -18,6 +18,7 @@
 ;;
 ;;
 ;;; Code:
+(require 'el-secretario-source)
 
 (defclass el-secretario-notmuch-source (el-secretario-source)
   ((query :initarg :query)
