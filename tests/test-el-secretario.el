@@ -21,6 +21,7 @@
 
 (require 'buttercup)
 (require 'el-secretario)
+(require 'el-secretario-source)
 (require 'el-secretario-org)
 (require 'el-secretario-space)
 
@@ -427,5 +428,20 @@ SCHEDULED: <2021-02-02>
                                             (line-end-position))
             :to-equal "* TODO Third task")))
 
+(require 'el-secretario-test)
+(describe "Example module"
+  (it "can go through the items"
+    (el-secretario-start-session (el-secretario-test-source
+                                  :items-left '(1 2 3 4 5)))
+    (expect (el-secretario/next-item)
+            :to-equal 1)
+    (expect (el-secretario/next-item)
+            :to-equal 2)
+    (expect (el-secretario/next-item)
+            :to-equal 3)
+    (expect (el-secretario/next-item)
+            :to-equal 4)
+    (expect (el-secretario/next-item)
+            :to-equal 5)))
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here
