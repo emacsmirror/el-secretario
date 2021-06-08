@@ -26,11 +26,6 @@
    (tasks-skipped :initform nil)))
 
 (defvar el-secretario-tasks-keymap (make-sparse-keymap))
-(general-define-key
- :keymaps 'el-secretario-tasks-keymap
- "s" '((lambda () (el-secretario-tasks--skip-task t)) :which-key "Skip task")
- "b" '(#'el-secretario-tasks-begin-task :which-key "Begin task")
- "t" '((lambda () (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" ))
 
 (defun el-secretario-tasks-begin (&optional keymap next-item-hook)
   "TODO"

@@ -23,7 +23,6 @@
 (require 'cl-lib)
 (require 'org-ql)
 (require 'hercules)
-(require 'general)
 (require 'el-secretario-source)
 (require 'el-secretario-org)
 (require 'el-secretario-message)
@@ -34,10 +33,7 @@
 (defvar el-secretario-default-map (make-sparse-keymap)
   "The default hercules-style keymap for sources.")
 
-(general-define-key
- :keymaps 'el-secretario-default-map
- "n" '(el-secretario/next-item :which-key "next")
- "p" '(el-secretario/previous-item :which-key "previous"))
+
 
 (defvar el-secretario--is-testing nil
   "Determines if code is running in testing mode.

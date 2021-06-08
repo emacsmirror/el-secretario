@@ -53,9 +53,6 @@ should probably have one keybind that calls
 (defvar el-secretario-message-message-keymap (make-sparse-keymap)
   "Default keymap for exiting a message.
 Only one head which is for removing the message buffer.")
-(general-define-key
- :keymaps 'el-secretario-message-message-keymap
- "q" '(el-secretario-message--back-to-pre-message :which-key "quit" ) )
 
 (defmacro el-secretario-message--with-pre-buffer (&rest body)
   `(if (string-equal (buffer-name)

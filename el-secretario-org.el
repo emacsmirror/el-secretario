@@ -25,21 +25,6 @@
 
 (defvar el-secretario-org-keymap (make-sparse-keymap))
 
-(general-define-key
- :keymaps 'el-secretario-org-keymap
- "n" '(el-secretario/next-item :which-key "next")
- "p" '(el-secretario/previous-item :which-key "previous")
- "r" '((lambda () (org-refile) (el-secretario/next-item)) :wk "Refile")
- "R" '((lambda ()
-         (let ((org-reverse-note-order t))
-           (org-refile)
-           (el-secretario/next-item))) :wk "Refile to top")
- "t" '(org-set-tags-command :wk "Tags")
- "T" '(org-todo :wk "Tags")
- "s" '(org-schedule :wk "Schedule")
- "d" '(org-deadline :wk  "Deadline")
- "D" '((lambda () (delete-region (point-min) (point-max))) :wk "Delete visible")
- "q" '((lambda () (el-secretario-end-sesion)) :wk "Quit"))
 
 (defvar el-secretario-org-narrow-function #'org-narrow-to-subtree
   "Function to use for narrowing when goint to the next item.
