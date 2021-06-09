@@ -27,16 +27,16 @@
 
 (general-define-key
  :keymaps 'el-secretario-tasks-keymap
- "s" '((lambda () (el-secretario-tasks--skip-task t)) :which-key "Skip task")
+ "s" '((lambda () (interactive) (el-secretario-tasks--skip-task t)) :which-key "Skip task")
  "b" '(#'el-secretario-tasks-begin-task :which-key "Begin task")
- "t" '((lambda () (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" ))
+ "t" '((lambda () (interactive) (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" ))
 
 (general-define-key
  :keymaps 'el-secretario-org-keymap
  "n" '(el-secretario/next-item :which-key "next")
  "p" '(el-secretario/previous-item :which-key "previous")
- "r" '((lambda () (org-refile) (el-secretario/next-item)) :wk "Refile")
- "R" '((lambda ()
+ "r" '((lambda () (interactive) (org-refile) (el-secretario/next-item)) :wk "Refile")
+ "R" '((lambda () (interactive)
          (let ((org-reverse-note-order t))
            (org-refile)
            (el-secretario/next-item))) :wk "Refile to top")
@@ -44,8 +44,8 @@
  "T" '(org-todo :wk "Tags")
  "s" '(el-secretario-org-schedule :wk "Schedule")
  "d" '(el-secretario-org-deadline :wk  "Deadline")
- "D" '((lambda () (delete-region (point-min) (point-max))) :wk "Delete visible")
- "q" '((lambda () (el-secretario-end-sesion)) :wk "Quit"))
+ "D" '((lambda () (interactive) (delete-region (point-min) (point-max))) :wk "Delete visible")
+ "q" '((lambda () (interactive) (el-secretario-end-sesion)) :wk "Quit"))
 
 (hercules-def
  :keymap 'el-secretario-org-keymap)
