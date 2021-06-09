@@ -1,4 +1,4 @@
-;;; el-secretario-test.el --- Description -*- lexical-binding: t; -*-
+;;; el-secretario-example.el --- Description -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
@@ -8,7 +8,7 @@
 ;; Modified: June 08, 2021
 ;; Version: 0.0.1
 ;; Keywords:
-;; Homepage: https://github.com/leo/el-secretario-test
+;; Homepage: https://git.sr.ht/~zetagon/el-secretario
 ;; Package-Requires: ((emacs "24.3"))
 ;;
 ;; This file is not part of GNU Emacs.
@@ -19,26 +19,32 @@
 ;;
 ;;; Code:
 (require 'el-secretario-source)
-(defclass  el-secretario-test-source (el-secretario-source)
+(defclass  el-secretario-example-source (el-secretario-source)
   ((current-item :initform nil)
    (items-left :initarg :items-left)
    (items-done :initform '())))
+(defun el-secretario-example-get-current-val (source)
+  (plist-get (oref source current-item)
+             :val))
 
-(cl-defmethod el-secretario-source-init ((obj el-secretario-test-source) &optional backwards)
+(cl-defmethod el-secretario-source-activate ((obj el-secretario-example-source) &optional backwards)
+  (el-secretario/activate-keymap)
+  (el-secretario-source-activate-item obj))
+
+(cl-defmethod el-secretario-source-init ((obj el-secretario-example-source) &optional backwards)
   (with-slots (items-done items-left current-item) obj
     (setq items-left (mapcar (lambda (x)
                                (list :val x :reviewed 0))
                              items-left))
     (el-secretario-source-next-item obj)))
 
-(cl-defmethod el-secretario-source-activate-item ((obj el-secretario-test-source))
+(cl-defmethod el-secretario-source-activate-item ((obj el-secretario-example-source))
   (with-slots (current-item) obj
-    (plist-put current-item (1+
-                             (plist-get current-item
-                                        :reviewed)))
-    (plist-get current-item :val)))
+    (plist-put current-item :reviewed
+               (1+ (plist-get current-item
+                              :reviewed)))))
 
-(cl-defmethod el-secretario-source-next-item ((obj el-secretario-test-source))
+(cl-defmethod el-secretario-source-next-item ((obj el-secretario-example-source))
   (with-slots (current-item items-left items-done) obj
     (if-let ((item (pop items-left)))
         (progn
@@ -50,7 +56,7 @@
       (message "No next item!")
       (el-secretario--next-source))))
 
-(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-test-source))
+(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-example-source))
   "TODO"
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-done)))
@@ -62,5 +68,5 @@
       (message "No previous item!")
       (el-secretario--previous-source))))
 
-(provide 'el-secretario-test)
-;;; el-secretario-test.el ends here
+(provide 'el-secretario-example)
+;;; el-secretario-example.el ends here

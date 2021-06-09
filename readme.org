@@ -40,6 +40,12 @@ go through your todo inbox. Pressing ~n~ will in a similar way take you to the
 next item in your inbox. When you've refiled your tasks appropriately your
 secretary will go through all your existing todos over in =Todo.org=
 
+This uses the default keybindings this package provides. See
+[[file:el-secretario-keybindings.el]]. This file isn't loaded automatically. Use
+~require~ or ~use-package~ for that. It's easy to add your own keybindings! Use
+whatever keybinding mechanism you use to add keybindings the respective source's
+keymap.
+
 A more complete configuration can be found at [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my configuration]].
 
 * Vocabulary
@@ -161,6 +167,8 @@ See the docstrings for respective method for what they are supposed to do.
 
 Each source can fill the ~keymap~ slot (as defined in ~el-secretario-source~)
 with a keymap. Otherwise the default keymap will be used.
+
+See [[./el-secretario-example.el][the example source]] and [[file:tests/test-el-secretario.el::(describe "Example module"][its unit tests]].
 
 * Tasks
 Main entry point is ~el-secretario-tasks-choose-task~. See it's docstring for more info.

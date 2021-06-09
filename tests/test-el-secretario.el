@@ -96,6 +96,76 @@
                                                                       (list (find-file-noselect
                                                                            "/tmp/el-secretario/tmp-test.org"))
                                                                       :next-item-hook #'next-item-fun))))
+(describe "Example module"
+  (it "can go through the items"
+    (el-secretario-start-session (el-secretario-example-source
+                                  :items-left '(1 2 3 4 5)))
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 2)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 3)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 4)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 5))
+  (it "can go backwards"
+    (el-secretario-start-session (el-secretario-example-source
+                                  :items-left '(1 2 3 4 5)))
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)
+    (el-secretario/previous-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 2)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 3))
+  (it "can go to the next source when there are no items left"
+    (el-secretario-start-session (list (el-secretario-example-source
+                                        :items-left '(1 2))
+                                       (el-secretario-example-source
+                                        :items-left '(3 4))))
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 2)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 3)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 4))
+  (it "can go to the previous source when there are no items left"
+    (el-secretario-start-session (list (el-secretario-example-source
+                                        :items-left '(1 2))
+                                       (el-secretario-example-source
+                                        :items-left '(3 4))))
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 2)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 3)
+    (el-secretario/previous-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 2)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 3)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+            :to-equal 4)))
 
 (describe "Org module"
   :var* (file source next-item-fun review-item-fun)
@@ -227,17 +297,7 @@
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO Daily review :b:"))
-  (describe "el-secretario-start-session"
-    (it "can accept a function as argument"
-      (el-secretario-start-session (lambda ()
-                                     (el-secretario-org-make-source
-                                      '(todo)
-                                      (list file)
-                                      :next-item-hook #'next-item-fun
-                                      :ids '("sub-task1"))))
-      (dotimes (_ 6)
-        (el-secretario/next-item))
-      (expect 'next-item-fun :to-have-been-called-times 7))
+  (describe "el-secretario-start-session with org module"
 
     (it "can reuse a function accepted as an argument"
       (let ((my-source (lambda ()
@@ -428,20 +488,48 @@ SCHEDULED: <2021-02-02>
                                             (line-end-position))
             :to-equal "* TODO Third task")))
 
-(require 'el-secretario-test)
-(describe "Example module"
-  (it "can go through the items"
-    (el-secretario-start-session (el-secretario-test-source
-                                  :items-left '(1 2 3 4 5)))
-    (expect (el-secretario/next-item)
-            :to-equal 1)
-    (expect (el-secretario/next-item)
-            :to-equal 2)
-    (expect (el-secretario/next-item)
-            :to-equal 3)
-    (expect (el-secretario/next-item)
-            :to-equal 4)
-    (expect (el-secretario/next-item)
-            :to-equal 5)))
+(require 'el-secretario-example)
+
+(describe "el-secretario-start-session"
+    (it "can accepte a function as argument"
+      (el-secretario-start-session (lambda ()
+                                     (el-secretario-example-source
+                                      :items-left '(1 2 3 4 5))))
+      (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+              :to-equal 1)
+      (el-secretario/next-item)
+      (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+              :to-equal 2)
+      (el-secretario/next-item)
+      (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+              :to-equal 3)
+      (el-secretario/next-item)
+      (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+              :to-equal 4)
+      (el-secretario/next-item)
+      (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+              :to-equal 5))
+    (it "can reuse a function accepted as an argument"
+      (let ((my-source (lambda ()
+                         (el-secretario-example-source
+                          :items-left '(1 2 3 4 5)))))
+        (el-secretario-start-session my-source)
+        (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+                :to-equal 1)
+        (el-secretario/next-item)
+        (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+                :to-equal 2)
+        (el-secretario/next-item)
+        (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+                :to-equal 3)
+        (el-secretario-start-session my-source)
+        (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+                :to-equal 1)
+        (el-secretario/next-item)
+        (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+                :to-equal 2)
+        (el-secretario/next-item)
+        (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
+                :to-equal 3))))
 (provide 'test-el-secretario)
 ;;; test-el-secretario.el ends here
