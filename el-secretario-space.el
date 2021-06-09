@@ -63,13 +63,18 @@ Where n is incremented by 1 for each time this function is called on that entry"
     (org-schedule nil (concat "+" delta "d")))
   (el-secretario-space--increment))
 
-(defun el-secretario-space-schedule-and-reset (arg &optional time)
+(defun el-secretario-space-schedule-and-reset (arg &optional time no-hercules)
   "Like `org-schedule' but it also resets the delta property.
 TIME is passed through to `org-schedule'
-Resetting is done with `el-secretario-space-reset'"
+Resetting is done with `el-secretario-space-reset'
+If NO-HERCULES is non-nil, don't bring up the current source's keymap."
   (interactive "P")
+  (when (called-interactively-p)
+    (hercules--hide))
   (el-secretario-space--reset)
-  (org-schedule arg time))
+  (org-schedule arg time)
+  (unless no-hercules
+    (el-secretario/activate-keymap)))
 
 (defun el-secretario-space-compare-le (x y)
   "Return t if X is scheduled before Y, nil otherwise.
