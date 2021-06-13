@@ -192,6 +192,7 @@ shuffling is done in place."
                 (el-secretario--swap LIST i j)))
   LIST)
 
+
 ;;; Patch for hercules' intereraction with minibuffer
 ;;; Remove when https://github.com/wurosh/hercules/pull/2 is merged
 
@@ -288,5 +289,11 @@ See `hercules--temporary-restore-hooks'"
                   (lambda ()
                     (apply #'hercules--remove-hooks hercules--temporary-restore-hooks)
                     (apply #'hercules--show hercules--show-arguments))))
+;;;
+(cl-pushnew '(:function org-capture)
+            (car (cdr hercules--temporary-hide-hooks)))
+(cl-pushnew '(:hook org-capture-after-finalize-hook)
+            (car (cdr hercules--temporary-restore-hooks)))
+
 (provide 'el-secretario)
 ;;; el-secretario.el ends here
