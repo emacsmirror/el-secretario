@@ -59,6 +59,7 @@ subtrees that are also todos. It can then be useful to see the context when revi
    (items-done :initform '())))
 
 
+;;;###autoload
 (cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun keymap shuffle-p ids keymap)
   "
 

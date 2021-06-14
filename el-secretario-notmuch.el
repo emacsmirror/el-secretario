@@ -24,7 +24,7 @@
   ((query :initarg :query)
    (:next-item-hook :initarg :next-item-hook)))
 
-
+;;;###autoload
 (defun el-secretario-notmuch-make-source (query &optional next-item-hook keymap)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
