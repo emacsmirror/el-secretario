@@ -297,6 +297,24 @@
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO Daily review :b:"))
+  (it "can remove an item from the current source"
+
+    (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                      (list file)
+                                                                      :next-item-hook #'next-item-fun)))
+
+    (el-secretario/next-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO bar :b:")
+    (el-secretario-org/ignore-current-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO baz :a:")
+    (el-secretario/previous-item)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO :a:"))
   (describe "el-secretario-start-session with org module"
 
     (it "can reuse a function accepted as an argument"

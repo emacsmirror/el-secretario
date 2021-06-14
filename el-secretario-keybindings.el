@@ -43,6 +43,7 @@
  "t" '(org-set-tags-command :wk "Tags")
  "T" '(org-todo :wk "Tags")
  "s" '(el-secretario-org-schedule :wk "Schedule")
+ "z" '(el-secretario-org/ignore-current-item :wk "Snooze")
  "d" '(el-secretario-org-deadline :wk  "Deadline")
  "D" '((lambda () (interactive) (delete-region (point-min) (point-max))) :wk "Delete visible")
  "q" '((lambda () (interactive) (el-secretario-end-sesion)) :wk "Quit"))

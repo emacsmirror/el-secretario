@@ -171,6 +171,14 @@ function."
       (message "No previous item!")
       (el-secretario--previous-source))))
 
+(defun el-secretario-org/ignore-current-item ()
+  "Remove the current item from this session."
+  (interactive)
+  (when el-secretario--current-source-list
+    (with-slots (current-item) (car el-secretario--current-source-list)
+      (setq current-item nil)
+      (el-secretario/next-item))))
+
 (defvar date nil)
 (defun el-secretario-org--update-status-buffer ()
   "Update the status buffer with useful information.
