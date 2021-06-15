@@ -93,6 +93,11 @@ Note that the backlinks buffer will only be populated when
 ~notmuch-show-next-thread-show~) is called. =M-x
 el-secretario-notmuch/open-link-for-current-email= can be used to open and
 populate the backlinks buffer manually.
+** Elfeed
+Very similar to the notmuch module. It goes through your elfeed items in
+chronological order, oldest first. The relevant function is just
+~el-secretario-elfeed-make-source~, look at it's docstring for more info.
+
 ** Org
 :PROPERTIES:
 :ID:       e378a8e0-2701-41e7-8814-b6a0b0186664

@@ -26,9 +26,18 @@
  "p" '(el-secretario/previous-item :which-key "previous"))
 
 (general-define-key
+ :keymaps 'el-secretario-elfeed-map
+ "n" '(el-secretario/next-item :which-key "next")
+ "p" '(el-secretario/previous-item :which-key "previous")
+ "+" '(elfeed-show-tag :which-key "Add tag")
+ "-" '(elfeed-show-untag :which-key "Remove tag")
+ "c" '(org-capture :which-key "Org Capture")
+ "o" '(elfeed-show-visit :which-key "Open in browser"))
+
+(general-define-key
  :keymaps 'el-secretario-tasks-keymap
  "s" '((lambda () (interactive) (el-secretario-tasks--skip-task t)) :which-key "Skip task")
- "b" '(#'el-secretario-tasks-begin-task :which-key "Begin task")
+ "b" '(el-secretario-tasks-begin-task :which-key "Begin task")
  "t" '((lambda () (interactive) (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" ))
 
 (general-define-key
