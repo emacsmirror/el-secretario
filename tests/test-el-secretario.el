@@ -24,6 +24,7 @@
 (require 'el-secretario-source)
 (require 'el-secretario-org)
 (require 'el-secretario-space)
+(require 'el-secretario-function)
 
 (setq buttercup-colors '((black . 30)
                          (red . 31)
@@ -505,7 +506,37 @@ SCHEDULED: <2021-02-02>
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO Third task")))
+(describe "function module"
+  :var* (next-item-fun)
 
+  (before-each
+
+    (setf (symbol-function 'next-item-fun) (lambda () ))
+    (spy-on 'next-item-fun))
+
+  (it "calls the function"
+    (el-secretario-start-session (el-secretario-function-source
+                                  :func #'next-item-fun))
+    (expect #'next-item-fun :to-have-been-called-times 1))
+  (it "can go to the next source"
+    (el-secretario-start-session (list (el-secretario-function-source
+                                        :func #'next-item-fun)
+                                       (el-secretario-example-source
+                                        :items-left '(1 2 3 4 5))) )
+    (expect #'next-item-fun :to-have-been-called-times 1)
+    (el-secretario/next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1))
+  (it "can go to the previous source"
+    (el-secretario-start-session (list (el-secretario-example-source
+                                        :items-left '(1))
+                                       (el-secretario-function-source
+                                        :func #'next-item-fun)) )
+    (el-secretario/next-item)
+    (el-secretario/previous-item)
+    (expect #'next-item-fun :to-have-been-called-times 1)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)))
 (require 'el-secretario-example)
 
 (describe "el-secretario-start-session"

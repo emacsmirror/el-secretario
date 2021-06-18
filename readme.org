@@ -69,7 +69,9 @@ The example above has one notmuch source, and two org sources.
 various parts of your system.
 
 In general functions and variables that are for users follow the format
-~el-secretario-MODULE-NAME~ and names for developers follow the format ~el-secretario-MODULE--NAME~ (notice the two dashes). Interactive commands use the ~el-secretario-MODULE/NAME~ format.
+~el-secretario-MODULE-NAME~ and names for developers follow the format
+~el-secretario-MODULE--NAME~ (notice the two dashes). Interactive commands use
+the ~el-secretario-MODULE/NAME~ format.
 
 ** Notmuch
 A very simple module that goes through your email in chronological order. The
@@ -152,6 +154,12 @@ that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [
   will ensure that you review your items sorted so that the earliest scheduled
   items comes first. This can be useful to create a queue of tasks that are
   roughly sorted by how relevant they are.
+** Function
+An extremely simple source for when you want a function to be called
+automatically during a specific time in the review. It calls the provided
+function each time the source is activated and goes to the next source
+immediately when ~el-secretario/next-item~ is called. To use it put
+~(el-secretario-function-source :func #'YOUR-FUNCTION)~ in your source list.
 
 ** TODO Tasks
 This one is still a little bit weird and I don't exactly know what it's supposed
