@@ -1,33 +1,62 @@
 
 # Table of Contents
 
-1.  [Basic idea](#org1338dbf)
-    1.  [Simple Configuration](#org027bec1)
-2.  [Vocabulary](#orgb435d83)
-    1.  [Item](#org8d698a4)
-    2.  [Source](#org2b8533c)
-3.  [The modules](#orgf2f731e)
-    1.  [Notmuch](#org5234c35)
-        1.  [Capturing and backlinks](#org4b01895)
-    2.  [Mu4e](#org096ce40)
-    3.  [Elfeed](#org40e7886)
-    4.  [Org](#org4cc5002)
-        1.  [Convenience functions](#org149dd9f)
-        2.  [Property hooks](#org8f4819b)
-    5.  [Space](#org894f5c0)
-        1.  [Relevant variables](#org7a35288)
-        2.  [Relevant functions](#orgc2e5ecf)
-    6.  [Function](#org99db3ef)
-    7.  [Tasks](#org13a1b7a)
-4.  [Creating a new source](#org5e90559)
-5.  [Tasks](#org8a6bc48)
-6.  [Contribute](#org6b9d71f)
-    1.  [Loading in Emacs](#orgbe03387)
+1.  [Requirements and Installation](#orgf35fe7d)
+2.  [Basic idea](#orgc81bcdc)
+    1.  [Simple Configuration](#orgc103408)
+3.  [Vocabulary](#org276001e)
+    1.  [Item](#orgbfee0ad)
+    2.  [Source](#org6cc10e3)
+4.  [The modules](#orgb6a6b57)
+    1.  [Notmuch](#orgb79e53d)
+        1.  [Capturing and backlinks](#orgd83e2a6)
+    2.  [Mu4e](#org685ee24)
+    3.  [Elfeed](#org0e30b75)
+    4.  [Org](#org2895c2b)
+        1.  [Convenience functions](#orgb299e01)
+        2.  [Property hooks](#orgaba7d5c)
+    5.  [Space](#org86bcbf8)
+        1.  [Relevant variables](#orgfdd618a)
+        2.  [Relevant functions](#org64a5789)
+    6.  [Function](#org590978d)
+    7.  [Tasks](#org166b2a9)
+5.  [Creating a new source](#org731fda1)
+6.  [Thanks](#org8d8ab81)
+7.  [Contribute](#org43ed016)
+    1.  [Loading in Emacs](#orgbe79b14)
 
 A framework for reviewing your tasks.
 
 
-<a id="org1338dbf"></a>
+<a id="orgf35fe7d"></a>
+
+# Requirements and Installation
+
+`el-secretario` has support for a number of external packages which needs to be
+installed separately if you want to use them.
+
+-   Org-mode
+-   Notmuch
+-   Mu4e
+-   Elfeed
+    
+    Install this package with the method of your choosing. Currently it isn&rsquo;t on
+    Melpa so a method that uses git is preferred.
+    
+    If you are using doom:
+    
+        (package! el-secretario
+          :recipe (:repo "https://git.sr.ht/~zetagon/el-secretario"))
+    
+    No calls to `require` or `use-package` is needed
+    since all relevant functions are properly autoloaded. If you want the default
+    bindings use:
+    
+        (eval-after-load 'el-secretario
+          '(require 'el-secretario-keybindings))
+
+
+<a id="orgc81bcdc"></a>
 
 # Basic idea
 
@@ -40,7 +69,7 @@ line todo file, and it lets you focus on each task in an isolated controlled env
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
 
-<a id="org027bec1"></a>
+<a id="orgc103408"></a>
 
 ## Simple Configuration
 
@@ -62,7 +91,7 @@ This was all very abstract so let&rsquo;s move on to a concrete example:
 Above is a sample configuration, and here is a [gif](https://zetagon.srht.site/demo-edited.gif) where it&rsquo;s used in action.
 
 Calling `el-secretario-daily-review` will open up your oldest email. Pressing
-`n` in the [hercules](https://melpa.org/#/hercules) prompt will take you to the next email sorted chronologically.
+`n` in the [which-key](https://github.com/justbur/emacs-which-key) prompt will take you to the next email sorted chronologically.
 In this way your secretary will make sure you go through all your email without
 having to worry about which or how many emails you will read.
 
@@ -80,12 +109,12 @@ keymap.
 A more complete configuration can be found at [my configuration](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario).
 
 
-<a id="orgb435d83"></a>
+<a id="org276001e"></a>
 
 # Vocabulary
 
 
-<a id="org8d698a4"></a>
+<a id="orgbfee0ad"></a>
 
 ## Item
 
@@ -93,7 +122,7 @@ The fundamental building block. Items are the thing that you review from each
 source, for example an email or a todo.
 
 
-<a id="org2b8533c"></a>
+<a id="org6cc10e3"></a>
 
 ## Source
 
@@ -102,7 +131,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="orgf2f731e"></a>
+<a id="orgb6a6b57"></a>
 
 # The modules
 
@@ -115,7 +144,7 @@ In general functions and variables that are for users follow the format
 the `el-secretario-MODULE/NAME` format.
 
 
-<a id="org5234c35"></a>
+<a id="orgb79e53d"></a>
 
 ## Notmuch
 
@@ -124,7 +153,7 @@ relevant function is just `el-secretario-notmuch-make-source`, look at it&rsquo;
 docstring for more info.
 
 
-<a id="org4b01895"></a>
+<a id="orgd83e2a6"></a>
 
 ### Capturing and backlinks
 
@@ -145,7 +174,7 @@ el-secretario-notmuch/open-link-for-current-email` can be used to open and
 populate the backlinks buffer manually.
 
 
-<a id="org096ce40"></a>
+<a id="org685ee24"></a>
 
 ## Mu4e
 
@@ -154,7 +183,7 @@ relevant function is just `el-secretario-mu4e-make-source`, look at it&rsquo;s
 docstring for more info.
 
 
-<a id="org40e7886"></a>
+<a id="org0e30b75"></a>
 
 ## Elfeed
 
@@ -163,7 +192,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at it&rsquo;s docstring for more info.
 
 
-<a id="org4cc5002"></a>
+<a id="org2895c2b"></a>
 
 ## Org
 
@@ -171,7 +200,7 @@ A very simple module that goes through your todos. The relevant function is just
 `el-secretario-org-make-source`, look at it&rsquo;s docstring for more info.
 
 
-<a id="org149dd9f"></a>
+<a id="orgb299e01"></a>
 
 ### Convenience functions
 
@@ -181,7 +210,7 @@ This module has some convenience functions:
 -   `el-secretario-org-up-heading`
 
 
-<a id="org8f4819b"></a>
+<a id="orgaba7d5c"></a>
 
 ### Property hooks
 
@@ -241,7 +270,7 @@ with the function `el-secretario-tasks--run-task-hook`.
     ...)` to retain the clock in behaviour.
 
 
-<a id="org894f5c0"></a>
+<a id="org86bcbf8"></a>
 
 ## Space
 
@@ -251,17 +280,17 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org4cc5002). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org2895c2b). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
-<a id="org7a35288"></a>
+<a id="orgfdd618a"></a>
 
 ### Relevant variables
 
 -   `el-secretario-space-increment-percentage`
 
 
-<a id="orgc2e5ecf"></a>
+<a id="org64a5789"></a>
 
 ### Relevant functions
 
@@ -275,7 +304,7 @@ that augments the [org module](#org4cc5002). See [my config](https://github.com/
     roughly sorted by how relevant they are.
 
 
-<a id="org99db3ef"></a>
+<a id="org590978d"></a>
 
 ## Function
 
@@ -286,7 +315,7 @@ immediately when `el-secretario/next-item` is called. To use it put
 `(el-secretario-function-source :func #'YOUR-FUNCTION)` in your source list.
 
 
-<a id="org13a1b7a"></a>
+<a id="org166b2a9"></a>
 
 ## TODO Tasks
 
@@ -294,7 +323,7 @@ This one is still a little bit weird and I don&rsquo;t exactly know what it&rsqu
 to do so ignore it for now!
 
 
-<a id="org5e90559"></a>
+<a id="org731fda1"></a>
 
 # Creating a new source
 
@@ -316,41 +345,27 @@ with a keymap. Otherwise the default keymap will be used.
 See [the example source](./el-secretario-example.el) and [its unit tests](tests/test-el-secretario.el).
 
 
-<a id="org8a6bc48"></a>
+<a id="org8d8ab81"></a>
 
-# Tasks
+# Thanks
 
-Main entry point is `el-secretario-tasks-choose-task`. See it&rsquo;s docstring for more info.
+`el-secretario` is mostly a glue-package. It couldn&rsquo;t exists without all the
+fantastic things it glues together! Huge thanks to the creators of:
 
-When you choose to begin **FOO** or **baz** the default begin hook will run, but
-when you start **bar** the secretary will run `(insert "foobar")` at the beginning
-of the headline. When you finish **baz** the secretary also will run `(insert
-"foobar")` at the beginning of the headline.
-
-    * DONE FOO
-    :PROPERTIES:
-    :EL-SECRETARIO-PRIORITY: 74
-    :END:
-    
-    * bar
-    :PROPERTIES:
-    :EL-SECRETARIO-PRIORITY: 85
-    :EL-SECRETARIO-BEGIN-TASK-HOOK: (insert "foobar")
-    :END:
-    
-    * DONE baz
-    :PROPERTIES:
-    :EL-SECRETARIO-PRIORITY: 106
-    :EL-SECRETARIO-FINISH-TASK-HOOK: (insert "foobar")
-    :END:
+-   [Org-mode](https://orgmode.org/)
+-   [Notmuch](https://notmuchmail.org/)
+-   [Mu4e](https://www.djcbsoftware.nl/code/mu/mu4e.html)
+-   [Elfeed](https://github.com/skeeto/elfeed)
+-   [Hercules](https://melpa.org/#/hercules)
+-   [which-key](https://github.com/justbur/emacs-which-key)
+-   [Emacs](https://www.gnu.org/software/emacs/)
 
 
-<a id="org6b9d71f"></a>
+<a id="org43ed016"></a>
 
 # Contribute
 
-I am currently trying out sourcehut so please send any contributions to
-<https://git.sr.ht/~zetagon/el-secretario> if you can. Send any patches or
+I am currently trying out sourcehut. Send any patches or
 comments to <mailto:~zetagon/el-secretario@lists.sr.ht>. You can browse the list
 [here](https://lists.sr.ht/~zetagon/el-secretario).
 
@@ -362,9 +377,9 @@ It would be very nice to have a mascot for the project though, so I would be
 very happy if you would contribute with a nice drawing.
 
 
-<a id="orgbe03387"></a>
+<a id="orgbe79b14"></a>
 
 ## Loading in Emacs
 
-I still don&rsquo;t know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a pull request. In the meantime I will not prioritize this and just load everything when the main module is loaded.
+I still don&rsquo;t know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a patch. In the meantime I will not prioritize this and just load everything when the main module is loaded.
 

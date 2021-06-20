@@ -1,6 +1,32 @@
 #+TITLE: Readme
 
 A framework for reviewing your tasks.
+* Requirements and Installation
+=el-secretario= has support for a number of external packages which needs to be
+installed separately if you want to use them.
+- Org-mode
+- Notmuch
+- Mu4e
+- Elfeed
+
+  Install this package with the method of your choosing. Currently it isn't on
+  Melpa so a method that uses git is preferred.
+
+  If you are using doom:
+
+  #+begin_src emacs-lisp
+(package! el-secretario
+  :recipe (:repo "https://git.sr.ht/~zetagon/el-secretario"))
+  #+end_src
+
+  No calls to ~require~ or ~use-package~ is needed
+  since all relevant functions are properly autoloaded. If you want the default
+  bindings use:
+
+  #+begin_src emacs-lisp
+(eval-after-load 'el-secretario
+  '(require 'el-secretario-keybindings))
+  #+end_src
 
 * Basic idea
 The basic idea is that there are a bunch of decisions you don't want to make, so
@@ -31,7 +57,7 @@ This was all very abstract so let's move on to a concrete example:
 Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where it's used in action.
 
 Calling ~el-secretario-daily-review~ will open up your oldest email. Pressing
-~n~ in the [[https://melpa.org/#/hercules][hercules]] prompt will take you to the next email sorted chronologically.
+~n~ in the [[https://github.com/justbur/emacs-which-key][which-key]] prompt will take you to the next email sorted chronologically.
 In this way your secretary will make sure you go through all your email without
 having to worry about which or how many emails you will read.
 
@@ -187,37 +213,21 @@ with a keymap. Otherwise the default keymap will be used.
 
 See [[./el-secretario-example.el][the example source]] and [[file:tests/test-el-secretario.el::(describe "Example module"][its unit tests]].
 
-* Tasks
-Main entry point is ~el-secretario-tasks-choose-task~. See it's docstring for more info.
+* Thanks
+=el-secretario= is mostly a glue-package. It couldn't exists without all the
+fantastic things it glues together! Huge thanks to the creators of:
 
-When you choose to begin *FOO* or *baz* the default begin hook will run, but
-when you start *bar* the secretary will run ~(insert "foobar")~ at the beginning
-of the headline. When you finish *baz* the secretary also will run ~(insert
-"foobar")~ at the beginning of the headline.
+- [[https://orgmode.org/][Org-mode]]
+- [[https://notmuchmail.org/][Notmuch]]
+- [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]]
+- [[https://github.com/skeeto/elfeed][Elfeed]]
+- [[https://melpa.org/#/hercules][Hercules]]
+- [[https://github.com/justbur/emacs-which-key][which-key]]
+- [[https://www.gnu.org/software/emacs/][Emacs]]
 
-#+begin_src org
-,* DONE FOO
-:PROPERTIES:
-:EL-SECRETARIO-PRIORITY: 74
-:END:
-
-,* bar
-:PROPERTIES:
-:EL-SECRETARIO-PRIORITY: 85
-:EL-SECRETARIO-BEGIN-TASK-HOOK: (insert "foobar")
-:END:
-
-,* DONE baz
-:PROPERTIES:
-:EL-SECRETARIO-PRIORITY: 106
-:EL-SECRETARIO-FINISH-TASK-HOOK: (insert "foobar")
-:END:
-
-#+end_src
 * Contribute
 
-I am currently trying out sourcehut so please send any contributions to
-https://git.sr.ht/~zetagon/el-secretario if you can. Send any patches or
+I am currently trying out sourcehut. Send any patches or
 comments to mailto:~zetagon/el-secretario@lists.sr.ht. You can browse the list
 [[https://lists.sr.ht/~zetagon/el-secretario][here]].
 
@@ -228,7 +238,7 @@ feedback on that is especially welcome.
 It would be very nice to have a mascot for the project though, so I would be
 very happy if you would contribute with a nice drawing.
 ** Loading in Emacs
-I still don't know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a pull request. In the meantime I will not prioritize this and just load everything when the main module is loaded.
+I still don't know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a patch. In the meantime I will not prioritize this and just load everything when the main module is loaded.
 
 
 # Local Variables:
