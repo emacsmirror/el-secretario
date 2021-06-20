@@ -19,6 +19,7 @@
 ;;
 ;;; Code:
 
+;;;###autoload
 (defclass el-secretario-function-source (el-secretario-source)
   ((func :initarg :func)))
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-function-source) &optional backwards)
