@@ -26,6 +26,11 @@
  "p" '(el-secretario/previous-item :which-key "previous"))
 
 (general-define-key
+ :keymaps 'el-secretario-mu4e-map
+ "n" '(el-secretario/next-item :which-key "next")
+ "p" '(el-secretario/previous-item :which-key "previous"))
+
+(general-define-key
  :keymaps 'el-secretario-elfeed-map
  "n" '(el-secretario/next-item :which-key "next")
  "p" '(el-secretario/previous-item :which-key "previous")

@@ -95,6 +95,10 @@ Note that the backlinks buffer will only be populated when
 ~notmuch-show-next-thread-show~) is called. =M-x
 el-secretario-notmuch/open-link-for-current-email= can be used to open and
 populate the backlinks buffer manually.
+** Mu4e
+Very similar to the notmuch module. It goes through your mu4e email. The
+relevant function is just ~el-secretario-mu4e-make-source~, look at it's
+docstring for more info.
 ** Elfeed
 Very similar to the notmuch module. It goes through your elfeed items in
 chronological order, oldest first. The relevant function is just
