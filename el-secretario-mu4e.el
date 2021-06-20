@@ -58,7 +58,33 @@ KEYMAP is a keymap to use during review of this source"
   (unless (mu4e-view-headers-next -1)
     (el-secretario--previous-source)))
 
-
+;; This fixes a bug in mu4e
+;; It should return nil if it doesn't succeed in getting the previous message
+(define-advice mu4e~headers-move (:override (lines))
+    (unless (eq major-mode 'mu4e-headers-mode)
+      (mu4e-error "Must be in mu4e-headers-mode (%S)" major-mode))
+    (let* ((succeeded (zerop (forward-line lines)))
+           (docid (mu4e~headers-docid-at-point)))
+      (if succeeded
+          ;; move point, even if this function is called when this window is not
+          ;; visible
+          (when docid
+            ;; update all windows showing the headers buffer
+            (walk-windows
+             (lambda (win)
+               (when (eq (window-buffer win) (mu4e-get-headers-buffer))
+                 (set-window-point win (point))))
+             nil t)
+            (if (eq mu4e-split-view 'single-window)
+                (when (eq (window-buffer) (mu4e-get-view-buffer))
+                  (mu4e-headers-view-message))
+              ;; update message view if it was already showing
+              (when (and mu4e-split-view (window-live-p mu4e~headers-view-win))
+                (mu4e-headers-view-message)))
+            ;; attempt to highlight the new line, display the message
+            (mu4e~headers-highlight docid)
+            docid)
+        nil)) )
 
 (provide 'el-secretario-mu4e)
 ;;; el-secretario-mu4e.el ends here
