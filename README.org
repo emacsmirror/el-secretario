@@ -4,15 +4,15 @@ A framework for reviewing your tasks.
 * Requirements and Installation
 =el-secretario= has support for a number of external packages which needs to be
 installed separately if you want to use them.
-- Org-mode
-- Notmuch
-- Mu4e
-- Elfeed
+- [[https://orgmode.org/][Org-mode]]
+- [[https://notmuchmail.org/][Notmuch]]
+- [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]]
+- [[https://github.com/skeeto/elfeed][Elfeed]]
 
-  Install this package with the method of your choosing. Currently it isn't on
-  Melpa so a method that uses git is preferred.
+Install this package with the method of your choosing. Currently it isn't on
+Melpa so a method that uses git is preferred.
 
-  If you are using doom:
+If you are using doom:
 
   #+begin_src emacs-lisp
 (package! el-secretario
