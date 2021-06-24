@@ -38,7 +38,7 @@ KEYMAP is a keymap to use during review of this source"
     (setq elfeed-show-entry-delete 'elfeed-kill-buffer)
     (setq elfeed-show-entry-switch (lambda (x) (switch-to-buffer x nil t)))
     (when query
-      (setq elfeed-search-filter query))
+      (elfeed-search-set-filter query))
 
     (elfeed)
 
