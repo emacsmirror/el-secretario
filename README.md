@@ -1,34 +1,35 @@
 
 # Table of Contents
 
-1.  [Requirements and Installation](#org5f2416e)
-2.  [Basic idea](#org7235716)
-    1.  [Simple Configuration](#org849e180)
-3.  [Vocabulary](#org56a4955)
-    1.  [Item](#org9cfbf2e)
-    2.  [Source](#orgd4f5709)
-4.  [The modules](#org3b81b4c)
-    1.  [Notmuch](#org831e2fd)
-        1.  [Capturing and backlinks](#org8adc597)
-    2.  [Mu4e](#org172ee9f)
-    3.  [Elfeed](#org4e32dc5)
-    4.  [Org](#org6972361)
-        1.  [Convenience functions](#org3cd529b)
-        2.  [Property hooks](#org0c7e4bc)
-    5.  [Space](#org5e62f99)
-        1.  [Relevant variables](#orgb14f0bc)
-        2.  [Relevant functions](#org5d866c2)
-    6.  [Function](#org3e43964)
-    7.  [Tasks](#orgdc74ae6)
-5.  [Creating a new source](#org20f6731)
-6.  [Thanks](#org60534e7)
-7.  [Contribute](#org87a668f)
-    1.  [Loading in Emacs](#orgdeb1394)
+1.  [Requirements and Installation](#org29ed7ad)
+2.  [Basic idea](#org91d6ab1)
+    1.  [Simple Configuration](#org07f4330)
+3.  [Vocabulary](#orgc8a8f6c)
+    1.  [Item](#org8246692)
+    2.  [Source](#orgcedbd4a)
+4.  [The modules](#orgacefa84)
+    1.  [Notmuch](#org21c05e3)
+        1.  [Capturing and backlinks](#org3b156c6)
+    2.  [Mu4e](#org2086ced)
+    3.  [Elfeed](#org8293d89)
+    4.  [Org](#orgc672681)
+        1.  [Convenience functions](#orgb184da4)
+        2.  [Property hooks](#orgf2986c2)
+    5.  [Space](#org9c24572)
+        1.  [Relevant variables](#org44f8adf)
+        2.  [Relevant functions](#org2c9a431)
+    6.  [Function](#org85cae8e)
+    7.  [Tasks](#org3770ac9)
+5.  [Creating a new source](#orgac2062a)
+6.  [Thanks](#orgdfaf019)
+7.  [Contribute](#org4ee402d)
+    1.  [Moar sources!](#org1e365a1)
+    2.  [Loading in Emacs](#orgc07a030)
 
 A framework for reviewing your tasks.
 
 
-<a id="org5f2416e"></a>
+<a id="org29ed7ad"></a>
 
 # Requirements and Installation
 
@@ -56,7 +57,7 @@ bindings use:
       '(require 'el-secretario-keybindings))
 
 
-<a id="org7235716"></a>
+<a id="org91d6ab1"></a>
 
 # Basic idea
 
@@ -69,7 +70,7 @@ line todo file, and it lets you focus on each task in an isolated controlled env
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
 
-<a id="org849e180"></a>
+<a id="org07f4330"></a>
 
 ## Simple Configuration
 
@@ -109,12 +110,12 @@ keymap.
 A more complete configuration can be found at [my configuration](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario).
 
 
-<a id="org56a4955"></a>
+<a id="orgc8a8f6c"></a>
 
 # Vocabulary
 
 
-<a id="org9cfbf2e"></a>
+<a id="org8246692"></a>
 
 ## Item
 
@@ -122,7 +123,7 @@ The fundamental building block. Items are the thing that you review from each
 source, for example an email or a todo.
 
 
-<a id="orgd4f5709"></a>
+<a id="orgcedbd4a"></a>
 
 ## Source
 
@@ -131,7 +132,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="org3b81b4c"></a>
+<a id="orgacefa84"></a>
 
 # The modules
 
@@ -144,7 +145,7 @@ In general functions and variables that are for users follow the format
 the `el-secretario-MODULE/NAME` format.
 
 
-<a id="org831e2fd"></a>
+<a id="org21c05e3"></a>
 
 ## Notmuch
 
@@ -153,7 +154,7 @@ relevant function is just `el-secretario-notmuch-make-source`, look at it&rsquo;
 docstring for more info.
 
 
-<a id="org8adc597"></a>
+<a id="org3b156c6"></a>
 
 ### Capturing and backlinks
 
@@ -174,7 +175,7 @@ el-secretario-notmuch/open-link-for-current-email` can be used to open and
 populate the backlinks buffer manually.
 
 
-<a id="org172ee9f"></a>
+<a id="org2086ced"></a>
 
 ## Mu4e
 
@@ -183,7 +184,7 @@ relevant function is just `el-secretario-mu4e-make-source`, look at it&rsquo;s
 docstring for more info.
 
 
-<a id="org4e32dc5"></a>
+<a id="org8293d89"></a>
 
 ## Elfeed
 
@@ -192,7 +193,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at it&rsquo;s docstring for more info.
 
 
-<a id="org6972361"></a>
+<a id="orgc672681"></a>
 
 ## Org
 
@@ -200,7 +201,7 @@ A very simple module that goes through your todos. The relevant function is just
 `el-secretario-org-make-source`, look at it&rsquo;s docstring for more info.
 
 
-<a id="org3cd529b"></a>
+<a id="orgb184da4"></a>
 
 ### Convenience functions
 
@@ -210,7 +211,7 @@ This module has some convenience functions:
 -   `el-secretario-org-up-heading`
 
 
-<a id="org0c7e4bc"></a>
+<a id="orgf2986c2"></a>
 
 ### Property hooks
 
@@ -270,7 +271,7 @@ with the function `el-secretario-tasks--run-task-hook`.
     ...)` to retain the clock in behaviour.
 
 
-<a id="org5e62f99"></a>
+<a id="org9c24572"></a>
 
 ## Space
 
@@ -280,17 +281,17 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org6972361). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#orgc672681). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
-<a id="orgb14f0bc"></a>
+<a id="org44f8adf"></a>
 
 ### Relevant variables
 
 -   `el-secretario-space-increment-percentage`
 
 
-<a id="org5d866c2"></a>
+<a id="org2c9a431"></a>
 
 ### Relevant functions
 
@@ -304,7 +305,7 @@ that augments the [org module](#org6972361). See [my config](https://github.com/
     roughly sorted by how relevant they are.
 
 
-<a id="org3e43964"></a>
+<a id="org85cae8e"></a>
 
 ## Function
 
@@ -315,7 +316,7 @@ immediately when `el-secretario/next-item` is called. To use it put
 `(el-secretario-function-source :func #'YOUR-FUNCTION)` in your source list.
 
 
-<a id="orgdc74ae6"></a>
+<a id="org3770ac9"></a>
 
 ## TODO Tasks
 
@@ -323,7 +324,7 @@ This one is still a little bit weird and I don&rsquo;t exactly know what it&rsqu
 to do so ignore it for now!
 
 
-<a id="org20f6731"></a>
+<a id="orgac2062a"></a>
 
 # Creating a new source
 
@@ -345,7 +346,7 @@ with a keymap. Otherwise the default keymap will be used.
 See [the example source](./el-secretario-example.el) and [its unit tests](tests/test-el-secretario.el).
 
 
-<a id="org60534e7"></a>
+<a id="orgdfaf019"></a>
 
 # Thanks
 
@@ -361,7 +362,7 @@ fantastic things it glues together! Huge thanks to the creators of:
 -   [Emacs](https://www.gnu.org/software/emacs/)
 
 
-<a id="org87a668f"></a>
+<a id="org4ee402d"></a>
 
 # Contribute
 
@@ -377,7 +378,16 @@ It would be very nice to have a mascot for the project though, so I would be
 very happy if you would contribute with a nice drawing.
 
 
-<a id="orgdeb1394"></a>
+<a id="org1e365a1"></a>
+
+## Moar sources!
+
+El secretario gets better the more sources there are. I&rsquo;d be very happy to
+review contributions with new sources or improvements over existing ones. See
+[Creating a new source](#orgac2062a).
+
+
+<a id="orgc07a030"></a>
 
 ## Loading in Emacs
 

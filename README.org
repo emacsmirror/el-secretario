@@ -197,6 +197,9 @@ to do so ignore it for now!
 
 
 * Creating a new source
+:PROPERTIES:
+:ID:       2be5fc5b-e6f6-48c0-ac60-15024247e615
+:END:
 A source is a [[info:eieio#Top][eieio]] class that inherits from ~el-secretario-source~. It needs to
 implement the following methods:
 - ~el-secretario-source-next-item~
@@ -237,6 +240,12 @@ feedback on that is especially welcome.
 
 It would be very nice to have a mascot for the project though, so I would be
 very happy if you would contribute with a nice drawing.
+** Moar sources!
+
+El secretario gets better the more sources there are. I'd be very happy to
+review contributions with new sources or improvements over existing ones. See
+[[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Creating a new source]].
+
 ** Loading in Emacs
 I still don't know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a patch. In the meantime I will not prioritize this and just load everything when the main module is loaded.
 
