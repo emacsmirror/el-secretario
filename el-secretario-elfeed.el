@@ -1,4 +1,4 @@
-;;; el-secretario-elfeed.el Elfeed implementation for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-elfeed.el --- Elfeed implementation for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
@@ -7,18 +7,19 @@
 ;; Created: September 20, 2020
 ;; Modified: October 17, 2020
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "26.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;
+;; An elfeed source for el-secretario
 ;;
 ;;; Code:
 (require 'el-secretario-source)
+(require 'elfeed)
 
 (defclass el-secretario-elfeed-source (el-secretario-source)
   ((query :initarg :query)))

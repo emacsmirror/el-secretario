@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5"))
+;; Package-Requires: ((emacs "26.3") )
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -21,6 +21,8 @@
 
 (require 'buttercup)
 (require 'el-secretario)
+(require 'el-secretario-message)
+(require 'el-secretario-tasks)
 (require 'el-secretario-source)
 (require 'el-secretario-org)
 (require 'el-secretario-space)

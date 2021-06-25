@@ -1,4 +1,4 @@
-;;; el-secretario-org.el org-mode module for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-org.el --- Org mode module for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
@@ -7,9 +7,9 @@
 ;; Created: September 20, 2020
 ;; Modified: October 17, 2020
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre") (dash "2.18.1"))
+;; Package-Requires: ((emacs "26.3")  (org-ql "0.6-pre") (dash "2.18.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -33,6 +33,7 @@ For example `el-secretario-org-narrow-to-highest-todo' might be
 useful for when you have defined projects to be a todo entry with
 subtrees that are also todos. It can then be useful to see the context when reviewing.")
 (defun el-secretario-org-narrow ()
+  "Function to use for narrowing to the current item."
   (funcall el-secretario-org-narrow-function))
 
 (defun el-secretario-org-narrow-to-highest-todo ()
@@ -62,8 +63,7 @@ subtrees that are also todos. It can then be useful to see the context when revi
 
 ;;;###autoload
 (cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun keymap shuffle-p ids keymap)
-  "
-
+  "\
 QUERY is an arbitrary org-ql query.
 
 FILES is the files to search through.
@@ -220,7 +220,9 @@ That information is the currently visible schedule dates and deadlines."
                    (org-get-tags nil 't))))
 
 (defun el-secretario-org-up-heading (arg)
-  "Call `outline-up-heading' but return position if succeeds and nil otherwise"
+  "Call `outline-up-heading' but return position if succeeds and nil otherwise.
+
+Pass ARG to `outline-up-heading'."
   (condition-case nil
       (progn
         (outline-up-heading arg)
@@ -229,8 +231,9 @@ That information is the currently visible schedule dates and deadlines."
 
 (defun el-secretario-org--parse-headline ()
   "Parse headline at point and put in some more relevant information.
-This is like `org-element-headline-parser' but with some extra properties put in.
-"
+
+This is like `org-element-headline-parser' but with some extra
+properties put in."
   (--> (org-element-headline-parser (line-end-position))
     (nth 1 it)
     (plist-put it :file-name (buffer-file-name))

@@ -1,4 +1,4 @@
-;;; el-secretario-source.el --- Description -*- lexical-binding: t; -*-
+;;; el-secretario-source.el --- The base class for sources -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
@@ -7,18 +7,22 @@
 ;; Created: June 07, 2021
 ;; Modified: June 07, 2021
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "26.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;  Description
+;;  This file contains the base source class. The doc strings of each method
+;;  describes what a source needs to implement.
 ;;
 ;;; Code:
 (require 'eieio)
+(require 'eieio-base)
+(require 'hercules)
+
 (defvar el-secretario-source-default-map (make-sparse-keymap)
   "The default hercules-style keymap for sources.")
 (defclass el-secretario-source (eieio-named)
@@ -40,7 +44,7 @@ the `el-secretario-source-init') only once\" is kept.
 ;;; User methods
 ;; Each new source should implement these methods
 
-(cl-defmethod el-secretario-source-init :after ((obj el-secretario-source) &optional backwards)
+(cl-defmethod el-secretario-source-init :after ((obj el-secretario-source) &optional _backwards)
   "Set the `is-initialized' flag after a source has been initialized."
   (with-slots (is-initialized) obj
     (setq is-initialized t)))
@@ -64,10 +68,15 @@ source that only needs to happen once. The default
 behaviour (i.e. if your source doesn 't implement this method) is
 to call `el-secretario-source-activate'.
 
-It should also do whatever is needed to bring up the relevant item to the user."
+It should also do whatever is needed to bring up the relevant item to the user.
+
+If BACKWARDS is t initialize the source in the reverse order.
+This most likely means that the user has called
+`el-secretario/previous-item' and is exepcting the last item of
+the source to be shown."
   (el-secretario-source-activate obj backwards))
 
-(cl-defmethod el-secretario-source-next-item ((obj el-secretario-source))
+(cl-defmethod el-secretario-source-next-item ((_obj el-secretario-source))
   "Go to the next item of source OBJ.
 
 It should call `el-secretario--next-source' if there are no more items.
@@ -76,13 +85,13 @@ Example:
  For the notmuch module, this method goes to the next email."
   (display-warning "This source doesn't implement the next-item method!"))
 
-(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-source))
+(cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-source))
   "Go to the previous item of source OBJ.
 
 It should call `el-secretario--previous-source' if there are no more items."
   (display-warning "This source doesn't implement the previous-item method!"))
 
-(cl-defmethod el-secretario-source-activate ((obj el-secretario-source) &optional backwards)
+(cl-defmethod el-secretario-source-activate ((_obj el-secretario-source) &optional _backwards)
   "Activate source OBJ.
 
 This method is called when el-secretario switches to source
@@ -90,7 +99,12 @@ OBJ (for example when the user calls `el-secretario/next-item'
 with no items left, so el-secretario switches to source OBJ).
 
 For example, the org module implements this method to bring up
-the correct org buffer, and go to the correct heading."
+the correct org buffer, and go to the correct heading.
+
+If BACKWARDS is t initialize the source in the reverse order.
+This most likely means that the user has called
+`el-secretario/previous-item' and is exepcting the last item of
+the source to be shown."
   (display-warning "This source doesn't implement the activate method"))
 
 ;;; Utility methods
@@ -101,7 +115,7 @@ the correct org buffer, and go to the correct heading."
   (hercules--show (oref obj keymap)
                   t t))
 (cl-defmethod el-secretario--source-initialized-p ((obj el-secretario-source))
-  "Return `t' if OBJ is initialized"
+  "Return t if OBJ is initialized."
   (oref obj is-initialized))
 (provide 'el-secretario-source)
 ;;; el-secretario-source.el ends here

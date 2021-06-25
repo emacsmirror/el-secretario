@@ -1,4 +1,4 @@
-;;; el-secretario-mu4e.el Mu4e implementation for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-mu4e.el --- Mu4e implementation for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
@@ -7,14 +7,16 @@
 ;; Created: June 20, 2021
 ;; Modified: June 20, 2021
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience mail
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "26.3")  (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
+;; The Emacs secretary that helps you through all your inboxes and tasks. See
+;; README.org
 ;;
 ;;
 ;;; Code:
@@ -43,6 +45,9 @@ KEYMAP is a keymap to use during review of this source"
 
 (defvar el-secretario-mu4e--activate-backwards nil)
 (defun el-secretario-mu4e--after-search-h ()
+  "Go to the correct message directly after search is complete.
+
+Should be added to `mu4e-headers-found-hook'."
   (remove-hook 'mu4e-headers-found-hook #'el-secretario-mu4e--after-search-h)
   (when el-secretario-mu4e--activate-backwards
     (goto-char (point-max))

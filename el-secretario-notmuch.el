@@ -1,4 +1,4 @@
-;;; el-secretario-notmuch.el Notmuch implementation for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-notmuch.el --- Notmuch implementation for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
@@ -7,28 +7,27 @@
 ;; Created: September 20, 2020
 ;; Modified: October 17, 2020
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience mail
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "26.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;
+;; An notmuch source for el-secretario
 ;;
 ;;; Code:
 (require 'el-secretario-source)
+(require 'notmuch)
 
 (defclass el-secretario-notmuch-source (el-secretario-source)
-  ((query :initarg :query)
-   (:next-item-hook :initarg :next-item-hook)))
+  ((query :initarg :query)))
 
 ;;;###autoload
 (defun el-secretario-notmuch-make-source (query &optional keymap)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
-NEXT-ITEM-HOOk is called on each heading.
 KEYMAP is a keymap to use during review of this source"
   (el-secretario-notmuch-source
    :keymap (or keymap 'el-secretario-source-default-map)
@@ -48,10 +47,10 @@ KEYMAP is a keymap to use during review of this source"
     (el-secretario-notmuch--search-show-thread)
     (el-secretario/activate-keymap)))
 
-(cl-defmethod el-secretario-source-next-item ((obj el-secretario-notmuch-source))
-  (el-secretario--notmuch-show-next-thread))
-(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-notmuch-source))
-  (el-secretario--notmuch-show-next-thread t))
+(cl-defmethod el-secretario-source-next-item ((_obj el-secretario-notmuch-source))
+  (el-secretario-notmuch-show-next-thread))
+(cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-notmuch-source))
+  (el-secretario-notmuch-show-next-thread t))
 
 ;;
 ;; The logic for detecting when to call next-source or previous-source is quite
@@ -71,8 +70,11 @@ KEYMAP is a keymap to use during review of this source"
 ;; 2020-06-08 [1/1]   Sender bar    Subject b           (tagB)
 ;; End of search results.
 
-(defun el-secretario--notmuch-show-next-thread (&optional previous)
-  "Like `notmuch-show-next-thread' but call `el-secretario-notmuch--search-show-thread' instead"
+(defun el-secretario-notmuch-show-next-thread (&optional previous)
+  "Like `notmuch-show-next-thread' but call `el-secretario-notmuch--search-show-thread' instead.
+
+If PREVIOUS is non-nil, move to the previous item in the search
+results instead."
   (interactive "P")
   (let ((parent-buffer notmuch-show-parent-buffer))
     (notmuch-bury-or-kill-this-buffer)
@@ -88,7 +90,11 @@ KEYMAP is a keymap to use during review of this source"
 
 
 (defun el-secretario-notmuch--search-show-thread (&optional elide-toggle)
-  "Like `notmuch-search-show-thread' but call `el-secretario--next-source' if there are no more mail."
+  "Wrapper-function around `notmuch-search-show-thread'.
+
+Like `notmuch-search-show-thread' but call
+`el-secretario--next-source' if there are no more mail.
+Pass ELIDE-TOGGLE to `notmuch-search-show-thread'."
   (interactive "P")
   (let ((thread-id (notmuch-search-find-thread-id))
         (subject (notmuch-search-find-subject)))
@@ -99,7 +105,8 @@ KEYMAP is a keymap to use during review of this source"
                              notmuch-search-query-string
                              ;; Name the buffer based on the subject.
                              (concat "*"
-                                     (truncate-string-to-width subject 30 nil nil t)
+                                     (truncate-string-to-width
+                                      subject 30 nil nil t)
                                      "*"))
                (el-secretario/activate-keymap)
                (el-secretario-notmuch--open-link-for-current-email))
@@ -112,19 +119,21 @@ When you review an email in a thread that you have captured to
 with this function you will see that capture in the status
 window.
 
-You can use your own template by calling `el-secretario-notmuch--reverse-capture' yourself.
- "
-  (el-secretario-notmuch--reverse-capture file (concat "\n* WAITING for email: [[notmuch:id:" message-id "][Email: " subject "]]"
-                                  "\n:PROPERTIES:"
-                                  "\n:ID: " notmuch-show-thread-id
-                                  "\n:From: \"" from
-                                  "\"\n:END:\n")))
+You can use your own template by calling `el-secretario-notmuch--reverse-capture' yourself."
+  (el-secretario-notmuch--reverse-capture
+   file
+   (concat "\n* WAITING for email: [[notmuch:id:" message-id "][Email: "
+           subject "]]"
+           "\n:PROPERTIES:"
+           "\n:ID: " notmuch-show-thread-id
+           "\n:From: \"" from
+           "\"\n:END:\n")))
 
 
 (defun el-secretario-notmuch-capture-get-thread-link ()
   "Get a link to the thread of the captured email.
 
-To be used in a capture template. "
+To be used in a capture template."
   (with-current-buffer (org-capture-get :original-buffer)
     (concat "[[notmuch:" notmuch-show-thread-id "][Thread]]")))
 

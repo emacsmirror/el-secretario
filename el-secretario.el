@@ -1,4 +1,4 @@
-;;; el-secretario.el General interface for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario.el --- General interface for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
@@ -7,15 +7,16 @@
 ;; Created: September 20, 2020
 ;; Modified: October 17, 2020
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "26.3")  (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;
+;; The Emacs secretary that helps you through all your inboxes and tasks. See
+;; README.org
 ;;
 ;;; Code:
 (require 'eieio)
@@ -23,12 +24,6 @@
 (require 'cl-lib)
 (require 'org-ql)
 (require 'hercules)
-(require 'el-secretario-source)
-(require 'el-secretario-org)
-(require 'el-secretario-message)
-(require 'el-secretario-notmuch)
-(require 'el-secretario-space)
-(require 'el-secretario-tasks)
 
 
 
@@ -38,17 +33,7 @@
   "Determines if code is running in testing mode.
 
 When a user is interacting with el-secretario this should always
-be nil. Set it to `t' if in testing
-")
-
-
-
-
-(defun el-secretario/activate-keymap ()
-  "Activate the keymap of the currently active source."
-  (interactive)
-  (when el-secretario--current-source-list
-    (el-secretario--source-keymap-activate (car el-secretario--current-source-list))))
+be nil. Set it to t if in testing.")
 
 (defvar el-secretario--current-source-list nil
   "TODO")
@@ -58,13 +43,19 @@ be nil. Set it to `t' if in testing
 
 (defvar el-secretario--status-buffer-name "*el-secretario-status*"
   "TODO")
+
 (defvar el-secretario--original-buffer nil
   "The buffer the user was in before activating el-secretario.")
-
 (defvar el-secretario--sesion-active nil
-  "t when a session is active")
+  "Is t when a session is active.")
 
 (defvar el-secretario--sources '())
+
+(defun el-secretario/activate-keymap ()
+  "Activate the keymap of the currently active source."
+  (interactive)
+  (when el-secretario--current-source-list
+    (el-secretario--source-keymap-activate (car el-secretario--current-source-list))))
 
 
 (defun secretary ()
@@ -98,6 +89,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
   (el-secretario-source-init (car el-secretario--current-source-list)))
 
 (defun el-secretario-end-sesion ()
+  "End current session and do cleanup."
   (interactive)
   (setq el-secretario--sesion-active nil)
   (switch-to-buffer el-secretario--original-buffer)
@@ -169,10 +161,11 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
 
 
 (defvar el-secretario--y-or-no-p-input-list nil
-  "The list `el-secretario-y-or-no-p' will take from if in testing mode")
+  "The list `el-secretario-y-or-no-p' will take from if in testing mode.")
 
 (defun el-secretario--y-or-n-p (prompt)
-  "A version of `y-or-n-p' that is testable."
+  "A version of `y-or-n-p' that is testable.
+Pass PROMPT to `y-or-n-p'."
   (if el-secretario--is-testing
       (pop el-secretario--y-or-no-p-input-list)
     (y-or-n-p prompt)))
@@ -195,104 +188,89 @@ shuffling is done in place."
 ;;; Patch for hercules' intereraction with minibuffer
 ;;; Remove when https://github.com/wurosh/hercules/pull/2 is merged
 
-(define-advice hercules--hide (:before (&rest _))
-  (apply #'hercules--remove-hooks hercules--temporary-hide-hooks))
-(define-advice hercules--show (:before (&optional keymap flatten transient &rest _))
-  (setq hercules--show-arguments (list keymap flatten transient))
-  (apply #'hercules--add-hooks hercules--temporary-hide-hooks))
-
-(defvar hercules--temporary-restore-hooks
-  '(hercules--restore-after-minibuffer
-    ((:hook minibuffer-exit-hook)))
-  "Hooks for showing hercules after temporarily hiding.
-
-CAR should be `hercules--restore-after-minibuffer'. CDR is a list
-of hooks (as defined by `hercules--add-hooks') for when to show
-hercules after temporarily hiding it with
-`hercules--temporary-hide-hooks'.
-
-Call by
-`(apply hercules--add-hooks hercules--temporary-hide-hooks)'
-or
-`(apply hercules--remove-hooks hercules--temporary-hide-hooks)'
-")
-
-(defvar hercules--temporary-hide-hooks
-  '(hercules--hide-before-minibuffer
+(defvar el-secretario-hercules--show-arguments nil
+  "The arguments `hercules--show' was last called with.")
+(defvar el-secretario-hercules--temporary-hide-hooks
+  '(el-secretario-hercules--hide-before-minibuffer
     ((:function read-string)
      (:function read-from-minibuffer)))
   "Hooks for temporarily hiding hercules.
 
 CAR should be hercules--hide-before-minibuffer. CDR is a list of
-hooks (as defined by `hercules--add-hooks') for when to
+hooks (as defined by `el-secretario-hercules--add-hooks') for when to
 temporarily hide hercules. Also see
-`hercules--temporary-restore-hooks'.
+`el-secretario-hercules--temporary-restore-hooks'.
 
 Call by
-`(apply hercules--add-hooks hercules--temporary-hide-hooks)'
+`(apply el-secretario-hercules--add-hooks el-secretario-hercules--temporary-hide-hooks)'
 or
-`(apply hercules--remove-hooks hercules--temporary-hide-hooks)'
-")
-(defun hercules--remove-hooks (fun hooks)
+`(apply el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks)'.")
+
+(defvar el-secretario-hercules--temporary-restore-hooks
+  '(el-secretario-hercules--restore-after-minibuffer
+    ((:hook minibuffer-exit-hook)))
+  "Hooks for showing hercules after temporarily hiding.
+
+CAR should be `el-secretario-hercules--restore-after-minibuffer'. CDR is a list
+of hooks (as defined by `el-secretario-hercules--add-hooks') for when to show
+hercules after temporarily hiding it with
+`el-secretario-hercules--temporary-hide-hooks'.
+
+Call by
+`(apply el-secretario-hercules--add-hooks el-secretario-hercules--temporary-hide-hooks)'
+or
+`(apply el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks)'.")
+
+(define-advice hercules--hide (:before (&rest _))
+  (apply #'el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks))
+(define-advice hercules--show (:before (&optional keymap flatten transient &rest _))
+  (setq el-secretario-hercules--show-arguments (list keymap flatten transient))
+  (apply #'el-secretario-hercules--add-hooks el-secretario-hercules--temporary-hide-hooks))
+
+(defun el-secretario-hercules--remove-hooks (fun hooks)
   "Add FUN to HOOKS.
 
 HOOKS is a (TYPE SYM) plist. If KEY is :hook remove FUN from the hook
-SYM. If KEY is :function remove FUN as :before advice from SYM.
-"
+SYM. If KEY is :function remove FUN as :before advice from SYM."
   (dolist (x hooks)
     (if-let ((hook (plist-get x :hook)))
         (remove-hook hook fun))
     (if-let ((sym (plist-get x :function)))
         (advice-remove sym fun))))
-(defun hercules--remove-hooks (fun hooks)
-  "Add FUN to HOOKS.
 
-HOOKS is a (TYPE SYM) plist. If KEY is :hook remove FUN from the hook
-SYM. If KEY is :function remove FUN as :before advice from SYM.
-"
-  (dolist (x hooks)
-    (if-let ((hook (plist-get x :hook)))
-        (remove-hook hook fun))
-    (if-let ((sym (plist-get x :function)))
-        (advice-remove sym fun))))
-
-(defun hercules--add-hooks (fun hooks)
+(defun el-secretario-hercules--add-hooks (fun hooks)
   "Add FUN to HOOKS.
 
 HOOKS is a (TYPE SYM) plist. If KEY is :hook add FUN to the hook
-SYM. If KEY is :function add FUN as :before advice to SYM.
-"
+SYM. If KEY is :function add FUN as :before advice to SYM."
   (dolist (x hooks)
     (if-let ((hook (plist-get x :hook)))
         (add-hook hook fun))
     (if-let ((sym (plist-get x :function)))
         (advice-add sym :before fun))))
 
-(defun hercules--hide-before-minibuffer (&rest _)
+(defun el-secretario-hercules--hide-before-minibuffer (&rest _)
   "Temporarily hide hercules.el when the minibuffer is shown.
 
-See `hercules--temporary-hide-hooks'"
-  (apply #'hercules--remove-hooks hercules--temporary-hide-hooks)
-  (apply #'hercules--add-hooks hercules--temporary-restore-hooks)
-  (apply #'hercules--hide hercules--show-arguments))
-
-(defvar hercules--show-arguments nil
-  "The arguments `hercules--show' was last called with.")
-(defun hercules--restore-after-minibuffer ()
+See `el-secretario-hercules--temporary-hide-hooks'"
+  (apply #'el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks)
+  (apply #'el-secretario-hercules--add-hooks el-secretario-hercules--temporary-restore-hooks)
+  (apply #'hercules--hide el-secretario-hercules--show-arguments))
+(defun el-secretario-hercules--restore-after-minibuffer ()
   "Show hercules.el after temporarily hiding when the minibuffer is shown.
 
-See `hercules--temporary-restore-hooks'"
+See `el-secretario-hercules--temporary-restore-hooks'"
   ;; This timer is needed. Otherwise hercules will for some reason hide
   ;; immedeately after being shown.
   (run-with-timer 0.001 nil
                   (lambda ()
-                    (apply #'hercules--remove-hooks hercules--temporary-restore-hooks)
-                    (apply #'hercules--show hercules--show-arguments))))
+                    (apply #'el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-restore-hooks)
+                    (apply #'hercules--show el-secretario-hercules--show-arguments))))
 ;;;
 (cl-pushnew '(:function org-capture)
-            (car (cdr hercules--temporary-hide-hooks)))
+            (car (cdr el-secretario-hercules--temporary-hide-hooks)))
 (cl-pushnew '(:hook org-capture-after-finalize-hook)
-            (car (cdr hercules--temporary-restore-hooks)))
+            (car (cdr el-secretario-hercules--temporary-restore-hooks)))
 
 (provide 'el-secretario)
 ;;; el-secretario.el ends here

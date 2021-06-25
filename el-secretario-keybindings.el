@@ -7,9 +7,9 @@
 ;; Created: June 08, 2021
 ;; Modified: June 08, 2021
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "24.3"))
+;; Package-Requires: ((emacs "26.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;

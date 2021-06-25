@@ -1,6 +1,7 @@
 #+TITLE: Readme
 
-A framework for reviewing your tasks.
+The Emacs secretary that helps you through all your inboxes and tasks.
+
 * Requirements and Installation
 =el-secretario= has support for a number of external packages which needs to be
 installed separately if you want to use them.
@@ -242,7 +243,7 @@ It would be very nice to have a mascot for the project, so I would be
 very happy if you would contribute with a nice drawing.
 ** Moar sources!
 
-El secretario gets better the more sources there are. I'd be very happy to
+=el-Secretario= gets better the more sources there are. I'd be very happy to
 review contributions with new sources or improvements over existing ones. See
 [[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Creating a new source]].
 

@@ -7,15 +7,15 @@
 ;; Created: June 18, 2021
 ;; Modified: June 18, 2021
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://github.com/zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5"))
+;; Package-Requires: ((emacs "26.3") )
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;
+;; Source for just calling one function
 ;;
 ;;; Code:
 (require 'el-secretario)

@@ -1,4 +1,4 @@
-;;; el-secretario-message.el --- description -*- lexical-binding: t; -*-
+;;; el-secretario-message.el --- A source that displays one message -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
@@ -7,25 +7,25 @@
 ;; Created: January 21, 2021
 ;; Modified: January 21, 2021
 ;; Version: 0.0.1
-;; Keywords:
+;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "26.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;  description
+;;  A source that displays one message
 ;;
 ;;; Code:
 (require 'el-secretario-source)
 
 
 (defvar el-secretario-message-pre-message-marker nil
-  "The marker to return to before a message has been displayed")
+  "The marker to return to before a message has been displayed.")
 
 (defvar el-secretario-message-keymap nil
-  "The keymap to be used for current message")
+  "The keymap to be used for current message.")
 
 (defvar el-secretario-message-buffer-name "*el-secretario message*")
 
