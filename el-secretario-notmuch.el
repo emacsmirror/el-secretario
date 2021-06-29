@@ -25,15 +25,14 @@
    (:next-item-hook :initarg :next-item-hook)))
 
 ;;;###autoload
-(defun el-secretario-notmuch-make-source (query &optional next-item-hook keymap)
+(defun el-secretario-notmuch-make-source (query &optional keymap)
   "Convenience macro for creating a source for notmuch mail.
 QUERY is a normal notmuch query.
 NEXT-ITEM-HOOk is called on each heading.
 KEYMAP is a keymap to use during review of this source"
   (el-secretario-notmuch-source
    :keymap (or keymap 'el-secretario-source-default-map)
-   :query query
-   :next-item-hook (or next-item-hook (lambda ()))))
+   :query query))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-notmuch-source) &optional backwards)
   (with-slots (query) obj
