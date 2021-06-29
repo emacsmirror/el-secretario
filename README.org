@@ -231,14 +231,13 @@ fantastic things it glues together! Huge thanks to the creators of:
 * Contribute
 
 I am currently trying out sourcehut. Send any patches or
-comments to mailto:~zetagon/el-secretario@lists.sr.ht. You can browse the list
-[[https://lists.sr.ht/~zetagon/el-secretario][here]].
+comments to https://lists.sr.ht/~zetagon/el-secretario-devel
 
 Use it and come with feedback on basically everything! Usability, features, bugs
 etc. I have a hard time figuring out what's unclear in the documentation so
 feedback on that is especially welcome.
 
-It would be very nice to have a mascot for the project though, so I would be
+It would be very nice to have a mascot for the project, so I would be
 very happy if you would contribute with a nice drawing.
 ** Moar sources!
 
