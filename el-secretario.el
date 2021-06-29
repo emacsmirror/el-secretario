@@ -30,8 +30,7 @@
 (require 'el-secretario-space)
 (require 'el-secretario-tasks)
 
-(defvar el-secretario-default-map (make-sparse-keymap)
-  "The default hercules-style keymap for sources.")
+
 
 
 

@@ -31,9 +31,9 @@ QUERY is a normal notmuch query.
 NEXT-ITEM-HOOk is called on each heading.
 KEYMAP is a keymap to use during review of this source"
   (el-secretario-notmuch-source
-   :keymap (or keymap 'el-secretario-default-keymap)
+   :keymap (or keymap 'el-secretario-source-default-map)
    :query query
-   :next-item-hook (or next-item-hook (lambda ()))) )
+   :next-item-hook (or next-item-hook (lambda ()))))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-notmuch-source) &optional backwards)
   (with-slots (query) obj

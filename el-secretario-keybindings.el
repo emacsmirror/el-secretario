@@ -21,7 +21,7 @@
 (require 'general)
 
 (general-define-key
- :keymaps 'el-secretario-default-map
+ :keymaps 'el-secretario-source-default-map
  "n" '(el-secretario/next-item :which-key "next")
  "p" '(el-secretario/previous-item :which-key "previous"))
 

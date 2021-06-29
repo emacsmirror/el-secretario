@@ -19,10 +19,11 @@
 ;;
 ;;; Code:
 (require 'eieio)
-
+(defvar el-secretario-source-default-map (make-sparse-keymap)
+  "The default hercules-style keymap for sources.")
 (defclass el-secretario-source (eieio-named)
   ((keymap :initarg :keymap
-           :initform #'el-secretario-default-map
+           :initform #'el-secretario-source-default-map
            :protection :protected)
    (is-initialized :initform nil))
   :abstract t
