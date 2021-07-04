@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords:
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs 27.1) (cl-lib "0.5") (org-ql "0.6-pre") (dash "2.18.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -19,7 +19,7 @@
 ;;
 ;;; Code:
 (require 'el-secretario-source)
-
+(require 'dash)
 
 
 (defvar el-secretario-space-increment-percentage nil

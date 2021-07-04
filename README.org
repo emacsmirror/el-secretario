@@ -226,6 +226,7 @@ fantastic things it glues together! Huge thanks to the creators of:
 - [[https://github.com/skeeto/elfeed][Elfeed]]
 - [[https://melpa.org/#/hercules][Hercules]]
 - [[https://github.com/justbur/emacs-which-key][which-key]]
+- [[https://github.com/magnars/dash.el][dash.el]]
 - [[https://www.gnu.org/software/emacs/][Emacs]]
 
 * Contribute

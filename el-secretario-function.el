@@ -18,6 +18,7 @@
 ;;
 ;;
 ;;; Code:
+(require 'el-secretario)
 
 ;;;###autoload
 (defclass el-secretario-function-source (el-secretario-source)
