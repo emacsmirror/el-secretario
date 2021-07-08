@@ -1,4 +1,4 @@
-;;; el-secretario-function.el Source for just calling one function -*- lexical-binding: t; -*-
+;;; el-secretario-function.el --- Source for just calling one function -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
@@ -23,7 +23,7 @@
 ;;;###autoload
 (defclass el-secretario-function-source (el-secretario-source)
   ((func :initarg :func)))
-(cl-defmethod el-secretario-source-activate ((obj el-secretario-function-source) &optional backwards)
+(cl-defmethod el-secretario-source-activate ((obj el-secretario-function-source) &optional _backwards)
   (funcall (oref obj func)))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-function-source))
