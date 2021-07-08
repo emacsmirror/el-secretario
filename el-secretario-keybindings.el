@@ -1,4 +1,4 @@
-;;; el-secretario-keybindings.el Keybindings that use general.el -*- lexical-binding: t; -*-
+;;; el-secretario-keybindings.el --- Keybindings that use general.el -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
