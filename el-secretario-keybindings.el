@@ -9,13 +9,14 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "26.3"))
+;; Package-Requires: ((emacs "27.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;
+;; Default set of keybindings used in el-secretario. To use the default
+;; keybindings load this file after loading el-secretario.
 ;;
 ;;; Code:
 (require 'general)

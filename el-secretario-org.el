@@ -9,13 +9,13 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "26.3")  (org-ql "0.6-pre") (dash "2.18.1"))
+;; Package-Requires: ((emacs "27.1")  (org-ql "0.6-pre") (dash "2.18.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;
+;; The org source for el-secretario.
 ;;
 ;;; Code:
 
@@ -181,7 +181,7 @@ function."
       (setq current-item nil)
       (el-secretario/next-item))))
 
-(defvar date nil)
+(defvar date)
 (defun el-secretario-org--update-status-buffer ()
   "Update the status buffer with useful information.
 That information is the currently visible schedule dates and deadlines."

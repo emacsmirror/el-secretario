@@ -1,4 +1,4 @@
-;;; el-secretario-example.el --- Description -*- lexical-binding: t; -*-
+;;; el-secretario-example.el --- Example source for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
@@ -9,13 +9,13 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "26.3"))
+;; Package-Requires: ((emacs "27.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
-;;  Description
+;;  This is a trivial example for how a source is implemented.
 ;;
 ;;; Code:
 (require 'el-secretario-source)

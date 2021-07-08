@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience mail
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "26.3")  (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "27.1")  (org-ql "0.6-pre"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
