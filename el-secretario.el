@@ -46,8 +46,6 @@ be nil. Set it to t if in testing.")
 
 (defvar el-secretario--original-buffer nil
   "The buffer the user was in before activating el-secretario.")
-(defvar el-secretario--sesion-active nil
-  "Is t when a session is active.")
 
 (defvar el-secretario--sources '())
 
@@ -58,22 +56,12 @@ be nil. Set it to t if in testing.")
     (el-secretario--source-keymap-activate (car el-secretario--current-source-list))))
 
 
-(defun secretary ()
-  (interactive)
-  (if el-secretario--sesion-active
-      (progn
-        (el-secretario/activate-keymap))
-    (el-secretario-start-session
-     (alist-get (completing-read "Choose what to do" el-secretario--sources)
-                el-secretario--sources nil nil #'equal))))
-
 ;;;###autoload
 (defun el-secretario-start-session (source-list)
   "Start session specified by SOURCE-LIST.
 
 SOURCE-LIST should be a list of newly instantiated sources, or
 SOURCE-LIST is a function that returns a list of newly instantiated sources."
-  (setq el-secretario--sesion-active t)
   (setq el-secretario--original-buffer (current-buffer))
   (setq el-secretario--current-source-list
         (--> (if (functionp source-list)
@@ -91,7 +79,6 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
 (defun el-secretario-end-sesion ()
   "End current session and do cleanup."
   (interactive)
-  (setq el-secretario--sesion-active nil)
   (switch-to-buffer el-secretario--original-buffer)
   (el-secretario-status-buffer-deactivate))
 
