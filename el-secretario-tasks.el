@@ -60,7 +60,7 @@
                 (push (el-secretario-org--parse-headline) tasks-left)))))))
     (setq items-done nil)
     (setq tasks-left (nreverse tasks-left))
-    (el-secretario/activate-keymap)
+    (el-secretario-activate-keymap)
     (el-secretario-tasks--skip-task)))
 
 
@@ -79,7 +79,7 @@ If DECREASE-PRIORITY is non-nil also decrease its priority."
                            :EL-SECRETARIO-REVIEW-TASK-HOOK)
 
           (funcall next-item-hook)
-          (el-secretario/activate-keymap))
+          (el-secretario-activate-keymap))
       (el-secretario--next-source))))
 
 

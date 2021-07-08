@@ -28,7 +28,7 @@
              :val))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-example-source) &optional backwards)
-  (el-secretario/activate-keymap)
+  (el-secretario-activate-keymap)
   (el-secretario-source-activate-item obj))
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-example-source) &optional backwards)

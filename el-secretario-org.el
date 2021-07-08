@@ -94,7 +94,7 @@ function."
    :keymap (or keymap #'el-secretario-org-keymap)))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional backwards)
-  (el-secretario/activate-keymap)
+  (el-secretario-activate-keymap)
   (el-secretario-source-activate-item obj))
 
 
@@ -124,7 +124,7 @@ function."
     (when compare-fun
       (setq items-left (sort items-left compare-fun)))
     (setq items-done nil))
-  (el-secretario/activate-keymap)
+  (el-secretario-activate-keymap)
   (el-secretario-source-next-item obj))
 
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
@@ -143,7 +143,7 @@ function."
       (setq current-item (plist-put current-item :called-next-item-hook t))
 
       (el-secretario-org--update-status-buffer)
-      (el-secretario/activate-keymap)
+      (el-secretario-activate-keymap)
       (el-secretario-tasks--run-task-hook
        (el-secretario-org--parse-headline)
        :EL-SECRETARIO-REVIEW-TASK-HOOK))))
@@ -173,13 +173,13 @@ function."
       (message "No previous item!")
       (el-secretario--previous-source))))
 
-(defun el-secretario-org/ignore-current-item ()
+(defun el-secretario-org-ignore-current-item ()
   "Remove the current item from this session."
   (interactive)
   (when el-secretario--current-source-list
     (with-slots (current-item) (car el-secretario--current-source-list)
       (setq current-item nil)
-      (el-secretario/next-item))))
+      (el-secretario-next-item))))
 
 (defvar date)
 (defun el-secretario-org--update-status-buffer ()

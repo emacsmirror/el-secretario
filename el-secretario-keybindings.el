@@ -23,18 +23,18 @@
 
 (general-define-key
  :keymaps 'el-secretario-source-default-map
- "n" '(el-secretario/next-item :which-key "next")
- "p" '(el-secretario/previous-item :which-key "previous"))
+ "n" '(el-secretario-next-item :which-key "next")
+ "p" '(el-secretario-previous-item :which-key "previous"))
 
 (general-define-key
  :keymaps 'el-secretario-mu4e-map
- "n" '(el-secretario/next-item :which-key "next")
- "p" '(el-secretario/previous-item :which-key "previous"))
+ "n" '(el-secretario-next-item :which-key "next")
+ "p" '(el-secretario-previous-item :which-key "previous"))
 
 (general-define-key
  :keymaps 'el-secretario-elfeed-map
- "n" '(el-secretario/next-item :which-key "next")
- "p" '(el-secretario/previous-item :which-key "previous")
+ "n" '(el-secretario-next-item :which-key "next")
+ "p" '(el-secretario-previous-item :which-key "previous")
  "+" '(elfeed-show-tag :which-key "Add tag")
  "-" '(elfeed-show-untag :which-key "Remove tag")
  "c" '(org-capture :which-key "Org Capture")
@@ -48,17 +48,17 @@
 
 (general-define-key
  :keymaps 'el-secretario-org-keymap
- "n" '(el-secretario/next-item :which-key "next")
- "p" '(el-secretario/previous-item :which-key "previous")
- "r" '((lambda () (interactive) (org-refile) (el-secretario/next-item)) :wk "Refile")
+ "n" '(el-secretario-next-item :which-key "next")
+ "p" '(el-secretario-previous-item :which-key "previous")
+ "r" '((lambda () (interactive) (org-refile) (el-secretario-next-item)) :wk "Refile")
  "R" '((lambda () (interactive)
          (let ((org-reverse-note-order t))
            (org-refile)
-           (el-secretario/next-item))) :wk "Refile to top")
+           (el-secretario-next-item))) :wk "Refile to top")
  "t" '(org-set-tags-command :wk "Tags")
  "T" '(org-todo :wk "Tags")
  "s" '(el-secretario-org-schedule :wk "Schedule")
- "z" '(el-secretario-org/ignore-current-item :wk "Snooze")
+ "z" '(el-secretario-org-ignore-current-item :wk "Snooze")
  "d" '(el-secretario-org-deadline :wk  "Deadline")
  "D" '((lambda () (interactive)
          (save-restriction
@@ -78,13 +78,13 @@
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-schedule arg time)
-  (el-secretario/activate-keymap))
+  (el-secretario-activate-keymap))
 
 (defun el-secretario-org-deadline (arg &optional time)
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-deadline arg time)
-  (el-secretario/activate-keymap))
+  (el-secretario-activate-keymap))
 
 (provide 'el-secretario-keybindings)
 ;;; el-secretario-keybindings.el ends here

@@ -41,7 +41,7 @@ KEYMAP is a keymap to use during review of this source"
     (setq mu4e-split-view 'single-window)
     (add-hook 'mu4e-headers-found-hook #'el-secretario-mu4e--after-search-h)
     (mu4e-headers-search (or query "flag:unread"))
-    (el-secretario/activate-keymap)))
+    (el-secretario-activate-keymap)))
 
 (defvar el-secretario-mu4e--activate-backwards nil)
 (defun el-secretario-mu4e--after-search-h ()

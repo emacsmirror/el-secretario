@@ -49,7 +49,7 @@ be nil. Set it to t if in testing.")
 
 (defvar el-secretario--sources '())
 
-(defun el-secretario/activate-keymap ()
+(defun el-secretario-activate-keymap ()
   "Activate the keymap of the currently active source."
   (interactive)
   (when el-secretario--current-source-list
@@ -82,14 +82,14 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
   (switch-to-buffer el-secretario--original-buffer)
   (el-secretario-status-buffer-deactivate))
 
-(defun el-secretario/next-item ()
+(defun el-secretario-next-item ()
   "Go to the next item of this session."
   (interactive)
   (when el-secretario--current-source-list
     (el-secretario-source-next-item
      (car el-secretario--current-source-list))))
 
-(defun el-secretario/previous-item ()
+(defun el-secretario-previous-item ()
   "Go to the previous item of this session."
   (interactive)
   (when el-secretario--current-source-list

@@ -74,7 +74,7 @@ If NO-HERCULES is non-nil, don't bring up the current source's keymap."
   (el-secretario-space--reset)
   (org-schedule arg time)
   (unless no-hercules
-    (el-secretario/activate-keymap)))
+    (el-secretario-activate-keymap)))
 
 (defun el-secretario-space-compare-le (x y)
   "Return t if X is scheduled before Y, nil otherwise.

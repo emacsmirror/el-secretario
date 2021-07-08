@@ -72,7 +72,7 @@ It should also do whatever is needed to bring up the relevant item to the user.
 
 If BACKWARDS is t initialize the source in the reverse order.
 This most likely means that the user has called
-`el-secretario/previous-item' and is exepcting the last item of
+`el-secretario-previous-item' and is exepcting the last item of
 the source to be shown."
   (el-secretario-source-activate obj backwards))
 
@@ -95,7 +95,7 @@ It should call `el-secretario--previous-source' if there are no more items."
   "Activate source OBJ.
 
 This method is called when el-secretario switches to source
-OBJ (for example when the user calls `el-secretario/next-item'
+OBJ (for example when the user calls `el-secretario-next-item'
 with no items left, so el-secretario switches to source OBJ).
 
 For example, the org module implements this method to bring up
@@ -103,7 +103,7 @@ the correct org buffer, and go to the correct heading.
 
 If BACKWARDS is t initialize the source in the reverse order.
 This most likely means that the user has called
-`el-secretario/previous-item' and is exepcting the last item of
+`el-secretario-previous-item' and is exepcting the last item of
 the source to be shown."
   (display-warning "This source doesn't implement the activate method"))
 

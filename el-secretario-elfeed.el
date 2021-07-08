@@ -51,7 +51,7 @@ KEYMAP is a keymap to use during review of this source"
           (forward-line -1))
       (goto-char (point-min)))
     (call-interactively #'elfeed-search-show-entry)
-    (el-secretario/activate-keymap)))
+    (el-secretario-activate-keymap)))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-elfeed-source))
   (el-secretario-elfeed--show-next))

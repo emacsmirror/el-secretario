@@ -45,7 +45,7 @@ KEYMAP is a keymap to use during review of this source"
         (notmuch-search-last-thread)
       (notmuch-search-first-thread))
     (el-secretario-notmuch--search-show-thread)
-    (el-secretario/activate-keymap)))
+    (el-secretario-activate-keymap)))
 
 (cl-defmethod el-secretario-source-next-item ((_obj el-secretario-notmuch-source))
   (el-secretario-notmuch-show-next-thread))
@@ -108,7 +108,7 @@ Pass ELIDE-TOGGLE to `notmuch-search-show-thread'."
                                      (truncate-string-to-width
                                       subject 30 nil nil t)
                                      "*"))
-               (el-secretario/activate-keymap)
+               (el-secretario-activate-keymap)
                (el-secretario-notmuch--open-link-for-current-email))
       (message "End of search results.")
       (el-secretario--next-source))))
@@ -137,7 +137,7 @@ To be used in a capture template."
   (with-current-buffer (org-capture-get :original-buffer)
     (concat "[[notmuch:" notmuch-show-thread-id "][Thread]]")))
 
-(defun el-secretario-notmuch/open-link-for-current-email ()
+(defun el-secretario-notmuch-open-link-for-current-email ()
   (interactive)
   (el-secretario--status-buffer-activate)
   (el-secretario-notmuch--open-link-for-current-email))
