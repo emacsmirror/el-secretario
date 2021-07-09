@@ -98,13 +98,13 @@ It should call `el-secretario--next-source' if there are no more items.
 
 Example:
  For the notmuch module, this method goes to the next email."
-  (display-warning "This source doesn't implement the next-item method!"))
+  (display-warning 'el-secretario "This source doesn't implement the next-item method!"))
 
 (cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-source))
   "Go to the previous item of source OBJ.
 
 It should call `el-secretario--previous-source' if there are no more items."
-  (display-warning "This source doesn't implement the previous-item method!"))
+  (display-warning 'el-secretario "This source doesn't implement the previous-item method!"))
 
 (cl-defmethod el-secretario-source-activate ((_obj el-secretario-source) &optional _backwards)
   "Activate source OBJ.
@@ -120,7 +120,7 @@ If BACKWARDS is t initialize the source in the reverse order.
 This most likely means that the user has called
 `el-secretario-previous-item' and is exepcting the last item of
 the source to be shown."
-  (display-warning "This source doesn't implement the activate method"))
+  (display-warning 'el-secretario "This source doesn't implement the activate method"))
 
 ;;; Utility methods
 ;; Subclasses don't need to implement these
