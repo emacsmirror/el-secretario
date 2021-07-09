@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "27.1")  (org-ql "0.6-pre") (dash "2.18.1"))
+;; Package-Requires: ((emacs "27.1")  (org-ql "0.6-pre") (dash "2.18.1") (el-secretario "0.0.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;

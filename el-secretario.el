@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "27.1")  (org-ql "0.6-pre"))
+;; Package-Requires: ((emacs "27.1")  (org-ql "0.6-pre") (hercules "0.3"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -39,10 +39,7 @@
 (require 'cl-lib)
 (require 'org-ql)
 (require 'hercules)
-
-
-
-
+(require 'el-secretario-source)
 
 (defvar el-secretario--is-testing nil
   "Determines if code is running in testing mode.
