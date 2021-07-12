@@ -44,6 +44,7 @@
 
 (defvar el-secretario-message-buffer-name "*el-secretario message*")
 
+;;;###autoload
 (defun el-secretario-message--display-message-prompt (message &optional keymap)
   "Display MESSAGE in a dedicated buffer.
 If KEYMAP is nil, use `el-secretario-message-message-keymap'.
