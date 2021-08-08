@@ -53,9 +53,9 @@ This was all very abstract so let's move on to a concrete example:
       (el-secretario-org-make-source nil ("~/org/Inbox.org"))
 
       ;; Go through TODOs
-      (el-secretario-org-make-source (todo "TODO") ("~/org/orgzly/Todo.org"))))))
+      (el-secretario-org-make-source '(todo "TODO") '("~/org/orgzly/Todo.org"))))))
 #+END_SRC
-Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where it's used in action.
+Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where its used in action.
 
 Calling ~el-secretario-daily-review~ will open up your oldest email. Pressing
 ~n~ in the [[https://github.com/justbur/emacs-which-key][which-key]] prompt will take you to the next email sorted chronologically.
@@ -100,7 +100,7 @@ In general functions and variables that are for users follow the format
 ~el-secretario-MODULE--NAME~ (notice the two dashes).
 ** Notmuch
 A very simple module that goes through your email in chronological order. The
-relevant function is just ~el-secretario-notmuch-make-source~, look at it's
+relevant function is just ~el-secretario-notmuch-make-source~, look at its
 docstring for more info.
 
 *** Capturing and backlinks
@@ -122,19 +122,19 @@ el-secretario-notmuch/open-link-for-current-email= can be used to open and
 populate the backlinks buffer manually.
 ** Mu4e
 Very similar to the notmuch module. It goes through your mu4e email. The
-relevant function is just ~el-secretario-mu4e-make-source~, look at it's
+relevant function is just ~el-secretario-mu4e-make-source~, look at its
 docstring for more info.
 ** Elfeed
 Very similar to the notmuch module. It goes through your elfeed items in
 chronological order, oldest first. The relevant function is just
-~el-secretario-elfeed-make-source~, look at it's docstring for more info.
+~el-secretario-elfeed-make-source~, look at its docstring for more info.
 
 ** Org
 :PROPERTIES:
 :ID:       e378a8e0-2701-41e7-8814-b6a0b0186664
 :END:
 A very simple module that goes through your todos. The relevant function is just
-~el-secretario-org-make-source~, look at it's docstring for more info.
+~el-secretario-org-make-source~, look at its docstring for more info.
 *** Convenience functions
 This module has some convenience functions:
 - ~el-secretario-org-remove-tag~
