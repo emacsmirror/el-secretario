@@ -66,29 +66,30 @@
    "t" '((lambda () (interactive) (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" )))
 
 (eval-after-load 'el-secretario-org
-  (general-define-key
-   :keymaps 'el-secretario-org-keymap
-   "n" '(el-secretario-next-item :which-key "next")
-   "p" '(el-secretario-previous-item :which-key "previous")
-   "r" '((lambda () (interactive) (org-refile) (el-secretario-next-item)) :wk "Refile")
-   "R" '((lambda () (interactive)
-           (let ((org-reverse-note-order t))
-             (org-refile)
-             (el-secretario-next-item))) :wk "Refile to top")
-   "t" '(org-set-tags-command :wk "Tags")
-   "T" '(org-todo :wk "Tags")
-   "s" '(el-secretario-org-schedule :wk "Schedule")
-   "z" '(el-secretario-org-ignore-current-item :wk "Snooze")
-   "d" '(el-secretario-org-deadline :wk  "Deadline")
-   "D" '((lambda () (interactive)
-           (save-restriction
-             (org-narrow-to-subtree)
-             (delete-region (point-min) (point-max))))
-         :wk "Delete visible")
-   "q" '((lambda () (interactive) (el-secretario-end-sesion)) :wk "Quit"))
+  (progn
+    (general-define-key
+     :keymaps 'el-secretario-org-keymap
+     "n" '(el-secretario-next-item :which-key "next")
+     "p" '(el-secretario-previous-item :which-key "previous")
+     "r" '((lambda () (interactive) (org-refile) (el-secretario-next-item)) :wk "Refile")
+     "R" '((lambda () (interactive)
+             (let ((org-reverse-note-order t))
+               (org-refile)
+               (el-secretario-next-item))) :wk "Refile to top")
+     "t" '(org-set-tags-command :wk "Tags")
+     "T" '(org-todo :wk "Tags")
+     "s" '(el-secretario-org-schedule :wk "Schedule")
+     "z" '(el-secretario-org-ignore-current-item :wk "Snooze")
+     "d" '(el-secretario-org-deadline :wk  "Deadline")
+     "D" '((lambda () (interactive)
+             (save-restriction
+               (org-narrow-to-subtree)
+               (delete-region (point-min) (point-max))))
+           :wk "Delete visible")
+     "q" '((lambda () (interactive) (el-secretario-end-sesion)) :wk "Quit"))
 
-  (hercules-def
-   :keymap 'el-secretario-org-keymap))
+    (hercules-def
+     :keymap 'el-secretario-org-keymap)))
 
 (eval-after-load 'el-secretario-message
   (general-define-key
