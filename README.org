@@ -26,7 +26,7 @@ If you are using doom:
 
   #+begin_src emacs-lisp
 (eval-after-load 'el-secretario
-  '(require 'el-secretario-keybindings))
+  (require 'el-secretario-keybindings))
   #+end_src
 
 * Basic idea
