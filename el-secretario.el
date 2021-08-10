@@ -183,6 +183,26 @@ shuffling is done in place."
                 (el-secretario--swap LIST i j)))
   LIST)
 
+;; HACK: Remove when https://github.com/justbur/emacs-which-key/issues/322 is resolved
+
+(define-advice which-key--get-bindings (:override (&optional prefix keymap filter recursive))
+  "Collect key bindings.
+If KEYMAP is nil, collect from current buffer using the current
+key sequence as a prefix. Otherwise, collect from KEYMAP. FILTER
+is a function to use to filter the bindings. If RECURSIVE is
+non-nil, then bindings are collected recursively for all prefixes."
+  (let* ((unformatted
+          (cond ((keymapp keymap)
+                 (which-key--get-keymap-bindings
+                  keymap nil prefix filter recursive))
+                (keymap
+                 (error "%s is not a keymap" keymap))
+                (t
+                 (which-key--get-current-bindings prefix filter)))))
+    (when which-key-sort-order
+      (setq unformatted
+            (sort unformatted which-key-sort-order)))
+    (which-key--format-and-replace unformatted recursive)))
 
 ;;; Patch for hercules' intereraction with minibuffer
 ;;; Remove when https://github.com/wurosh/hercules/pull/2 is merged
