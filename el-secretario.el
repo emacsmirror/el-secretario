@@ -203,8 +203,31 @@ non-nil, then bindings are collected recursively for all prefixes."
       (setq unformatted
             (sort unformatted which-key-sort-order)))
     (which-key--format-and-replace unformatted recursive)))
+;;; Hack: which-key
+(define-advice hercules--show (:override (&optional keymap flatten transient &rest _))
+  "Summon hercules.el showing KEYMAP.
+Push KEYMAP onto `overriding-terminal-local-map' when TRANSIENT
+is nil.  Otherwise use `set-transient-map'.  If FLATTEN is t,
+show full keymap \(including sub-maps\), and prevent redrawing on
+prefix-key press by overriding `which-key--update'."
+  (setq hercules--popup-showing-p t
+        which-key-persistent-popup t)
+  (when keymap
+    (let ((which-key-show-prefix hercules-show-prefix))
+      (if flatten
+          (progn
+            (which-key--show-keymap
+             (symbol-name keymap) (symbol-value keymap) nil t t)
+            (advice-add #'which-key--update :override #'ignore))
+        (which-key--show-keymap
+         (symbol-name keymap) (symbol-value keymap) nil nil t)))
+    (if transient
+        (set-transient-map (symbol-value keymap)
+                           t (lambda () (hercules--hide keymap transient)))
+      (internal-push-keymap (symbol-value keymap)
+                            'overriding-terminal-local-map))))
 
-;;; Patch for hercules' intereraction with minibuffer
+;;; HACK: Patch for hercules' intereraction with minibuffer
 ;;; Remove when https://github.com/wurosh/hercules/pull/2 is merged
 
 (defvar el-secretario-hercules--show-arguments nil
