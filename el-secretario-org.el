@@ -36,6 +36,7 @@
 
 (require 'org-ql)
 (require 'el-secretario-source)
+(require 'el-secretario-tasks)
 (require 'dash)
 
 
