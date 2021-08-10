@@ -48,24 +48,19 @@ KEYMAP is a keymap to use during review of this source"
    :keymap (or keymap 'el-secretario-source-default-map)
    :query query))
 
-(defvar el-secretario-notmuch--source-activate-backwards-param nil)
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-notmuch-source) &optional backwards)
   (with-slots (query) obj
-    (add-hook 'notmuch-search-hook #'el-secretario-notmuch--after-search-h)
-    (setq el-secretario-notmuch--source-activate-backwards-param backwards)
     (notmuch-search (or query "tag:unread")
                     t
                     nil
                     0
-                    nil)))
-
-(defun el-secretario-notmuch--after-search-h ()
-  (remove-hook 'notmuch-search-hook #'el-secretario-notmuch--after-search-h)
-  (if el-secretario-notmuch--source-activate-backwards-param
-      (notmuch-search-last-thread)
-    (notmuch-search-first-thread))
-  (el-secretario-notmuch--search-show-thread)
-  (el-secretario-activate-keymap))
+                    nil)
+    (sit-for 0.1)
+    (if backwards
+        (notmuch-search-last-thread)
+      (notmuch-search-first-thread))
+    (el-secretario-notmuch--search-show-thread)
+    (el-secretario-activate-keymap)))
 
 (cl-defmethod el-secretario-source-next-item ((_obj el-secretario-notmuch-source))
   (el-secretario-notmuch-show-next-thread))
