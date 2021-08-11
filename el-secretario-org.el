@@ -74,11 +74,15 @@ subtrees that are also todos. It can then be useful to see the context when revi
    (ids :initarg :ids)
    (current-item :initform nil)
    (items-left :initform '())
-   (items-done :initform '())))
+   (items-done :initform '())
+   (tag-transitions :initform '()
+                    :initarg :tag-transitions)))
 
 
 ;;;###autoload
-(cl-defun el-secretario-org-make-source (query files &key next-item-hook compare-fun keymap shuffle-p ids keymap)
+(cl-defun el-secretario-org-make-source (query files
+                              &key next-item-hook compare-fun keymap shuffle-p ids keymap
+                              tag-transitions)
   "\
 QUERY is an arbitrary org-ql query.
 
@@ -107,7 +111,8 @@ function."
    :shuffle-p shuffle-p
    :next-item-hook next-item-hook
    :ids ids
-   :keymap (or keymap #'el-secretario-org-keymap)))
+   :keymap (or keymap #'el-secretario-org-keymap)
+   :tag-transitions tag-transitions))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional backwards)
   (el-secretario-activate-keymap)
@@ -144,7 +149,7 @@ function."
   (el-secretario-source-next-item obj))
 
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
-  (with-slots (current-item) obj
+  (with-slots (current-item tag-transitions) obj
 
     (let ((buf (plist-get current-item :buffer ))
           (pos (plist-get current-item :marker)))
@@ -154,6 +159,8 @@ function."
       (goto-char pos)
       (el-secretario-org-narrow)
       (unless (plist-get current-item :called-next-item-hook)
+        (el-secretario-org--step-tag-transition tag-transitions)
+
         (when-let ((hook (oref obj :next-item-hook)))
           (funcall hook)))
       (setq current-item (plist-put current-item :called-next-item-hook t))
@@ -220,6 +227,27 @@ That information is the currently visible schedule dates and deadlines."
         (fit-window-to-buffer))))
 
 
+(defun el-secretario-org--step-tag-transition (tag-transitions)
+  "Make one state transition according to TAG-TRANSITIONS.
+
+TAG-TRANSITIONS is a list of (TAG . NEW-TAG) cons cells. If a the
+current org heading has tag TAG, remove it and add the tag NEW-TAG.
+
+Transitions happen in parallel. For example one call
+with `((\"a\" . \"b\") (\"b\" . \"c\"))` as TAG-TRANSITIONS will
+change \"a\" tags to \"b\" (i.e. the new \"b\" tag won 't
+immedieately change into a \"c\").
+"
+  (let (tags-to-add
+        tags-to-remove)
+    (dolist (tag-newtag tag-transitions)
+      (when (el-secretario-org--has-tag (car tag-newtag))
+        (push (cdr tag-newtag) tags-to-add)
+        (push (car tag-newtag) tags-to-remove)))
+    (dolist (tag tags-to-remove)
+      (el-secretario-org-remove-tag tag))
+    (dolist (tag tags-to-add)
+      (el-secretario-org-add-tag tag))) )
 
 (defun el-secretario-org-add-tag (&rest tags)
   "Add TAGS to current headline."
@@ -227,6 +255,11 @@ That information is the currently visible schedule dates and deadlines."
                  (append tags (or (org-get-tags nil 't)
                                   '()))
                  :test #'string-equal)))
+
+(defun el-secretario-org--has-tag (tag)
+  (seq-contains-p (org-get-tags nil 't)
+                  tag
+                  #'string-equal) )
 
 (defun el-secretario-org-remove-tag (&rest tags)
   "Remove TAGS from current headline."

@@ -318,6 +318,63 @@
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO FOO :a:"))
+  (describe "tag state machine"
+    (it "can change the tag of every item"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("a" . "b")))))
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (el-secretario-next-item)
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (el-secretario-next-item)
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t))
+    (it "takes a step only once per item per session"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("a" . "b")))))
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (el-secretario-next-item)
+      (el-secretario-previous-item)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (el-secretario-next-item)
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (el-secretario-next-item)
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t))
+    (it "changes all tags simultaneously, not sequentially"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("a" . "b")
+                                                                          ("b" . "c")))))
+
+      (expect (org-get-tags nil t)
+              :to-equal '("b"))
+      (el-secretario-next-item)
+
+      (expect (org-get-tags nil t)
+              :to-equal '("c"))
+      (el-secretario-next-item)
+
+      (expect (org-get-tags nil t)
+              :to-equal '("b"))))
   (describe "el-secretario-start-session with org module"
 
     (it "can reuse a function accepted as an argument"

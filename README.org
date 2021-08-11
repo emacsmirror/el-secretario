@@ -138,6 +138,46 @@ chronological order, oldest first. The relevant function is just
 :END:
 A very simple module that goes through your todos. The relevant function is just
 ~el-secretario-org-make-source~, look at its docstring for more info.
+*** Tag state machine
+
+El secretario can update tags of headings according to a state machine. The
+first time you review an item one state transition is done. The state machine is
+defined per source with the ~TAG-TRANSITIONS~ argument to
+~el-secretario-org-make-source~.
+
+**** Example
+
+#+begin_src emacs-lisp
+(el-secretario-org-make-source '(todo)
+                               "~/org/Todo.org"
+                               :tag-transitions
+                               '(("a" . "b")
+                                 ("b" . "c")))
+#+end_src
+
+#+begin_src org
+,* TODO Foo :a:
+,* TODO Bar :b:
+#+end_src
+
+With the el-secretario source and org file above, one review will result in the
+org file below. All "a" tags have turned into "b" tags, and all "b" tags have
+turned into "c" tags.
+
+#+begin_src org
+,* TODO Foo :b:
+,* TODO Bar :c:
+#+end_src
+
+A second review will have converted all tags to "c".
+
+#+begin_src org
+,* TODO Foo :c:
+,* TODO Bar :c:
+#+end_src
+
+
+
 *** Convenience functions
 This module has some convenience functions:
 - ~el-secretario-org-remove-tag~
