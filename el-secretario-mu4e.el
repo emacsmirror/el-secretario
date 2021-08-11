@@ -68,7 +68,12 @@ Should be added to `mu4e-headers-found-hook'."
   (when el-secretario-mu4e--activate-backwards
     (goto-char (point-max))
     (forward-line -1))
-  (mu4e-headers-view-message))
+  (if (get-text-property (point) 'msg)
+      (mu4e-headers-view-message)
+    ;; Go to the next/previous source if there are no messages
+    (if el-secretario-mu4e--activate-backwards
+        (el-secretario--previous-source)
+      (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-mu4e-source))
   (unless (mu4e-view-headers-next)
