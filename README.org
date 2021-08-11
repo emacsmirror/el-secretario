@@ -29,12 +29,12 @@ If you are using doom:
   (require 'el-secretario-keybindings))
   #+end_src
 
-* Basic idea
-The basic idea is that there are a bunch of decisions you don't want to make, so
-you have hired a secretary to do them for you. Your secretary will help you go
-through your list of tasks by showing you the relevant tasks one by one. This
-eliminates the information overload and decision paralysis you get from 10 000
-line todo file, and it lets you focus on each task in an isolated controlled environment.
+
+* Introducing my secretary
+
+There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let's call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a "next email"  button. Let's call it the linked list method.
+
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn't stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [[id:ed9c2652-6638-4572-bd16-edeb982da237][things]] into inboxes but he can also learn new things if you [[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][teach]] him.
 
 This was all very abstract so let's move on to a concrete example:
 
@@ -53,7 +53,7 @@ This was all very abstract so let's move on to a concrete example:
       (el-secretario-org-make-source nil ("~/org/Inbox.org"))
 
       ;; Go through TODOs
-      (el-secretario-org-make-source '(todo "TODO") '("~/org/orgzly/Todo.org"))))))
+      (el-secretario-org-make-source '(todo "TODO") '("~/org/Todo.org"))))))
 #+END_SRC
 Above is a sample configuration, and here is a [[https://zetagon.srht.site/demo-edited.gif][gif]] where its used in action.
 
@@ -91,6 +91,9 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 * The modules
+:PROPERTIES:
+:ID:       ed9c2652-6638-4572-bd16-edeb982da237
+:END:
 
 =el-secretario= comes with a set of modules that will help you with reviewing
 various parts of your system.
@@ -231,7 +234,7 @@ fantastic things it glues together! Huge thanks to the creators of:
 * Contribute
 
 I am currently trying out sourcehut. Send any patches or
-comments to https://lists.sr.ht/~zetagon/el-secretario-devel
+comments to https://lists.sr.ht/~zetagon/el-secretario-devel. Bugs should be reported to https://todo.sr.ht/~zetagon/el-secretario (which is also a place you could look at to find things to contribute).
 
 Use it and come with feedback on basically everything! Usability, features, bugs
 etc. I have a hard time figuring out what's unclear in the documentation so
