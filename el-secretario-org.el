@@ -122,12 +122,7 @@ function."
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional backwards)
   "TODO"
   (with-slots (query files compare-fun shuffle-p ids items-left items-done) obj
-    (dolist (f files)
-      (if (bufferp f)
-          (with-current-buffer f
-            (widen))
-        (with-current-buffer (find-file-noselect f)
-          (widen))))
+    (el-secretario-org--widen-all obj)
     (setq items-left
           (append (-map (lambda (id)
                           (let ((m (org-id-find id 'marker)))
@@ -182,6 +177,7 @@ function."
           (el-secretario-source-activate-item obj))
 
       (message "No next item!")
+      (el-secretario-org--widen-all obj)
       (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-org-source))
@@ -194,7 +190,17 @@ function."
           (setq current-item item)
           (el-secretario-source-activate-item obj))
       (message "No previous item!")
+      (el-secretario-org--widen-all obj)
       (el-secretario--previous-source))))
+
+(defun el-secretario-org--widen-all (source)
+  (with-slots (files) source
+    (dolist (f files)
+      (if (bufferp f)
+          (with-current-buffer f
+            (widen))
+        (with-current-buffer (find-file-noselect f)
+          (widen))))))
 
 (defun el-secretario-org-ignore-current-item ()
   "Remove the current item from this session."
