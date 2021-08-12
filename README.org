@@ -143,7 +143,10 @@ A very simple module that goes through your todos. The relevant function is just
 El secretario can update tags of headings according to a state machine. The
 first time you review an item one state transition is done. The state machine is
 defined per source with the ~TAG-TRANSITIONS~ argument to
-~el-secretario-org-make-source~.
+~el-secretario-org-make-source~. It is a list of =(TAG . NEW-TAG)= cons pairs.
+Each reviewed heading that has the tag =TAG= gets the tag =TAG= removed and
+=NEW-TAG= added. If =TAG= is the empty string =NEW-TAG= is always added.
+
 
 **** Example
 
@@ -152,7 +155,9 @@ defined per source with the ~TAG-TRANSITIONS~ argument to
                                "~/org/Todo.org"
                                :tag-transitions
                                '(("a" . "b")
-                                 ("b" . "c")))
+                                 ("b" . "c")
+                                 ("" . "d")
+                                 ("d" . "")))
 #+end_src
 
 #+begin_src org
@@ -162,11 +167,11 @@ defined per source with the ~TAG-TRANSITIONS~ argument to
 
 With the el-secretario source and org file above, one review will result in the
 org file below. All "a" tags have turned into "b" tags, and all "b" tags have
-turned into "c" tags.
+turned into "c" tags. "d" is added to both.
 
 #+begin_src org
-,* TODO Foo :b:
-,* TODO Bar :c:
+,* TODO Foo :b:d:
+,* TODO Bar :c:d:
 #+end_src
 
 A second review will have converted all tags to "c".

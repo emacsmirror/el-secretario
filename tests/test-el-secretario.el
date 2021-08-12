@@ -336,6 +336,96 @@
 
       (expect (el-secretario-org--has-tag "b")
               :to-be t))
+    (it "can remove tags"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("a" . "")))))
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be nil)
+      (expect (el-secretario-org--has-tag "a")
+              :to-be nil)
+      (el-secretario-next-item)
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (el-secretario-next-item)
+
+      (expect (el-secretario-org--has-tag "a")
+              :to-be nil)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be nil))
+    (it "can change and remove tags in parallel"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("a" . "b")
+                                                                          ("b" . "")))))
+
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+
+      (el-secretario-next-item)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be nil)
+      (expect (el-secretario-org--has-tag "a")
+              :to-be nil)
+
+      (el-secretario-next-item)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t))
+    (it "can add and change tags in parallel"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("" . "a")
+                                                                          ("a" . "b")))))
+
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (expect (el-secretario-org--has-tag "a")
+              :to-be t)
+
+      (el-secretario-next-item)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (expect (el-secretario-org--has-tag "a")
+              :to-be t)
+
+      (el-secretario-next-item)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (expect (el-secretario-org--has-tag "a")
+              :to-be t))
+    (it "can add tags"
+
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("" . "c")))))
+
+      (expect (el-secretario-org--has-tag "b")
+              :to-be nil)
+      (expect (el-secretario-org--has-tag "c")
+              :to-be t)
+
+      (el-secretario-next-item)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be t)
+      (expect (el-secretario-org--has-tag "c")
+              :to-be t)
+
+      (el-secretario-next-item)
+      (expect (el-secretario-org--has-tag "c")
+              :to-be t)
+      (expect (el-secretario-org--has-tag "b")
+              :to-be nil))
     (it "takes a step only once per item per session"
 
       (el-secretario-start-session (list (el-secretario-org-make-source '(todo)

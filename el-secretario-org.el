@@ -103,7 +103,9 @@ that function. Sorting happens after shuffling if SHUFFLE-P is
 non-nil. COMPARE-FUN should take two arguments which are returned
 by `el-secretario-org--parse-headline' See
 `el-secretario-space-compare-le' for an example sorting
-function."
+function.
+
+TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transition'."
   (el-secretario-org-source
    :query query
    :files files
@@ -247,7 +249,8 @@ immedieately change into a \"c\").
   (let (tags-to-add
         tags-to-remove)
     (dolist (tag-newtag tag-transitions)
-      (when (el-secretario-org--has-tag (car tag-newtag))
+      (when (or (string-empty-p (car tag-newtag))
+                (el-secretario-org--has-tag (car tag-newtag)))
         (push (cdr tag-newtag) tags-to-add)
         (push (car tag-newtag) tags-to-remove)))
     (dolist (tag tags-to-remove)
