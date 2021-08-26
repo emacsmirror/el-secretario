@@ -1,36 +1,38 @@
 
 # Table of Contents
 
-1.  [Requirements and Installation](#org88ffd97)
-2.  [Introducing my secretary](#org4209908)
-    1.  [Simple Configuration](#orgdfc44d9)
-3.  [Vocabulary](#org26f2548)
-    1.  [Item](#org1c1e6cc)
-    2.  [Source](#org0206275)
-4.  [The modules](#org89d6836)
-    1.  [Notmuch](#org9775ffa)
-        1.  [Capturing and backlinks](#orgd3ca36a)
-    2.  [Mu4e](#orgcba5907)
-    3.  [Elfeed](#org8683d6a)
-    4.  [Org](#org2255986)
-        1.  [Tag state machine](#orgd348395)
-        2.  [Convenience functions](#org06be62d)
-        3.  [Property hooks](#orgbfb475b)
-    5.  [Space](#org745b3a8)
-        1.  [Relevant variables](#org725e29c)
-        2.  [Relevant functions](#orgfb9faa1)
-    6.  [Function](#org4858da4)
-    7.  [Tasks](#orgbb0f398)
-5.  [Creating a new source](#org1094d7b)
-6.  [Thanks](#orgb92e15a)
-7.  [Contribute](#orgefbb048)
-    1.  [Moar sources!](#org6e10ce1)
-    2.  [Loading in Emacs](#orgcf0a027)
+1.  [Requirements and Installation](#org05923a0)
+2.  [Introducing my secretary](#org2174a49)
+    1.  [Simple Configuration](#orgec492b8)
+3.  [Vocabulary](#org5a7624b)
+    1.  [Item](#org7a7842b)
+    2.  [Source](#org196c3df)
+4.  [The modules](#orga74ce01)
+    1.  [Notmuch](#org88af288)
+        1.  [Capturing and backlinks](#org98a6b94)
+    2.  [Mu4e](#orgef99745)
+    3.  [Elfeed](#org6c2cc8e)
+    4.  [Org](#org0a48f84)
+        1.  [Tag state machine](#orgf55d54d)
+        2.  [Convenience functions](#orgb97181e)
+        3.  [Property hooks](#org15f43c6)
+    5.  [Space](#org91c3129)
+        1.  [Relevant variables](#org9ef7898)
+        2.  [Relevant functions](#orge05aec5)
+    6.  [Files](#org8482727)
+        1.  [Example](#orge2ed57a)
+    7.  [Function](#org4579903)
+    8.  [Tasks](#org07762c1)
+5.  [Creating a new source](#org44c0b21)
+6.  [Thanks](#org9435cfc)
+7.  [Contribute](#orged31e35)
+    1.  [Moar sources!](#org0b64f2e)
+    2.  [Loading in Emacs](#org5920db6)
 
 The Emacs secretary that helps you through all your inboxes and tasks.
 
 
-<a id="org88ffd97"></a>
+<a id="org05923a0"></a>
 
 # Requirements and Installation
 
@@ -58,18 +60,18 @@ bindings use:
       (require 'el-secretario-keybindings))
 
 
-<a id="org4209908"></a>
+<a id="org2174a49"></a>
 
 # Introducing my secretary
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org89d6836) into inboxes but he can also learn new things if you [teach](#org1094d7b) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orga74ce01) into inboxes but he can also learn new things if you [teach](#org44c0b21) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
 
-<a id="orgdfc44d9"></a>
+<a id="orgec492b8"></a>
 
 ## Simple Configuration
 
@@ -109,12 +111,12 @@ keymap.
 A more complete configuration can be found at [my configuration](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario).
 
 
-<a id="org26f2548"></a>
+<a id="org5a7624b"></a>
 
 # Vocabulary
 
 
-<a id="org1c1e6cc"></a>
+<a id="org7a7842b"></a>
 
 ## Item
 
@@ -122,7 +124,7 @@ The fundamental building block. Items are the thing that you review from each
 source, for example an email or a todo.
 
 
-<a id="org0206275"></a>
+<a id="org196c3df"></a>
 
 ## Source
 
@@ -131,7 +133,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="org89d6836"></a>
+<a id="orga74ce01"></a>
 
 # The modules
 
@@ -143,7 +145,7 @@ In general functions and variables that are for users follow the format
 `el-secretario-MODULE--NAME` (notice the two dashes).
 
 
-<a id="org9775ffa"></a>
+<a id="org88af288"></a>
 
 ## Notmuch
 
@@ -152,7 +154,7 @@ relevant function is just `el-secretario-notmuch-make-source`, look at its
 docstring for more info.
 
 
-<a id="orgd3ca36a"></a>
+<a id="org98a6b94"></a>
 
 ### Capturing and backlinks
 
@@ -173,7 +175,7 @@ el-secretario-notmuch/open-link-for-current-email` can be used to open and
 populate the backlinks buffer manually.
 
 
-<a id="orgcba5907"></a>
+<a id="orgef99745"></a>
 
 ## Mu4e
 
@@ -182,7 +184,7 @@ relevant function is just `el-secretario-mu4e-make-source`, look at its
 docstring for more info.
 
 
-<a id="org8683d6a"></a>
+<a id="org6c2cc8e"></a>
 
 ## Elfeed
 
@@ -191,7 +193,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="org2255986"></a>
+<a id="org0a48f84"></a>
 
 ## Org
 
@@ -199,7 +201,7 @@ A very simple module that goes through your todos. The relevant function is just
 `el-secretario-org-make-source`, look at its docstring for more info.
 
 
-<a id="orgd348395"></a>
+<a id="orgf55d54d"></a>
 
 ### Tag state machine
 
@@ -236,7 +238,7 @@ Each reviewed heading that has the tag `TAG` gets the tag `TAG` removed and
         * TODO Bar :c:
 
 
-<a id="org06be62d"></a>
+<a id="orgb97181e"></a>
 
 ### Convenience functions
 
@@ -246,7 +248,7 @@ This module has some convenience functions:
 -   `el-secretario-org-up-heading`
 
 
-<a id="orgbfb475b"></a>
+<a id="org15f43c6"></a>
 
 ### Property hooks
 
@@ -306,7 +308,7 @@ with the function `el-secretario-tasks--run-task-hook`.
     ...)` to retain the clock in behaviour.
 
 
-<a id="org745b3a8"></a>
+<a id="org91c3129"></a>
 
 ## Space
 
@@ -316,17 +318,17 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org2255986). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org0a48f84). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
-<a id="org725e29c"></a>
+<a id="org9ef7898"></a>
 
 ### Relevant variables
 
 -   `el-secretario-space-increment-percentage`
 
 
-<a id="orgfb9faa1"></a>
+<a id="orge05aec5"></a>
 
 ### Relevant functions
 
@@ -340,7 +342,25 @@ that augments the [org module](#org2255986). See [my config](https://github.com/
     roughly sorted by how relevant they are.
 
 
-<a id="org4858da4"></a>
+<a id="org8482727"></a>
+
+## Files
+
+A simple module that goes through a list of files in order.
+`el-secretario-files-make-source` is the entry point.
+
+
+<a id="orge2ed57a"></a>
+
+### Example
+
+Visit all your downloaded files:
+
+    (el-secretario-start-session
+     (el-secretario-files-make-source (directory-files "~/Downloads")))
+
+
+<a id="org4579903"></a>
 
 ## Function
 
@@ -351,7 +371,7 @@ immediately when `el-secretario-next-item` is called. To use it put
 `(el-secretario-function-source :func #'YOUR-FUNCTION)` in your source list.
 
 
-<a id="orgbb0f398"></a>
+<a id="org07762c1"></a>
 
 ## TODO Tasks
 
@@ -359,7 +379,7 @@ This one is still a little bit weird and I don&rsquo;t exactly know what it&rsqu
 to do so ignore it for now!
 
 
-<a id="org1094d7b"></a>
+<a id="org44c0b21"></a>
 
 # Creating a new source
 
@@ -381,7 +401,7 @@ with a keymap. Otherwise the default keymap will be used.
 See [the example source](./el-secretario-example.el) and [its unit tests](tests/test-el-secretario.el).
 
 
-<a id="orgb92e15a"></a>
+<a id="org9435cfc"></a>
 
 # Thanks
 
@@ -398,7 +418,7 @@ fantastic things it glues together! Huge thanks to the creators of:
 -   [Emacs](https://www.gnu.org/software/emacs/)
 
 
-<a id="orgefbb048"></a>
+<a id="orged31e35"></a>
 
 # Contribute
 
@@ -413,16 +433,16 @@ It would be very nice to have a mascot for the project, so I would be
 very happy if you would contribute with a nice drawing.
 
 
-<a id="org6e10ce1"></a>
+<a id="org0b64f2e"></a>
 
 ## Moar sources!
 
 `el-Secretario` gets better the more sources there are. I&rsquo;d be very happy to
 review contributions with new sources or improvements over existing ones. See
-[Creating a new source](#org1094d7b).
+[Creating a new source](#org44c0b21).
 
 
-<a id="orgcf0a027"></a>
+<a id="org5920db6"></a>
 
 ## Loading in Emacs
 

@@ -231,6 +231,18 @@ that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [
   will ensure that you review your items sorted so that the earliest scheduled
   items comes first. This can be useful to create a queue of tasks that are
   roughly sorted by how relevant they are.
+** Files
+A simple module that goes through a list of files in order.
+~el-secretario-files-make-source~ is the entry point.
+
+*** Example
+Visit all your downloaded files:
+
+#+begin_src emacs-lisp
+(el-secretario-start-session
+ (el-secretario-files-make-source (directory-files "~/Downloads")))
+#+end_src
+
 ** Function
 An extremely simple source for when you want a function to be called
 automatically during a specific time in the review. It calls the provided
