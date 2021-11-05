@@ -39,20 +39,24 @@
 (require 'mu4e)
 
 (defclass el-secretario-mu4e-source (el-secretario-source)
-  ((query :initarg :query)))
+  ((query :initarg :query)
+   (init-function :initarg :init-function)))
 (defvar el-secretario-mu4e-map (make-sparse-keymap))
 
 ;;;###autoload
-(defun el-secretario-mu4e-make-source (query &optional keymap)
+(defun el-secretario-mu4e-make-source (query &optional keymap init-function)
   "Convenience macro for creating a source for mu4e mail.
 QUERY is a normal mu4e query.
-KEYMAP is a keymap to use during review of this source"
+KEYMAP is a keymap to use during review of this source.
+INIT-FUNCTION is a function that is run before the source is initialized."
   (el-secretario-mu4e-source
    :keymap (or keymap 'el-secretario-mu4e-map)
-   :query query))
+   :query query
+   :init-function (or (lambda ()) init-function)))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-mu4e-source) &optional backwards)
-  (with-slots (query) obj
+  (with-slots (query init-function) obj
+    (funcall init-function)
     (setq el-secretario-mu4e--activate-backwards backwards)
     (setq mu4e-split-view 'single-window)
     (add-hook 'mu4e-headers-found-hook #'el-secretario-mu4e--after-search-h)
