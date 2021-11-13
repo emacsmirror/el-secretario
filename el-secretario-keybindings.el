@@ -35,6 +35,9 @@
 ;;
 ;;; Code:
 (require 'general)
+(require 'hercules)
+(require 'org)
+(require 'el-secretario)
 
 (eval-after-load 'el-secretario-source
   (general-define-key
@@ -78,9 +81,9 @@
                (el-secretario-next-item))) :wk "Refile to top")
      "t" '(org-set-tags-command :wk "Tags")
      "T" '(org-todo :wk "Tags")
-     "s" '(el-secretario-org-schedule :wk "Schedule")
+     "s" '(el-secretario-keybindings-org-schedule :wk "Schedule")
      "z" '(el-secretario-org-ignore-current-item :wk "Snooze")
-     "d" '(el-secretario-org-deadline :wk  "Deadline")
+     "d" '(el-secretario-keybindings-org-deadline :wk  "Deadline")
      "D" '((lambda () (interactive)
              (save-restriction
                (org-narrow-to-subtree)
@@ -96,13 +99,13 @@
    :keymaps 'el-secretario-message-message-keymap
    "q" '(el-secretario-message--back-to-pre-message :which-key "quit" ) ))
 
-(defun el-secretario-org-schedule (arg &optional time)
+(defun el-secretario-keybindings-org-schedule (arg &optional time)
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-schedule arg time)
   (el-secretario-activate-keymap))
 
-(defun el-secretario-org-deadline (arg &optional time)
+(defun el-secretario-keybindings-org-deadline (arg &optional time)
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-deadline arg time)

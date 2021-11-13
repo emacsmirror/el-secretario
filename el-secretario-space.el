@@ -35,6 +35,7 @@
 ;;; Code:
 (require 'el-secretario-source)
 (require 'dash)
+(require 'org)
 
 
 (defvar el-secretario-space-increment-percentage nil
@@ -67,7 +68,7 @@ nil means 100% are defered")
         (org-set-property "EL-SECRETARIO-DELTA" it)))))
 
 (defun el-secretario-space--reset ()
-  "Reset the delta value to the default value"
+  "Reset the delta value to the default value."
  (org-set-property "EL-SECRETARIO-DELTA" "2") )
 
 (defun el-secretario-space-reschedule ()
@@ -80,7 +81,7 @@ Where n is incremented by 1 for each time this function is called on that entry"
 
 (defun el-secretario-space-schedule-and-reset (arg &optional time no-hercules)
   "Like `org-schedule' but it also resets the delta property.
-TIME is passed through to `org-schedule'
+TIME and ARG is passed through to `org-schedule'
 Resetting is done with `el-secretario-space-reset'
 If NO-HERCULES is non-nil, don't bring up the current source's keymap."
   (interactive "P")
@@ -99,8 +100,7 @@ An unscheduled element is considered to be scheduled before all other elemens.
 The usecase for this is to pass it as sorting function to
 `el-secretario-org-make-source'.
 
-X and Y should be elements as returned by `el-secretario-org--parse-headline'.
-"
+X and Y should be elements as returned by `el-secretario-org--parse-headline'."
   (if-let ((x-scheduled (plist-get x :scheduled)))
       (if-let ((y-scheduled (plist-get y :scheduled)))
           (time-less-p (org-timestamp-to-time x-scheduled)

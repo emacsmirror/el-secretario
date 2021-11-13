@@ -56,7 +56,7 @@ should probably have one keybind that calls
   (switch-to-buffer (get-buffer-create el-secretario-message-buffer-name))
   (delete-region (point-min) (point-max))
   (insert message)
-  (setq el-secretario-message-keymap (or keymap #'el-secretario-message-message-keymap))
+  (setq el-secretario-message-keymap (or keymap 'el-secretario-message-message-keymap))
   (hercules--show el-secretario-message-keymap t t))
 
 (defun el-secretario-message--back-to-pre-message ()
