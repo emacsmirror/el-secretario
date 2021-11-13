@@ -193,11 +193,11 @@ custom code at specific points in time. The difference is that property hooks
 are defined by setting a property to a headline which means that they are local
 to the headline. You can set a property hook by adding the corresponding
 property with unquoted lisp code as value. You can run your own property hooks
-with the function ~el-secretario-tasks--run-task-hook~.
+with the function ~el-secretario-org--run-property-hook~.
 
 | Property                       | Run condition                                   |
 |--------------------------------+-------------------------------------------------|
-| EL-SECRETARIO-REVIEW-TASK-HOOK | When shown in a review                          |
+| EL-SECRETARIO-REVIEW-TASK-HOOK | When shown in a review in the org source        |
 | EL-SECRETARIO-FINISH-TASK-HOOK | When a task is marked as done                   |
 | EL-SECRETARIO-BEGIN-TASK-HOOK  | When ~el-secretario-tasks-begin-task~ is called |
 **** EL-SECRETARIO-FINISH-TASK-HOOK

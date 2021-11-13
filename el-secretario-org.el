@@ -164,7 +164,7 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
 
       (el-secretario-org--update-status-buffer)
       (el-secretario-activate-keymap)
-      (el-secretario-tasks--run-task-hook
+      (el-secretario-org--run-property-hook
        (el-secretario-org--parse-headline)
        :EL-SECRETARIO-REVIEW-TASK-HOOK))))
 
@@ -234,7 +234,20 @@ That information is the currently visible schedule dates and deadlines."
       (with-selected-window win
         (fit-window-to-buffer))))
 
+(defun el-secretario-org--run-property-hook (task hook-name &optional default-hook)
+  "Run a hook defined in the property of a org subtree.
+The hook will be called at the beginning of the line of the headline.
 
+TASK is a plist from `el-secretario-org--parse-headline'.
+HOOK-NAME is the org property that the hook is stored in.
+DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
+  (with-current-buffer (plist-get task :buffer)
+    (save-excursion
+      (goto-char (plist-get task :begin))
+      (eval (or (-some-> (plist-get task hook-name)
+                  (read))
+                default-hook)
+            t))))
 (defun el-secretario-org--step-tag-transition (tag-transitions)
   "Make one state transition according to TAG-TRANSITIONS.
 

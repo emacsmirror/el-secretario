@@ -90,7 +90,7 @@ If DECREASE-PRIORITY is non-nil also decrease its priority."
           (widen)
           (goto-char (plist-get task :begin))
           (org-narrow-to-subtree)
-          (el-secretario-tasks--run-task-hook (el-secretario-org--parse-headline)
+          (el-secretario-org--run-property-hook (el-secretario-org--parse-headline)
                            :EL-SECRETARIO-REVIEW-TASK-HOOK)
 
           (funcall next-item-hook)
@@ -108,20 +108,7 @@ In particular, run it's begin task hook."
   "The files that `el-secretario-tasks-choose-task'a will search through")
 
 
-(defun el-secretario-tasks--run-task-hook (task hook-name &optional default-hook)
-  "Run a hook defined in the property of a org subtree.
-The hook will be called at the beginning of the line of the headline.
 
-TASK is a plist from `el-secretario-org--parse-headline'.
-HOOK-NAME is the org property that the hook is stored in.
-DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
-  (with-current-buffer (plist-get task :buffer)
-    (save-excursion
-      (goto-char (plist-get task :begin))
-      (eval (or (-some-> (plist-get task hook-name)
-                  (read))
-                default-hook)
-            t))))
 
 ;; TODO refactor this to use `org-entry-properties' instead
 (defun el-secretario-tasks--run-begin-task-hook (task)
