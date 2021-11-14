@@ -61,12 +61,6 @@
    "c" '(org-capture :which-key "Org Capture")
    "o" '(elfeed-show-visit :which-key "Open in browser")))
 
-(eval-after-load 'el-secretario-tasks
-  (general-define-key
-   :keymaps 'el-secretario-tasks-keymap
-   "s" '((lambda () (interactive) (el-secretario-tasks--skip-task t)) :which-key "Skip task")
-   "b" '(el-secretario-tasks-begin-task :which-key "Begin task")
-   "t" '((lambda () (interactive) (el-secretario-message--with-pre-buffer (org-todo))) :which-key "TODO" )))
 
 (eval-after-load 'el-secretario-org
   (progn

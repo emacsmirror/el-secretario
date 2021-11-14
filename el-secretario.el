@@ -48,18 +48,16 @@ When a user is interacting with el-secretario this should always
 be nil. Set it to t if in testing.")
 
 (defvar el-secretario--current-source-list nil
-  "TODO")
+  "List of sources that have not yet been reviewed by the user.")
 
 (defvar el-secretario--current-source-list-done nil
-  "TODO")
+  "List of sources that have been reviewed by the user.")
 
 (defvar el-secretario--status-buffer-name "*el-secretario-status*"
-  "TODO")
+  "The name of the status buffer.")
 
 (defvar el-secretario--original-buffer nil
   "The buffer the user was in before activating el-secretario.")
-
-(defvar el-secretario--sources '())
 
 (defun el-secretario-activate-keymap ()
   "Activate the keymap of the currently active source."
@@ -224,9 +222,11 @@ temporarily hide hercules. Also see
 `el-secretario-hercules--temporary-restore-hooks'.
 
 Call by
-`(apply el-secretario-hercules--add-hooks el-secretario-hercules--temporary-hide-hooks)'
+`(apply el-secretario-hercules--add-hooks
+        el-secretario-hercules--temporary-hide-hooks)'
 or
-`(apply el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks)'.")
+`(apply el-secretario-hercules--remove-hooks
+        el-secretario-hercules--temporary-hide-hooks)'.")
 
 (defvar el-secretario-hercules--temporary-restore-hooks
   '(el-secretario-hercules--restore-after-minibuffer
@@ -239,9 +239,11 @@ hercules after temporarily hiding it with
 `el-secretario-hercules--temporary-hide-hooks'.
 
 Call by
-`(apply el-secretario-hercules--add-hooks el-secretario-hercules--temporary-hide-hooks)'
+`(apply el-secretario-hercules--add-hooks
+        el-secretario-hercules--temporary-hide-hooks)'
 or
-`(apply el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks)'.")
+`(apply el-secretario-hercules--remove-hooks
+        el-secretario-hercules--temporary-hide-hooks)'.")
 
 (define-advice hercules--hide (:before (&rest _))
   (apply #'el-secretario-hercules--remove-hooks el-secretario-hercules--temporary-hide-hooks))
