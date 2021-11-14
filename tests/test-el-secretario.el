@@ -27,6 +27,7 @@
 (require 'el-secretario-org)
 (require 'el-secretario-space)
 (require 'el-secretario-function)
+(require 'el-secretario-files)
 
 (setq buttercup-colors '((black . 30)
                          (red . 31)
@@ -686,6 +687,25 @@ SCHEDULED: <2021-02-02>
     (expect #'next-item-fun :to-have-been-called-times 1)
     (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
             :to-equal 1)))
+
+(describe "files module"
+  :var (buffers)
+  (before-each
+    (dolist (name '("*el-secretario-foo"
+                    "*el-secretario-bar"
+                    "*el-secretario-baz"))
+      (push (get-buffer-create name) buffers)))
+  (it "visits all buffers"
+    (el-secretario-start-session (el-secretario-files-source
+                                  :files buffers))
+    (expect (buffer-name)
+            :to-equal "*el-secretario-baz")
+    (el-secretario-next-item)
+    (expect (buffer-name)
+            :to-equal "*el-secretario-bar")
+    (el-secretario-next-item)
+    (expect (buffer-name)
+            :to-equal "*el-secretario-foo")))
 (require 'el-secretario-example)
 
 (describe "el-secretario-start-session"
