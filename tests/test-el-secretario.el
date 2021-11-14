@@ -22,7 +22,6 @@
 (require 'buttercup)
 (require 'el-secretario)
 (require 'el-secretario-message)
-(require 'el-secretario-tasks)
 (require 'el-secretario-source)
 (require 'el-secretario-org)
 (require 'el-secretario-space)

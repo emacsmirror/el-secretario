@@ -198,19 +198,18 @@ with the function ~el-secretario-org--run-property-hook~.
 | Property                       | Run condition                                   |
 |--------------------------------+-------------------------------------------------|
 | EL-SECRETARIO-REVIEW-TASK-HOOK | When shown in a review in the org source        |
-| EL-SECRETARIO-FINISH-TASK-HOOK | When a task is marked as done                   |
-| EL-SECRETARIO-BEGIN-TASK-HOOK  | When ~el-secretario-tasks-begin-task~ is called |
-**** EL-SECRETARIO-FINISH-TASK-HOOK
-In order to make this work add the following to your config.
+**** Run property hook when marking a task as finished
+
+In order to run a function when a specific task is done, you can add the following to your config.
+
 #+begin_src emacs-lisp
 (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
+(defun my/el-secretario-run-finish-task-hook ()
+  (when (member org-state org-done-keywords)
+    (el-secretario-org--run-property-hook (el-secretario-org--parse-headline)
+                     :EL-SECRETARIO-FINISH-TASK-HOOK)))
 #+end_src
 
-**** EL-SECRETARIO-BEGIN-TASK-HOOK
-This hook has a default value that is ~(org-clock-in)~ which means you can use
-~el-secretario-tasks-begin-task~ instead of ~org-clock-in~. Keep in mind though
-that if you set this property you have to use the value ~(progn (org-clock-in)
-...)~ to retain the clock in behaviour.
 ** Space
 A spaced repetition module for tasks (and not memorization!). When you begin to
 have lots of todos it becomes very tiring to review all of them all the time.
