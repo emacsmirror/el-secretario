@@ -45,7 +45,7 @@
 (defvar el-secretario-message-buffer-name "*el-secretario message*")
 
 ;;;###autoload
-(defun el-secretario-message--display-message-prompt (message &optional keymap)
+(defun el-secretario-message-display-message-prompt (message &optional keymap)
   "Display MESSAGE in a dedicated buffer.
 If KEYMAP is nil, use `el-secretario-message-message-keymap'.
 
@@ -71,6 +71,7 @@ should probably have one keybind that calls
 Only one head which is for removing the message buffer.")
 
 (defmacro el-secretario-message--with-pre-buffer (&rest body)
+  "Run BODY in the buffer before the current message was displayed."
   `(if (string-equal (buffer-name)
                      el-secretario-message-buffer-name)
        (with-current-buffer (marker-buffer el-secretario-message-pre-message-marker)
