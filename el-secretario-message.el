@@ -49,8 +49,8 @@
   "Display MESSAGE in a dedicated buffer.
 If KEYMAP is nil, use `el-secretario-message-message-keymap'.
 
-If KEYMAP is non-nil, use that as prompt. Keep in mind that it
-should probably have one keybind that calls
+If KEYMAP is non-nil, use that as prompt.  Keep in mind that it
+should probably have one keybinding that calls
 `el-secretario-message--back-to-pre-message'"
   (setq el-secretario-message-pre-message-marker (point-marker))
   (switch-to-buffer (get-buffer-create el-secretario-message-buffer-name))

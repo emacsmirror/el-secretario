@@ -77,7 +77,6 @@ Use KEYMAP during the review if available, otherwise use `el-secretario-source-d
       (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-files-source))
-  "TODO"
   (with-slots (files-left files-done current-file) obj
     (if-let ((file (pop files-done)))
         (progn

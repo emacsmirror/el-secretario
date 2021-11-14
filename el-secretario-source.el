@@ -30,7 +30,7 @@
 ;;
 ;;; Commentary:
 ;;
-;;  This file contains the base source class. The doc strings of each method
+;;  This file contains the base source class.  The doc strings of each method
 ;;  describes what a source needs to implement.
 ;;
 ;;; Code:
@@ -75,19 +75,19 @@ is already initialized and this method is called, call `el-secretario-source-act
   "Initialize source OBJ.
 
 This method is called only once, the first time source OBJ is
-activated. Subsequenct calls will redirect to
+activated.  Subsequent calls will redirect to
 `el-secretario-source-activate'.
 
 Implement this method if you need to setup state etc. for your
-source that only needs to happen once. The default
-behaviour (i.e. if your source doesn 't implement this method) is
+source that only needs to happen once.  The default
+behavior (i.e. if your source doesn't implement this method) is
 to call `el-secretario-source-activate'.
 
 It should also do whatever is needed to bring up the relevant item to the user.
 
 If BACKWARDS is t initialize the source in the reverse order.
 This most likely means that the user has called
-`el-secretario-previous-item' and is exepcting the last item of
+`el-secretario-previous-item' and is expecting the last item of
 the source to be shown."
   (el-secretario-source-activate obj backwards))
 
@@ -118,7 +118,7 @@ the correct org buffer, and go to the correct heading.
 
 If BACKWARDS is t initialize the source in the reverse order.
 This most likely means that the user has called
-`el-secretario-previous-item' and is exepcting the last item of
+`el-secretario-previous-item' and is expecting the last item of
 the source to be shown."
   (display-warning 'el-secretario "This source doesn't implement the activate method"))
 

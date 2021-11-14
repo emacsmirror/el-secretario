@@ -43,10 +43,10 @@
 
 
 (defvar el-secretario-org-narrow-function #'org-narrow-to-subtree
-  "Function to use for narrowing when goint to the next item.
+  "Function to use for narrowing when going to the next item.
 For example `el-secretario-org-narrow-to-highest-todo' might be
 useful for when you have defined projects to be a todo entry with
-subtrees that are also todos. It can then be useful to see the context when reviewing.")
+sub-trees that are also todos.  It can then be useful to see the context when reviewing.")
 (defun el-secretario-org-narrow ()
   "Function to use for narrowing to the current item."
   (funcall el-secretario-org-narrow-function))
@@ -98,8 +98,8 @@ If SHUFFLE-P is non-nil, shuffle the list of queried items before
 reviewing.
 
 If COMPARE-FUN is non-nil, sort the list of queried items using
-that function. Sorting happens after shuffling if SHUFFLE-P is
-non-nil. COMPARE-FUN should take two arguments which are returned
+that function.  Sorting happens after shuffling if SHUFFLE-P is
+non-nil.  COMPARE-FUN should take two arguments which are returned
 by `el-secretario-org--parse-headline' See
 `el-secretario-space-compare-le' for an example sorting
 function.
@@ -121,7 +121,6 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
 
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional backwards)
-  "TODO"
   (with-slots (query files compare-fun shuffle-p ids items-left items-done) obj
     (el-secretario-org--widen-all obj)
     (setq items-left
@@ -168,7 +167,6 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
        :EL-SECRETARIO-REVIEW-TASK-HOOK))))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-org-source))
-  "TODO"
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-left)))
         (progn
@@ -182,7 +180,6 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
       (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-org-source))
-  "TODO"
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-done)))
         (progn
@@ -195,6 +192,7 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
       (el-secretario--previous-source))))
 
 (defun el-secretario-org--widen-all (source)
+  "Widen all buffers that were visited by this SOURCE."
   (with-slots (files) source
     (dolist (f files)
       (if (bufferp f)
@@ -250,14 +248,13 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
 (defun el-secretario-org--step-tag-transition (tag-transitions)
   "Make one state transition according to TAG-TRANSITIONS.
 
-TAG-TRANSITIONS is a list of (TAG . NEW-TAG) cons cells. If a the
+TAG-TRANSITIONS is a list of (TAG . NEW-TAG) cons cells.  If a the
 current org heading has tag TAG, remove it and add the tag NEW-TAG.
 
-Transitions happen in parallel. For example one call
+Transitions happen in parallel.  For example one call
 with `((\"a\" . \"b\") (\"b\" . \"c\"))` as TAG-TRANSITIONS will
 change \"a\" tags to \"b\" (i.e. the new \"b\" tag won 't
-immedieately change into a \"c\").
-"
+immediately change into a \"c\")."
   (let (tags-to-add
         tags-to-remove)
     (dolist (tag-newtag tag-transitions)
@@ -278,6 +275,7 @@ immedieately change into a \"c\").
                  :test #'string-equal)))
 
 (defun el-secretario-org--has-tag (tag)
+  "Return non-nil if current headline has tag TAG."
   (seq-contains-p (org-get-tags nil 't)
                   tag
                   #'string-equal) )

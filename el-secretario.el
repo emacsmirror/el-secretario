@@ -30,7 +30,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; The Emacs secretary that helps you through all your inboxes and tasks. See
+;; The Emacs secretary that helps you through all your inboxes and tasks.  See
 ;; README.org
 ;;
 ;;; Code:
@@ -45,7 +45,7 @@
   "Determines if code is running in testing mode.
 
 When a user is interacting with el-secretario this should always
-be nil. Set it to t if in testing.")
+be nil.  Set it to t if in testing.")
 
 (defvar el-secretario--current-source-list nil
   "List of sources that have not yet been reviewed by the user.")
@@ -216,9 +216,9 @@ prefix-key press by overriding `which-key--update'."
      (:function read-from-minibuffer)))
   "Hooks for temporarily hiding hercules.
 
-CAR should be hercules--hide-before-minibuffer. CDR is a list of
+CAR should be `hercules--hide-before-minibuffer'.  CDR is a list of
 hooks (as defined by `el-secretario-hercules--add-hooks') for when to
-temporarily hide hercules. Also see
+temporarily hide hercules.  Also see
 `el-secretario-hercules--temporary-restore-hooks'.
 
 Call by
@@ -233,7 +233,7 @@ or
     ((:hook minibuffer-exit-hook)))
   "Hooks for showing hercules after temporarily hiding.
 
-CAR should be `el-secretario-hercules--restore-after-minibuffer'. CDR is a list
+CAR should be `el-secretario-hercules--restore-after-minibuffer'.  CDR is a list
 of hooks (as defined by `el-secretario-hercules--add-hooks') for when to show
 hercules after temporarily hiding it with
 `el-secretario-hercules--temporary-hide-hooks'.
@@ -254,8 +254,8 @@ or
 (defun el-secretario-hercules--remove-hooks (fun hooks)
   "Add FUN to HOOKS.
 
-HOOKS is a (TYPE SYM) plist. If KEY is :hook remove FUN from the hook
-SYM. If KEY is :function remove FUN as :before advice from SYM."
+HOOKS is a (TYPE SYM) plist.  If KEY is :hook remove FUN from the hook
+SYM.  If KEY is :function remove FUN as :before advice from SYM."
   (dolist (x hooks)
     (if-let ((hook (plist-get x :hook)))
         (remove-hook hook fun))
@@ -265,8 +265,8 @@ SYM. If KEY is :function remove FUN as :before advice from SYM."
 (defun el-secretario-hercules--add-hooks (fun hooks)
   "Add FUN to HOOKS.
 
-HOOKS is a (TYPE SYM) plist. If KEY is :hook add FUN to the hook
-SYM. If KEY is :function add FUN as :before advice to SYM."
+HOOKS is a (TYPE SYM) plist.  If KEY is :hook add FUN to the hook
+SYM.  If KEY is :function add FUN as :before advice to SYM."
   (dolist (x hooks)
     (if-let ((hook (plist-get x :hook)))
         (add-hook hook fun))

@@ -30,7 +30,7 @@
 ;;
 ;;; Commentary:
 ;;
-;; Default set of keybindings used in el-secretario. To use the default
+;; Default set of keybindings used in el-secretario.  To use the default
 ;; keybindings load this file after loading el-secretario.
 ;;
 ;;; Code:
@@ -94,12 +94,14 @@
    "q" '(el-secretario-message--back-to-pre-message :which-key "quit" ) ))
 
 (defun el-secretario-keybindings-org-schedule (arg &optional time)
+  "Like `org-schedule' but makes sure the hercules prompt doesn't get in the way."
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-schedule arg time)
   (el-secretario-activate-keymap))
 
 (defun el-secretario-keybindings-org-deadline (arg &optional time)
+  "Like `org-deadline' but makes sure the hercules prompt doesn't get in the way."
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-deadline arg time)

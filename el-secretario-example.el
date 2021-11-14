@@ -38,6 +38,7 @@
   ((current-item :initform nil)
    (items-left :initarg :items-left)
    (items-done :initform '())))
+
 (defun el-secretario-example-get-current-val (source)
   (plist-get (oref source current-item)
              :val))

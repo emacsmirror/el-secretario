@@ -40,7 +40,7 @@
 
 (defvar el-secretario-space-increment-percentage nil
   "The percent of tasks to statistically defer.
-nil means 100% are defered")
+nil means 100% are deferred")
 
 (defun el-secretario-space--increment ()
   "Increment the delta value of the delta property with a spaced repetition algorithm."
@@ -95,9 +95,9 @@ If NO-HERCULES is non-nil, don't bring up the current source's keymap."
 (defun el-secretario-space-compare-le (x y)
   "Return t if X is scheduled before Y, nil otherwise.
 
-An unscheduled element is considered to be scheduled before all other elemens.
+An unscheduled element is considered to be scheduled before all other elements.
 
-The usecase for this is to pass it as sorting function to
+The use case for this is to pass it as sorting function to
 `el-secretario-org-make-source'.
 
 X and Y should be elements as returned by `el-secretario-org--parse-headline'."
