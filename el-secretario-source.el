@@ -9,7 +9,6 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "27.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -134,3 +133,7 @@ the source to be shown."
   (oref obj is-initialized))
 (provide 'el-secretario-source)
 ;;; el-secretario-source.el ends here
+
+;; Local Variables:
+;; package-lint-main-file: "el-secretario.el"
+;; End:

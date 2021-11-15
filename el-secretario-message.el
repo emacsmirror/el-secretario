@@ -9,7 +9,6 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "27.1"))
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
@@ -83,3 +82,7 @@ Only one head which is for removing the message buffer.")
 
 (provide 'el-secretario-message)
 ;;; el-secretario-message.el ends here
+
+;; Local Variables:
+;; package-lint-main-file: "el-secretario.el"
+;; End:
