@@ -94,14 +94,18 @@
    "q" '(el-secretario-message--back-to-pre-message :which-key "quit" ) ))
 
 (defun el-secretario-keybindings-org-schedule (arg &optional time)
-  "Like `org-schedule' but makes sure the hercules prompt doesn't get in the way."
+  "Like `org-schedule' but make sure the hercules prompt doesn't get in the way.
+
+Pass ARG and TIME to `org-schedule'."
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-schedule arg time)
   (el-secretario-activate-keymap))
 
 (defun el-secretario-keybindings-org-deadline (arg &optional time)
-  "Like `org-deadline' but makes sure the hercules prompt doesn't get in the way."
+  "Like `org-deadline' but make sure the hercules prompt doesn't get in the way.
+
+Pass ARG and TIME to `org-deadline'."
   (interactive "P")
   (hercules--hide)
   (funcall-interactively #'org-deadline arg time)
