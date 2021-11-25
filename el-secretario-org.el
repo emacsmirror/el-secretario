@@ -36,6 +36,7 @@
 
 (require 'org-ql)
 (require 'el-secretario-source)
+(require 'el-secretario)
 (require 'dash)
 
 
@@ -112,15 +113,15 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
    :shuffle-p shuffle-p
    :next-item-hook next-item-hook
    :ids ids
-   :keymap (or keymap #'el-secretario-org-keymap)
+   :keymap (or keymap 'el-secretario-org-keymap)
    :tag-transitions tag-transitions))
 
-(cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional backwards)
+(cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional _backwards)
   (el-secretario-activate-keymap)
   (el-secretario-source-activate-item obj))
 
 
-(cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional backwards)
+(cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional _backwards)
   (with-slots (query files compare-fun shuffle-p ids items-left items-done) obj
     (el-secretario-org--widen-all obj)
     (setq items-left
