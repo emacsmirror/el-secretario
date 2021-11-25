@@ -1,4 +1,4 @@
-;;; el-secretario-org.el --- Org mode module for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-org.el --- Create inboxes out of org-mode files for el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;

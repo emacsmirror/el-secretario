@@ -1,4 +1,4 @@
-;;; el-secretario.el --- General interface for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario.el --- Unify all your inboxes with the Emacs secretary -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;

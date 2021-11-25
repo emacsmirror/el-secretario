@@ -1,4 +1,4 @@
-;;; el-secretario-mu4e.el --- Mu4e implementation for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-mu4e.el --- Add mu4e inboxes to el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;

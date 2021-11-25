@@ -1,4 +1,4 @@
-;;; el-secretario-notmuch.el --- Notmuch implementation for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-notmuch.el --- Add notmuch inboxes to el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;

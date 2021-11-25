@@ -1,4 +1,4 @@
-;;; el-secretario-elfeed.el --- Elfeed implementation for el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-elfeed.el --- Add notmuch email inboxes to el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2020 Leo
 ;;
