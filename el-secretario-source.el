@@ -37,8 +37,13 @@
 (require 'eieio-base)
 (require 'hercules)
 
-(defvar el-secretario-source-default-map (make-sparse-keymap)
+(defvar el-secretario-source-default-map (let ((km (make-sparse-keymap)))
+                       (define-key km
+                         "n" '("next" . el-secretario-next-item))
+                       (define-key km
+                         "p"  '("previous" . el-secretario-previous-item)))
   "The default hercules-style keymap for sources.")
+
 (defclass el-secretario-source (eieio-named)
   ((keymap :initarg :keymap
            :initform #'el-secretario-source-default-map

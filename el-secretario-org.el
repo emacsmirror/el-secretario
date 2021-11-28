@@ -40,7 +40,55 @@
 (require 'dash)
 
 
-(defvar el-secretario-org-keymap (make-sparse-keymap))
+(defvar el-secretario-org-keymap
+  (let ((km (make-sparse-keymap)))
+    (define-key km
+      "n" '("next" . el-secretario-next-item))
+    (define-key km
+      "p" '("previous" . el-secretario-previous-item))
+    (define-key km
+      "r" '("Refile" . (lambda () (interactive) (org-refile) (el-secretario-next-item))))
+    (define-key km
+      "R" '("Refile to top" . (lambda () (interactive)
+                                (let ((org-reverse-note-order t))
+                                  (org-refile)
+                                  (el-secretario-next-item)))))
+    (define-key km
+      "t" '("Tags" . org-set-tags-command))
+    (define-key km
+      "T" '("Tags" . org-todo))
+    (define-key km
+      "s" '("Schedule" . el-secretario-org-schedule))
+    (define-key km
+      "z" '("Snooze" . el-secretario-org-ignore-current-item))
+    (define-key km
+      "d" '( "Deadline" . el-secretario-org-deadline))
+    (define-key km
+      "D" '("Delete visible" . (lambda () (interactive)
+                                 (save-restriction
+                                   (org-narrow-to-subtree)
+                                   (delete-region (point-min) (point-max))))))
+    (define-key km
+      "q" '( "Quit" . (lambda () (interactive) (el-secretario-end-sesion))))))
+(hercules-def
+ :keymap 'el-secretario-org-keymap)
+(defun el-secretario-org-schedule (arg &optional time)
+  "Like `org-schedule' but make sure the hercules prompt doesn't get in the way.
+
+Pass ARG and TIME to `org-schedule'."
+  (interactive "P")
+  (hercules--hide)
+  (funcall-interactively #'org-schedule arg time)
+  (el-secretario-activate-keymap))
+
+(defun el-secretario-org-deadline (arg &optional time)
+  "Like `org-deadline' but make sure the hercules prompt doesn't get in the way.
+
+Pass ARG and TIME to `org-deadline'."
+  (interactive "P")
+  (hercules--hide)
+  (funcall-interactively #'org-deadline arg time)
+  (el-secretario-activate-keymap))
 
 
 (defvar el-secretario-org-narrow-function #'org-narrow-to-subtree
@@ -228,9 +276,9 @@ That information is the currently visible schedule dates and deadlines."
       (--each scheduleds
         (insert "Scheduled: " it "\n"))))
   (when-let ((win (get-buffer-window
-                 (get-buffer-create el-secretario--status-buffer-name))))
-      (with-selected-window win
-        (fit-window-to-buffer))))
+                   (get-buffer-create el-secretario--status-buffer-name))))
+    (with-selected-window win
+      (fit-window-to-buffer))))
 
 (defun el-secretario-org--run-property-hook (task hook-name &optional default-hook)
   "Run a hook defined in the property of a org subtree.
@@ -286,7 +334,7 @@ immediately change into a \"c\")."
   (org-set-tags (--filter
                  (let ((-compare-fn #'string-equal))
                    (not (-contains? tags it)))
-                   (org-get-tags nil 't))))
+                 (org-get-tags nil 't))))
 
 (defun el-secretario-org-up-heading (arg)
   "Call `outline-up-heading' but return position if succeeds and nil otherwise.
@@ -304,16 +352,16 @@ Pass ARG to `outline-up-heading'."
 This is like `org-element-headline-parser' but with some extra
 properties put in."
   (--> (org-element-headline-parser (line-end-position))
-    (nth 1 it)
-    (plist-put it :file-name (buffer-file-name))
-    (plist-put it :buffer (current-buffer))
-    (plist-put it :marker (point-marker))
-    (plist-put it :EL-SECRETARIO-PRIORITY
-               (or (-some-> (plist-get
-                             it
-                             :EL-SECRETARIO-PRIORITY)
-                     (string-to-number))
-                   1))))
+       (nth 1 it)
+       (plist-put it :file-name (buffer-file-name))
+       (plist-put it :buffer (current-buffer))
+       (plist-put it :marker (point-marker))
+       (plist-put it :EL-SECRETARIO-PRIORITY
+                  (or (-some-> (plist-get
+                                it
+                                :EL-SECRETARIO-PRIORITY)
+                        (string-to-number))
+                      1))))
 
 (provide 'el-secretario-org)
 ;;; el-secretario-org.el ends here

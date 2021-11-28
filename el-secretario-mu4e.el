@@ -42,7 +42,12 @@
 (defclass el-secretario-mu4e-source (el-secretario-source)
   ((query :initarg :query)
    (init-function :initarg :init-function)))
-(defvar el-secretario-mu4e-map (make-sparse-keymap))
+(defvar el-secretario-mu4e-map (let ((km (make-sparse-keymap)))
+               (define-key km
+                 "n" '("next" . el-secretario-next-item))
+               (define-key km
+                 "p" '("previous" . el-secretario-previous-item))))
+
 
 (defvar el-secretario-mu4e--activate-backwards nil)
 

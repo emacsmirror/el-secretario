@@ -106,17 +106,6 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
     (el-secretario-source-previous-item
      (car el-secretario--current-source-list))))
 
-
-
-
-
-
-
-
-
-
-
-
 (defun el-secretario--next-source ()
   "Switch to the next source in this session."
   (if el-secretario--current-source-list

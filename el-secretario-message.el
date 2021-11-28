@@ -38,7 +38,9 @@
 (defvar el-secretario-message-pre-message-marker nil
   "The marker to return to before a message has been displayed.")
 
-(defvar el-secretario-message-keymap nil
+(defvar el-secretario-message-keymap (let ((km (make-sparse-keymap)))
+                  (define-key km
+                    "q" '("quit" . el-secretario-message--back-to-pre-message)))
   "The keymap to be used for current message.")
 
 (defvar el-secretario-message-buffer-name "*el-secretario message*")

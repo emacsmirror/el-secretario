@@ -39,7 +39,21 @@
 
 (defclass el-secretario-elfeed-source (el-secretario-source)
   ((query :initarg :query)))
-(defvar el-secretario-elfeed-map (make-sparse-keymap))
+(defvar el-secretario-elfeed-map (let ((km (make-sparse-keymap)))
+               (define-key km
+                 "n" '("next" . el-secretario-next-item))
+               (define-key km
+                 "p" '("previous" . el-secretario-previous-item))
+               (define-key km
+                 "+" '("Add tag" . elfeed-show-tag))
+               (define-key km
+                 "-" '("Remove tag" . elfeed-show-untag))
+               (define-key km
+                 "c" '("Org Capture" . org-capture))
+               (define-key km
+                 "o" '("Open in browser" . elfeed-show-visit))))
+
+
 
 ;;;###autoload
 (defun el-secretario-elfeed-make-source (&optional query keymap)
