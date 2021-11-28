@@ -81,7 +81,7 @@ sub-trees that are also todos.  It can then be useful to see the context when re
 
 ;;;###autoload
 (cl-defun el-secretario-org-make-source (query files
-                              &key next-item-hook compare-fun keymap shuffle-p ids keymap
+                              &key next-item-hook compare-fun keymap shuffle-p ids
                               tag-transitions)
   "\
 QUERY is an arbitrary org-ql query.

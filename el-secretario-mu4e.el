@@ -36,12 +36,15 @@
 ;;
 ;;; Code:
 (require 'el-secretario-source)
+(require 'el-secretario)
 (require 'mu4e)
 
 (defclass el-secretario-mu4e-source (el-secretario-source)
   ((query :initarg :query)
    (init-function :initarg :init-function)))
 (defvar el-secretario-mu4e-map (make-sparse-keymap))
+
+(defvar el-secretario-mu4e--activate-backwards nil)
 
 ;;;###autoload
 (defun el-secretario-mu4e-make-source (query &optional keymap init-function)
@@ -63,7 +66,6 @@ INIT-FUNCTION is a function that is run before the source is initialized."
     (mu4e-headers-search (or query "flag:unread"))
     (el-secretario-activate-keymap)))
 
-(defvar el-secretario-mu4e--activate-backwards nil)
 (defun el-secretario-mu4e--after-search-h ()
   "Go to the correct message directly after search is complete.
 
@@ -79,12 +81,12 @@ Should be added to `mu4e-headers-found-hook'."
         (el-secretario--previous-source)
       (el-secretario--next-source))))
 
-(cl-defmethod el-secretario-source-next-item ((obj el-secretario-mu4e-source))
+(cl-defmethod el-secretario-source-next-item ((_obj el-secretario-mu4e-source))
   (unless (mu4e-view-headers-next)
     (el-secretario--next-source)))
 
 
-(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-mu4e-source))
+(cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-mu4e-source))
   (unless (mu4e-view-headers-next -1)
     (el-secretario--previous-source)))
 

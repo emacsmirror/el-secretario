@@ -34,6 +34,7 @@
 ;;
 ;;; Code:
 (require 'el-secretario-source)
+(require 'el-secretario)
 (require 'elfeed)
 
 (defclass el-secretario-elfeed-source (el-secretario-source)
@@ -68,7 +69,7 @@ KEYMAP is a keymap to use during review of this source"
     (call-interactively #'elfeed-search-show-entry)
     (el-secretario-activate-keymap)))
 
-(cl-defmethod el-secretario-source-next-item ((obj el-secretario-elfeed-source))
+(cl-defmethod el-secretario-source-next-item ((_obj el-secretario-elfeed-source))
   (el-secretario-elfeed--show-next))
 
 (defun el-secretario-elfeed--show-next ()
@@ -81,7 +82,7 @@ KEYMAP is a keymap to use during review of this source"
         (el-secretario--next-source)
       (call-interactively #'elfeed-search-show-entry))))
 
-(cl-defmethod el-secretario-source-previous-item ((obj el-secretario-elfeed-source))
+(cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-elfeed-source))
   (el-secretario-elfeed--show-prev))
 
 (defun el-secretario-elfeed--show-prev ()
