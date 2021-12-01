@@ -60,7 +60,7 @@ INIT-FUNCTION is a function that is run before the source is initialized."
   (el-secretario-mu4e-source
    :keymap (or keymap 'el-secretario-mu4e-map)
    :query query
-   :init-function (or (lambda ()) init-function)))
+   :init-function (or init-function (lambda ()))))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-mu4e-source) &optional backwards)
   (with-slots (query init-function) obj
