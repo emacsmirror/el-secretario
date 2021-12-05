@@ -85,7 +85,7 @@ TIME and ARG is passed through to `org-schedule'
 Resetting is done with `el-secretario-space-reset'
 If NO-HERCULES is non-nil, don't bring up the current source's keymap."
   (interactive "P")
-  (when (called-interactively-p)
+  (unless time
     (hercules--hide))
   (el-secretario-space--reset)
   (org-schedule arg time)
