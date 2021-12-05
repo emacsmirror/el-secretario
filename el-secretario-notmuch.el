@@ -9,7 +9,7 @@
 ;; Version: 0.0.1
 ;; Keywords: convenience mail
 ;; Homepage: https://git.sr.ht/~zetagon/el-secretario
-;; Package-Requires: ((emacs "27.1") (el-secretario "0.0.1"))
+;; Package-Requires: ((emacs "27.1") (el-secretario "0.0.1") (notmuch "0.3.1"))
 ;;
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 ;;
 ;;; Code:
 (require 'el-secretario-source)
+(require 'el-secretario)
 (require 'notmuch)
 
 (defclass el-secretario-notmuch-source (el-secretario-source)
