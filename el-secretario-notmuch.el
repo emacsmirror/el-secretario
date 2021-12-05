@@ -124,8 +124,7 @@ Pass ELIDE-TOGGLE to `notmuch-search-show-thread'."
                                      (truncate-string-to-width
                                       subject 30 nil nil t)
                                      "*"))
-               (el-secretario-activate-keymap)
-               (el-secretario-notmuch--open-link-for-current-email))
+               (el-secretario-activate-keymap))
       (message "End of search results.")
       (el-secretario--next-source))))
 
