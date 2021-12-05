@@ -24,7 +24,7 @@
 (require 'el-secretario-message)
 (require 'el-secretario-source)
 (require 'el-secretario-org)
-(require 'el-secretario-space)
+(require 'el-secretario-org-space)
 (require 'el-secretario-function)
 (require 'el-secretario-files)
 
@@ -533,15 +533,15 @@ SCHEDULED: "
 ") file))
   (it "can increment the delta value"
     (with-current-buffer file
-      (el-secretario-space--increment)
+      (el-secretario-org-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
               4)))
   (it "can schedule a todo on the day `delta' days in the future"
     (with-current-buffer file
       (outline-next-heading)
-      (el-secretario-space--increment)
-      (el-secretario-space-reschedule)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space-reschedule)
       (let ((actual (->> (org-entry-get (point) "SCHEDULED")
                       (ts-parse)))
             (expected (->> (ts-now)
@@ -556,7 +556,7 @@ SCHEDULED: "
   (it "can reset the delta value to 2"
     (with-current-buffer file
       (outline-next-heading)
-      (el-secretario-space--reset)
+      (el-secretario-org-space--reset)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
               2)))
@@ -571,13 +571,13 @@ SCHEDULED: "
 
     (with-current-buffer file
       (outline-next-heading)
-      (el-secretario-space--increment)
-      (el-secretario-space--increment)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
               3)
 
-      (el-secretario-space--increment)
+      (el-secretario-org-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
               2)))
@@ -592,18 +592,18 @@ SCHEDULED: "
 
     (with-current-buffer file
       (outline-next-heading)
-      (el-secretario-space--increment)
+      (el-secretario-org-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
               2)
-      (el-secretario-space--increment)
-      (el-secretario-space--increment)
-      (el-secretario-space--increment)
-      (el-secretario-space--increment)
-      (el-secretario-space--increment)
-      (el-secretario-space--increment)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space--increment)
+      (el-secretario-org-space--increment)
 
-      (el-secretario-space--increment)
+      (el-secretario-org-space--increment)
       (expect (string-to-number (org-entry-get (point) "EL-SECRETARIO-DELTA"))
               :to-equal
               4)))
@@ -623,23 +623,23 @@ SCHEDULED: <2021-02-02>
         (setq x (el-secretario-org--parse-headline))
         (setq y (progn (outline-next-heading)
                        (el-secretario-org--parse-headline) ))
-        (expect (el-secretario-space-compare-le x y)
+        (expect (el-secretario-org-space-compare-le x y)
                 :to-be nil)
-        (expect (el-secretario-space-compare-le y x)
+        (expect (el-secretario-org-space-compare-le y x)
                 :to-be t)
         (setq x (el-secretario-org--parse-headline))
         (setq y (progn (outline-next-heading)
                       (el-secretario-org--parse-headline) ))
-        (expect (el-secretario-space-compare-le x y)
+        (expect (el-secretario-org-space-compare-le x y)
                 :to-be nil)
-        (expect (el-secretario-space-compare-le y x)
+        (expect (el-secretario-org-space-compare-le y x)
                 :to-be t)))
 
     (el-secretario-start-session
      (list (el-secretario-org-make-source '(todo)
                                           (list file)
                                           :next-item-hook #'next-item-fun
-                                          :compare-fun #'el-secretario-space-compare-le
+                                          :compare-fun #'el-secretario-org-space-compare-le
                                           :shuffle-p t)))
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))

@@ -151,7 +151,7 @@ If COMPARE-FUN is non-nil, sort the list of queried items using
 that function.  Sorting happens after shuffling if SHUFFLE-P is
 non-nil.  COMPARE-FUN should take two arguments which are returned
 by `el-secretario-org--parse-headline' See
-`el-secretario-space-compare-le' for an example sorting
+`el-secretario-org-space-compare-le' for an example sorting
 function.
 
 TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transition'."

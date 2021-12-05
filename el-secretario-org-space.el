@@ -1,4 +1,4 @@
-;;; el-secretario-space.el --- Spaced repetition module of el-secretario -*- lexical-binding: t; -*-
+;;; el-secretario-org-space.el --- Spaced repetition module of el-secretario -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Leo
 ;;
@@ -38,14 +38,14 @@
 (require 'org)
 
 
-(defvar el-secretario-space-increment-percentage nil
+(defvar el-secretario-org-space-increment-percentage nil
   "The percent of tasks to statistically defer.
 nil means 100% are deferred")
 
-(defun el-secretario-space--increment ()
+(defun el-secretario-org-space--increment ()
   "Increment the delta value of the delta property with a spaced repetition algorithm."
-  (unless (and el-secretario-space-increment-percentage
-             (<= el-secretario-space-increment-percentage (random 100)))
+  (unless (and el-secretario-org-space-increment-percentage
+             (<= el-secretario-org-space-increment-percentage (random 100)))
     (let ((cap
            (-some-> (org-entry-get (point)
                                    "EL-SECRETARIO-DELTA-CAP")
@@ -67,32 +67,32 @@ nil means 100% are deferred")
         (number-to-string it)
         (org-set-property "EL-SECRETARIO-DELTA" it)))))
 
-(defun el-secretario-space--reset ()
+(defun el-secretario-org-space--reset ()
   "Reset the delta value to the default value."
  (org-set-property "EL-SECRETARIO-DELTA" "2") )
 
-(defun el-secretario-space-reschedule ()
+(defun el-secretario-org-space-reschedule ()
   "Reschedule org entry at point n days into the future.
 Where n is incremented by 1 for each time this function is called on that entry"
   (let ((delta (org-entry-get (point)
                               "EL-SECRETARIO-DELTA")))
     (org-schedule nil (concat "+" delta "d")))
-  (el-secretario-space--increment))
+  (el-secretario-org-space--increment))
 
-(defun el-secretario-space-schedule-and-reset (arg &optional time no-hercules)
+(defun el-secretario-org-space-schedule-and-reset (arg &optional time no-hercules)
   "Like `org-schedule' but it also resets the delta property.
 TIME and ARG is passed through to `org-schedule'
-Resetting is done with `el-secretario-space-reset'
+Resetting is done with `el-secretario-org-space-reset'
 If NO-HERCULES is non-nil, don't bring up the current source's keymap."
   (interactive "P")
   (unless time
     (hercules--hide))
-  (el-secretario-space--reset)
+  (el-secretario-org-space--reset)
   (org-schedule arg time)
   (unless no-hercules
     (el-secretario-activate-keymap)))
 
-(defun el-secretario-space-compare-le (x y)
+(defun el-secretario-org-space-compare-le (x y)
   "Return t if X is scheduled before Y, nil otherwise.
 
 An unscheduled element is considered to be scheduled before all other elements.
@@ -108,5 +108,5 @@ X and Y should be elements as returned by `el-secretario-org--parse-headline'."
         nil)
     t))
 
-(provide 'el-secretario-space)
-;;; el-secretario-space.el ends here
+(provide 'el-secretario-org-space)
+;;; el-secretario-org-space.el ends here

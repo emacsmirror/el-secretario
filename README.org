@@ -220,11 +220,11 @@ Currently this module doesn't stand on it's own and serves more as a library
 that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my config]] for an example of how to use it.
 
 *** Relevant variables
-- ~el-secretario-space-increment-percentage~
+- ~el-secretario-org-space-increment-percentage~
 *** Relevant functions
-- ~el-secretario-space-reschedule~
-- ~el-secretario-space-schedule-and-reset~
-- ~el-secretario-space-compare-le~
+- ~el-secretario-org-space-reschedule~
+- ~el-secretario-org-space-schedule-and-reset~
+- ~el-secretario-org-space-compare-le~
 
   Passing this function as a comparison function to ~make-el-secretario-source~
   will ensure that you review your items sorted so that the earliest scheduled

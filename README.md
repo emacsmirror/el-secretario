@@ -310,16 +310,16 @@ that augments the [org module](#orgb0cfe97). See [my config](https://github.com/
 
 ### Relevant variables
 
--   `el-secretario-space-increment-percentage`
+-   `el-secretario-org-space-increment-percentage`
 
 
 <a id="orgd9a938a"></a>
 
 ### Relevant functions
 
--   `el-secretario-space-reschedule`
--   `el-secretario-space-schedule-and-reset`
--   `el-secretario-space-compare-le`
+-   `el-secretario-org-space-reschedule`
+-   `el-secretario-org-space-schedule-and-reset`
+-   `el-secretario-org-space-compare-le`
     
     Passing this function as a comparison function to `make-el-secretario-source`
     will ensure that you review your items sorted so that the earliest scheduled
