@@ -38,13 +38,19 @@
 (defclass el-secretario-function-source (el-secretario-source)
   ((func :initarg :func)))
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-function-source) &optional _backwards)
+  "See `el-secretario-source.el'.
+OBJ."
   (funcall (oref obj func)))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-function-source))
+  "See `el-secretario-source.el'.
+OBJ."
   (with-slots (current-item items-left items-done) obj
     (el-secretario--next-source)))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-function-source))
+  "See `el-secretario-source.el'.
+OBJ."
   (with-slots (current-item items-left items-done) obj
     (el-secretario--previous-source)))
 

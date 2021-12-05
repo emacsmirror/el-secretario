@@ -66,6 +66,8 @@ KEYMAP is a keymap to use during review of this source"
    :query query))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-elfeed-source) &optional backwards)
+  "See `el-secretario-source.el'.
+OBJ BACKWARDS."
   (with-slots (query) obj
     (setq elfeed-show-entry-delete 'elfeed-kill-buffer)
     (setq elfeed-show-entry-switch (lambda (x) (switch-to-buffer x nil t)))
@@ -85,6 +87,7 @@ KEYMAP is a keymap to use during review of this source"
     (el-secretario-activate-keymap)))
 
 (cl-defmethod el-secretario-source-next-item ((_obj el-secretario-elfeed-source))
+  "See `el-secretario-source.el'."
   (el-secretario-elfeed--show-next))
 
 (defun el-secretario-elfeed--show-next ()
@@ -98,6 +101,7 @@ KEYMAP is a keymap to use during review of this source"
       (call-interactively #'elfeed-search-show-entry))))
 
 (cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-elfeed-source))
+  "See `el-secretario-source.el'."
   (el-secretario-elfeed--show-prev))
 
 (defun el-secretario-elfeed--show-prev ()

@@ -50,6 +50,8 @@ KEYMAP is a keymap to use during review of this source"
    :query query))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-notmuch-source) &optional backwards)
+  "See `el-secretario-source.el'.
+OBJ BACKWARDS."
   (with-slots (query) obj
     (notmuch-search (or query "tag:unread")
                     t
@@ -64,8 +66,10 @@ KEYMAP is a keymap to use during review of this source"
     (el-secretario-activate-keymap)))
 
 (cl-defmethod el-secretario-source-next-item ((_obj el-secretario-notmuch-source))
+  "See `el-secretario-source.el'."
   (el-secretario-notmuch-show-next-thread))
 (cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-notmuch-source))
+  "See `el-secretario-source.el'."
   (el-secretario-notmuch-show-next-thread t))
 
 ;;

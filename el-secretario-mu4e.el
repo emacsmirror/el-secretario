@@ -64,6 +64,8 @@ INIT-FUNCTION is a function that is run before the source is initialized."
    :init-function (or init-function (lambda ()))))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-mu4e-source) &optional backwards)
+  "See `el-secretario-source.el'.
+OBJ BACKWARDS."
   (with-slots (query init-function) obj
     (funcall init-function)
     (setq el-secretario-mu4e--activate-backwards backwards)
@@ -88,11 +90,13 @@ Should be added to `mu4e-headers-found-hook'."
       (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-next-item ((_obj el-secretario-mu4e-source))
+  "See `el-secretario-source.el'."
   (unless (mu4e-view-headers-next)
     (el-secretario--next-source)))
 
 
 (cl-defmethod el-secretario-source-previous-item ((_obj el-secretario-mu4e-source))
+  "See `el-secretario-source.el'."
   (unless (mu4e-view-headers-next -1)
     (el-secretario--previous-source)))
 

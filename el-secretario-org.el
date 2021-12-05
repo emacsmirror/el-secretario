@@ -166,11 +166,15 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
    :tag-transitions tag-transitions))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-org-source) &optional _backwards)
+  "See `el-secretario-source.el'.
+OBJ."
   (el-secretario-activate-keymap)
   (el-secretario-source-activate-item obj))
 
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional _backwards)
+    "See `el-secretario-source.el'.
+OBJ."
   (with-slots (query files compare-fun shuffle-p ids items-left items-done) obj
     (el-secretario-org--widen-all obj)
     (setq items-left
@@ -194,6 +198,8 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
   (el-secretario-source-next-item obj))
 
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-org-source))
+  "See `el-secretario-source.el'.
+OBJ."
   (with-slots (current-item tag-transitions) obj
 
     (let ((buf (plist-get current-item :buffer ))
@@ -217,6 +223,8 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
        :EL-SECRETARIO-REVIEW-TASK-HOOK))))
 
 (cl-defmethod el-secretario-source-next-item ((obj el-secretario-org-source))
+  "See `el-secretario-source.el'.
+OBJ."
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-left)))
         (progn
@@ -230,6 +238,8 @@ TAG-TRANSITIONS is an alist as described by `el-secretario-org--step-tag-transit
       (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-org-source))
+  "See `el-secretario-source.el'.
+OBJ."
   (with-slots (items-left items-done current-item) obj
     (if-let ((item (pop items-done)))
         (progn
