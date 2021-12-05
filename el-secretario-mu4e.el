@@ -46,7 +46,8 @@
                (define-key km
                  "n" '("next" . el-secretario-next-item))
                (define-key km
-                 "p" '("previous" . el-secretario-previous-item))))
+                 "p" '("previous" . el-secretario-previous-item))
+               km))
 
 
 (defvar el-secretario-mu4e--activate-backwards nil)

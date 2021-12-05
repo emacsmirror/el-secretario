@@ -51,7 +51,8 @@
                (define-key km
                  "c" '("Org Capture" . org-capture))
                (define-key km
-                 "o" '("Open in browser" . elfeed-show-visit))))
+                 "o" '("Open in browser" . elfeed-show-visit))
+               km))
 
 
 

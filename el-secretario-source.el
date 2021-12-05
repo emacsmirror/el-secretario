@@ -41,12 +41,13 @@
                        (define-key km
                          "n" '("next" . el-secretario-next-item))
                        (define-key km
-                         "p"  '("previous" . el-secretario-previous-item)))
+                         "p"  '("previous" . el-secretario-previous-item))
+                       km)
   "The default hercules-style keymap for sources.")
 
 (defclass el-secretario-source (eieio-named)
   ((keymap :initarg :keymap
-           :initform #'el-secretario-source-default-map
+           :initform 'el-secretario-source-default-map
            :protection :protected)
    (is-initialized :initform nil))
   :abstract t

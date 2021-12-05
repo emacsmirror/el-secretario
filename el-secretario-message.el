@@ -40,7 +40,8 @@
 
 (defvar el-secretario-message-keymap (let ((km (make-sparse-keymap)))
                   (define-key km
-                    "q" '("quit" . el-secretario-message--back-to-pre-message)))
+                    "q" '("quit" . el-secretario-message--back-to-pre-message))
+                  km)
   "The keymap to be used for current message.")
 
 (defvar el-secretario-message-buffer-name "*el-secretario message*")
