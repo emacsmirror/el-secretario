@@ -69,7 +69,7 @@
                                    (org-narrow-to-subtree)
                                    (delete-region (point-min) (point-max))))))
     (define-key km
-      "q" '( "Quit" . (lambda () (interactive) (el-secretario-end-sesion))))
+      "q" '( "Quit" . (lambda () (interactive) (el-secretario-end-session))))
     km))
 (hercules-def
  :keymap 'el-secretario-org-keymap)

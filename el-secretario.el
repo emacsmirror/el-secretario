@@ -86,7 +86,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
   (el-secretario--status-buffer-activate)
   (el-secretario-source-init (car el-secretario--current-source-list)))
 
-(defun el-secretario-end-sesion ()
+(defun el-secretario-end-session ()
   "End current session and do cleanup."
   (interactive)
   (switch-to-buffer el-secretario--original-buffer)
@@ -118,7 +118,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
             (insert "Done!"))
           (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
     (el-secretario-status-buffer-deactivate)
-    (el-secretario-end-sesion)))
+    (el-secretario-end-session)))
 
 (defun el-secretario--previous-source ()
   "Switch to the previous source in this session."
