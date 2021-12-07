@@ -35,6 +35,13 @@ Install if you are using doom:
   (require 'el-secretario-keybindings))
   #+end_src
 
+Install manually from MELPA: =M-x package-install RET el-secretario RET=
+
+Or via ~use-package~:
+
+  #+begin_src emacs-lisp
+(use-package el-secretario)
+  #+end_src
 
 * Introducing my secretary
 
