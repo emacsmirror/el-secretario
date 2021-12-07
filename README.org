@@ -26,14 +26,7 @@ Install if you are using doom:
   :recipe (:repo "https://git.sr.ht/~zetagon/el-secretario"))
   #+end_src
 
-  No calls to ~require~ or ~use-package~ is needed
-  since all relevant functions are properly autoloaded. If you want the default
-  bindings use:
-
-  #+begin_src emacs-lisp
-(eval-after-load 'el-secretario
-  (require 'el-secretario-keybindings))
-  #+end_src
+No calls to ~require~ or ~use-package~ is needed since all relevant functions are properly autoloaded.
 
 Install manually from MELPA: =M-x package-install RET el-secretario RET=
 
