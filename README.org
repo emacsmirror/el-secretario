@@ -6,14 +6,20 @@ The Emacs secretary that helps you through all your inboxes and tasks.
 =el-secretario= has support for a number of external packages which needs to be
 installed separately if you want to use them.
 - [[https://orgmode.org/][Org-mode]]
+- [[https://github.com/alphapapa/org-ql][org-ql]]
+- [[https://melpa.org/#/hercules][Hercules]]
 - [[https://notmuchmail.org/][Notmuch]]
 - [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]]
 - [[https://github.com/skeeto/elfeed][Elfeed]]
 
-Install this package with the method of your choosing. Currently it isn't on
-Melpa so a method that uses git is preferred.
+Install this package with the method of your choosing.
 
-If you are using doom:
+If you install the package from source, you need to install at least these Emacs Lisp dependencies manually:
+
+- [[https://github.com/alphapapa/org-ql][org-ql]]
+- [[https://melpa.org/#/hercules][Hercules]]
+
+Install if you are using doom:
 
   #+begin_src emacs-lisp
 (package! el-secretario
