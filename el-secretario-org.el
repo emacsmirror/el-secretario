@@ -269,13 +269,14 @@ OBJ."
       (setq current-item nil)
       (el-secretario-next-item))))
 
+(with-no-warnings (defvar date))
 (defun el-secretario-org--update-status-buffer ()
   "Update the status buffer with useful information.
 That information is the currently visible schedule dates and deadlines."
   (interactive)
-  (org-dlet ((date (calendar-current-date))
-             deadlines
-             scheduleds)
+  (let ((date (calendar-current-date))
+        deadlines
+        scheduleds)
     (save-excursion
       (setq deadlines (org-agenda-get-deadlines))
       (setq scheduleds (org-agenda-get-scheduled)))
