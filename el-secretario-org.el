@@ -273,9 +273,9 @@ OBJ."
   "Update the status buffer with useful information.
 That information is the currently visible schedule dates and deadlines."
   (interactive)
-  (let ((date (calendar-current-date))
-        deadlines
-        scheduleds)
+  (org-dlet ((date (calendar-current-date))
+             deadlines
+             scheduleds)
     (save-excursion
       (setq deadlines (org-agenda-get-deadlines))
       (setq scheduleds (org-agenda-get-scheduled)))
