@@ -92,7 +92,7 @@ OBJ BACKWARDS."
 
 (defun el-secretario-elfeed--show-next ()
   "Show the next item in the elfeed-search buffer."
-  (interactive)
+  ;; This code is copied and adapted from elfeed.
   (funcall elfeed-show-entry-delete)
   (with-current-buffer (elfeed-search-buffer)
     (when elfeed-search-remain-on-entry (forward-line 1))
@@ -106,6 +106,7 @@ OBJ BACKWARDS."
 
 (defun el-secretario-elfeed--show-prev ()
   "Show the previous item in the elfeed-search buffer."
+  ;; This code is copied and adapted from elfeed.
   (funcall elfeed-show-entry-delete)
   (with-current-buffer (elfeed-search-buffer)
     (when elfeed-search-remain-on-entry (forward-line 1))

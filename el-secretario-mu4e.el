@@ -100,6 +100,7 @@ Should be added to `mu4e-headers-found-hook'."
   (unless (mu4e-view-headers-next -1)
     (el-secretario--previous-source)))
 
+;; This is copied and adapted from mu4.
 ;; This fixes a bug in mu4e
 ;; It should return nil if it doesn't succeed in getting the previous message
 (define-advice mu4e~headers-move (:override (lines))

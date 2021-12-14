@@ -96,6 +96,7 @@ OBJ BACKWARDS."
 If PREVIOUS is non-nil, move to the previous item in the search
 results instead."
   (interactive "P")
+  ;; This code is copied and adapted from notmuch.
   (let ((parent-buffer notmuch-show-parent-buffer))
     (notmuch-bury-or-kill-this-buffer)
     (when (buffer-live-p parent-buffer)
@@ -116,6 +117,7 @@ Like `notmuch-search-show-thread' but call
 `el-secretario--next-source' if there are no more mail.
 Pass ELIDE-TOGGLE to `notmuch-search-show-thread'."
   (interactive "P")
+  ;; This code is copied and adapted from notmuch.
   (let ((thread-id (notmuch-search-find-thread-id))
         (subject (notmuch-search-find-subject)))
     (if (> (length thread-id) 0)
