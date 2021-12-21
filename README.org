@@ -1,6 +1,11 @@
 #+TITLE: Readme
+#+options: toc:nil
 
 The Emacs secretary that helps you through all your inboxes and tasks.
+
+- Project page: https://sr.ht/~zetagon/el-secretario/
+- Patches or general discussions: <https://lists.sr.ht/~zetagon/el-secretario-devel>
+- Bug reports: https://todo.sr.ht/~zetagon/el-secretario
 
 * Requirements and Installation
 =el-secretario= has support for a number of external packages which needs to be
@@ -295,23 +300,19 @@ fantastic things it glues together! Huge thanks to the creators of:
 
 * Contribute
 
-I am currently trying out sourcehut. Send any patches or
-comments to https://lists.sr.ht/~zetagon/el-secretario-devel. Bugs should be reported to https://todo.sr.ht/~zetagon/el-secretario (which is also a place you could look at to find things to contribute).
+There are three ways to contribute to this project:
+- Feedback
+  Any feedback is very welcome! Documentation, usability, features etc.
 
-Use it and come with feedback on basically everything! Usability, features, bugs
-etc. I have a hard time figuring out what's unclear in the documentation so
-feedback on that is especially welcome.
+- Patches
+  el-secretario is designed to be extensible. [[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Write your own sources]] and
+  contribute them, or improve the existing ones.
+
+- Money
+  I have a ko-fi page if you want to throw money at me: https://ko-fi.com/zetagon
 
 It would be very nice to have a mascot for the project, so I would be
 very happy if you would contribute with a nice drawing.
-** Moar sources!
-
-=el-Secretario= gets better the more sources there are. I'd be very happy to
-review contributions with new sources or improvements over existing ones. See
-[[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Creating a new source]].
-
-** Loading in Emacs
-I still don't know how to properly load things in an Emacs package, if you know how to properly split parts of this package into separate modules so that the user can choose which parts they want to load, feel more than free to submit a patch. In the meantime I will not prioritize this and just load everything when the main module is loaded.
 
 
 # Local Variables:
