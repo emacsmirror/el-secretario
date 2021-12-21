@@ -71,6 +71,7 @@ nil means 100% are deferred")
   "Reset the delta value to the default value."
  (org-set-property "EL-SECRETARIO-DELTA" "2") )
 
+;;;###autoload
 (defun el-secretario-org-space-reschedule ()
   "Reschedule org entry at point n days into the future.
 Where n is incremented by 1 for each time this function is called on that entry"
@@ -79,6 +80,7 @@ Where n is incremented by 1 for each time this function is called on that entry"
     (org-schedule nil (concat "+" delta "d")))
   (el-secretario-org-space--increment))
 
+;;;###autoload
 (defun el-secretario-org-space-schedule-and-reset (arg &optional time no-hercules)
   "Like `org-schedule' but it also resets the delta property.
 TIME and ARG is passed through to `org-schedule'
@@ -92,6 +94,7 @@ If NO-HERCULES is non-nil, don't bring up the current source's keymap."
   (unless no-hercules
     (el-secretario-activate-keymap)))
 
+;;;###autoload
 (defun el-secretario-org-space-compare-le (x y)
   "Return t if X is scheduled before Y, nil otherwise.
 
