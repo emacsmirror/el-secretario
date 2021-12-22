@@ -366,13 +366,7 @@ properties put in."
        (nth 1 it)
        (plist-put it :file-name (buffer-file-name))
        (plist-put it :buffer (current-buffer))
-       (plist-put it :marker (point-marker))
-       (plist-put it :EL-SECRETARIO-PRIORITY
-                  (or (-some-> (plist-get
-                                it
-                                :EL-SECRETARIO-PRIORITY)
-                        (string-to-number))
-                      1))))
+       (plist-put it :marker (point-marker))))
 
 (provide 'el-secretario-org)
 ;;; el-secretario-org.el ends here
