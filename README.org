@@ -8,37 +8,31 @@ The Emacs secretary that helps you through all your inboxes and tasks.
 - Bug reports: https://todo.sr.ht/~zetagon/el-secretario
 
 * Requirements and Installation
-=el-secretario= has support for a number of external packages which needs to be
-installed separately if you want to use them.
-- [[https://orgmode.org/][Org-mode]]
-- [[https://github.com/alphapapa/org-ql][org-ql]]
-- [[https://melpa.org/#/hercules][Hercules]]
-- [[https://notmuchmail.org/][Notmuch]]
-- [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]]
-- [[https://github.com/skeeto/elfeed][Elfeed]]
+=el-secretario= is available on melpa and is divided into different packages:
+- =el-secretario= :: The main package
+- =el-secretario-org= :: [[https://orgmode.org/][Org-mode]] integration
+- =el-secretario-notmuch= :: [[https://notmuchmail.org/][Notmuch]] integration
+- =el-secretario-mu4e= :: [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]] integration
+- =el-secretario-elfeed= :: [[https://github.com/skeeto/elfeed][Elfeed]] integration
 
-Install this package with the method of your choosing.
+*Note:* =el-secretario= depends on a newer version of which-key than might be on elpa. See [[https://todo.sr.ht/~zetagon/el-secretario/2][Bug:  which-key: No bindings found in el-secretario-org-keymap]]
 
-If you install the package from source, you need to install at least these Emacs Lisp dependencies manually:
+No calls to ~require~ (explicit or with ~use-package~) is needed since all relevant functions are properly autoloaded.
 
-- [[https://github.com/alphapapa/org-ql][org-ql]]
-- [[https://melpa.org/#/hercules][Hercules]]
-
-Install if you are using doom:
+If you are using doom:
 
   #+begin_src emacs-lisp
-(package! el-secretario
-  :recipe (:repo "https://git.sr.ht/~zetagon/el-secretario"))
+(package! el-secretario)
   #+end_src
 
-No calls to ~require~ or ~use-package~ is needed since all relevant functions are properly autoloaded.
 
 Install manually from MELPA: =M-x package-install RET el-secretario RET=
 
 Or via ~use-package~:
 
   #+begin_src emacs-lisp
-(use-package el-secretario)
+(use-package el-secretario
+  :defer t)
   #+end_src
 
 * Introducing my secretary
@@ -78,11 +72,6 @@ go through your todo inbox. Pressing ~n~ will in a similar way take you to the
 next item in your inbox. When you've refiled your tasks appropriately your
 secretary will go through all your existing todos over in =Todo.org=
 
-This uses the default keybindings this package provides. See
-[[file:el-secretario-keybindings.el]]. This file isn't loaded automatically. Use
-~require~ or ~use-package~ for that. It's easy to add your own keybindings! Use
-whatever keybinding mechanism you use to add keybindings the respective source's
-keymap.
 
 A more complete configuration can be found at [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my configuration]].
 
@@ -264,8 +253,43 @@ immediately when ~el-secretario-next-item~ is called. To use it put
 This one is still a little bit weird and I don't exactly know what it's supposed
 to do so ignore it for now!
 
+* Customization
+** Keybindings
+It's easy to add your own keybindings! Use whatever keybinding mechanism you use
+to add keybindings the respective source's keymap.
 
-* Creating a new source
+For example to bind =org-capture= in the org keymap:
+
+#+begin_src emacs-lisp
+(define-key el-secretario-org-keymap
+      "c" '("Capture" . org-capture))
+#+end_src
+
+If you want different keybindings for different instances of the same source
+type you can provide your own keymap. The example below has two different
+keymaps for the two sources.
+
+#+begin_src emacs-lisp
+(defvar my/el-secretario-org-map (make-sparse-keymap))
+(define-key el-secretario-org-keymap
+  "c" '("Capture with template a" . (lambda () (interactive) (org-capture nil "a"))))
+
+(defvar my/el-secretario-org-map-2 (make-sparse-keymap))
+(define-key el-secretario-org-keymap
+  "c" '("Capture with template b" . (lambda () (interactive) (org-capture nil "b"))))
+
+(defun el-secretario-review ()
+  (el-secretario-start-session
+   (lambda ()
+     (list
+      (el-secretario-org-make-source '(todo "TODO") '("~/org/Todo.org")
+                                     :keymap my/el-secretario-org-map)
+
+      (el-secretario-org-make-source '(todo "TODO") '("~/org/Inbox.org")
+                                     :keymap my/el-secretario-org-map-2)))))
+#+end_src
+
+** Creating a new source
 :PROPERTIES:
 :ID:       2be5fc5b-e6f6-48c0-ac60-15024247e615
 :END:
@@ -283,7 +307,7 @@ See the docstrings for respective method for what they are supposed to do.
 Each source can fill the ~keymap~ slot (as defined in ~el-secretario-source~)
 with a keymap. Otherwise the default keymap will be used.
 
-See [[./el-secretario-example.el][the example source]] and [[file:tests/test-el-secretario.el::(describe "Example module"][its unit tests]].
+See [[./el-secretario-example.el][the example source]] and [[file:tests/test-el-secretario.el::(describe "Example module"][its unit tests]] for an easy to read example.
 
 * Thanks
 =el-secretario= is mostly a glue-package. It couldn't exists without all the

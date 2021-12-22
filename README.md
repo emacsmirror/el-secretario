@@ -7,42 +7,35 @@ The Emacs secretary that helps you through all your inboxes and tasks.
 
 # Requirements and Installation
 
-`el-secretario` has support for a number of external packages which needs to be
-installed separately if you want to use them.
+`el-secretario` is available on melpa and is divided into different packages:
 
--   [Org-mode](https://orgmode.org/)
--   [org-ql](https://github.com/alphapapa/org-ql)
--   [Hercules](https://melpa.org/#/hercules)
--   [Notmuch](https://notmuchmail.org/)
--   [Mu4e](https://www.djcbsoftware.nl/code/mu/mu4e.html)
--   [Elfeed](https://github.com/skeeto/elfeed)
+-   **`el-secretario`:** The main package
+-   **`el-secretario-org`:** [Org-mode](https://orgmode.org/) integration
+-   **`el-secretario-notmuch`:** [Notmuch](https://notmuchmail.org/) integration
+-   **`el-secretario-mu4e`:** [Mu4e](https://www.djcbsoftware.nl/code/mu/mu4e.html) integration
+-   **`el-secretario-elfeed`:** [Elfeed](https://github.com/skeeto/elfeed) integration
 
-Install this package with the method of your choosing.
+**Note:** `el-secretario` depends on a newer version of which-key than might be on elpa. See [Bug:  which-key: No bindings found in el-secretario-org-keymap](https://todo.sr.ht/~zetagon/el-secretario/2)
 
-If you install the package from source, you need to install at least these Emacs Lisp dependencies manually:
+No calls to `require` (explicit or with `use-package`) is needed since all relevant functions are properly autoloaded.
 
--   [org-ql](https://github.com/alphapapa/org-ql)
--   [Hercules](https://melpa.org/#/hercules)
+If you are using doom:
 
-Install if you are using doom:
-
-    (package! el-secretario
-      :recipe (:repo "https://git.sr.ht/~zetagon/el-secretario"))
-
-No calls to `require` or `use-package` is needed since all relevant functions are properly autoloaded.
+    (package! el-secretario)
 
 Install manually from MELPA: `M-x package-install RET el-secretario RET`
 
 Or via `use-package`:
 
-    (use-package el-secretario)
+    (use-package el-secretario
+      :defer t)
 
 
 # Introducing my secretary
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org07cda90) into inboxes but he can also learn new things if you [teach](#org60cf8f9) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orga6c5714) into inboxes but he can also learn new things if you [teach](#org28f442a) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -76,12 +69,6 @@ go through your todo inbox. Pressing `n` will in a similar way take you to the
 next item in your inbox. When you&rsquo;ve refiled your tasks appropriately your
 secretary will go through all your existing todos over in `Todo.org`
 
-This uses the default keybindings this package provides. See
-<el-secretario-keybindings.el>. This file isn&rsquo;t loaded automatically. Use
-`require` or `use-package` for that. It&rsquo;s easy to add your own keybindings! Use
-whatever keybinding mechanism you use to add keybindings the respective source&rsquo;s
-keymap.
-
 A more complete configuration can be found at [my configuration](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario).
 
 
@@ -101,7 +88,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="org07cda90"></a>
+<a id="orga6c5714"></a>
 
 # The modules
 
@@ -153,7 +140,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="orgc768448"></a>
+<a id="org7f206b2"></a>
 
 ## Org
 
@@ -255,7 +242,7 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#orgc768448). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org7f206b2). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -304,9 +291,45 @@ This one is still a little bit weird and I don&rsquo;t exactly know what it&rsqu
 to do so ignore it for now!
 
 
-<a id="org60cf8f9"></a>
+# Customization
 
-# Creating a new source
+
+## Keybindings
+
+It&rsquo;s easy to add your own keybindings! Use whatever keybinding mechanism you use
+to add keybindings the respective source&rsquo;s keymap.
+
+For example to bind `org-capture` in the org keymap:
+
+    (define-key el-secretario-org-keymap
+          "c" '("Capture" . org-capture))
+
+If you want different keybindings for different instances of the same source
+type you can provide your own keymap. The example below has two different
+keymaps for the two sources.
+
+    (defvar my/el-secretario-org-map (make-sparse-keymap))
+    (define-key el-secretario-org-keymap
+      "c" '("Capture with template a" . (lambda () (interactive) (org-capture nil "a"))))
+    
+    (defvar my/el-secretario-org-map-2 (make-sparse-keymap))
+    (define-key el-secretario-org-keymap
+      "c" '("Capture with template b" . (lambda () (interactive) (org-capture nil "b"))))
+    
+    (defun el-secretario-review ()
+      (el-secretario-start-session
+       (lambda ()
+         (list
+          (el-secretario-org-make-source '(todo "TODO") '("~/org/Todo.org")
+                                         :keymap my/el-secretario-org-map)
+    
+          (el-secretario-org-make-source '(todo "TODO") '("~/org/Inbox.org")
+                                         :keymap my/el-secretario-org-map-2)))))
+
+
+<a id="org28f442a"></a>
+
+## Creating a new source
 
 A source is a [eieio](eieio#Top) class that inherits from `el-secretario-source`. It needs to
 implement the following methods:
@@ -323,7 +346,7 @@ See the docstrings for respective method for what they are supposed to do.
 Each source can fill the `keymap` slot (as defined in `el-secretario-source`)
 with a keymap. Otherwise the default keymap will be used.
 
-See [the example source](./el-secretario-example.el) and [its unit tests](tests/test-el-secretario.el).
+See [the example source](./el-secretario-example.el) and [its unit tests](tests/test-el-secretario.el) for an easy to read example.
 
 
 # Thanks
@@ -349,7 +372,7 @@ There are three ways to contribute to this project:
     Any feedback is very welcome! Documentation, usability, features etc.
 
 -   Patches
-    el-secretario is designed to be extensible. [Write your own sources](#org60cf8f9) and
+    el-secretario is designed to be extensible. [Write your own sources](#org28f442a) and
     contribute them, or improve the existing ones.
 
 -   Money
