@@ -67,6 +67,7 @@ nil means 100% are deferred")
         (number-to-string it)
         (org-set-property "EL-SECRETARIO-DELTA" it)))))
 
+;;;###autoload
 (defun el-secretario-org-space--reset ()
   "Reset the delta value to the default value."
  (org-set-property "EL-SECRETARIO-DELTA" "2") )
