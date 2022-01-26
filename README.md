@@ -35,7 +35,7 @@ Or via `use-package`:
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orga6c5714) into inboxes but he can also learn new things if you [teach](#org28f442a) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orge315425) into inboxes but he can also learn new things if you [teach](#orgf7b53ab) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -88,7 +88,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="orga6c5714"></a>
+<a id="orge315425"></a>
 
 # The modules
 
@@ -140,7 +140,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="org7f206b2"></a>
+<a id="org6bc8654"></a>
 
 ## Org
 
@@ -242,7 +242,7 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org7f206b2). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org6bc8654). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -309,11 +309,11 @@ type you can provide your own keymap. The example below has two different
 keymaps for the two sources.
 
     (defvar my/el-secretario-org-map (make-sparse-keymap))
-    (define-key el-secretario-org-keymap
+    (define-key my/el-secretario-org-keymap
       "c" '("Capture with template a" . (lambda () (interactive) (org-capture nil "a"))))
     
     (defvar my/el-secretario-org-map-2 (make-sparse-keymap))
-    (define-key el-secretario-org-keymap
+    (define-key my/el-secretario-org-keymap
       "c" '("Capture with template b" . (lambda () (interactive) (org-capture nil "b"))))
     
     (defun el-secretario-review ()
@@ -327,7 +327,7 @@ keymaps for the two sources.
                                          :keymap my/el-secretario-org-map-2)))))
 
 
-<a id="org28f442a"></a>
+<a id="orgf7b53ab"></a>
 
 ## Creating a new source
 
@@ -372,7 +372,7 @@ There are three ways to contribute to this project:
     Any feedback is very welcome! Documentation, usability, features etc.
 
 -   Patches
-    el-secretario is designed to be extensible. [Write your own sources](#org28f442a) and
+    el-secretario is designed to be extensible. [Write your own sources](#orgf7b53ab) and
     contribute them, or improve the existing ones.
 
 -   Money

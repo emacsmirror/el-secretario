@@ -271,11 +271,11 @@ keymaps for the two sources.
 
 #+begin_src emacs-lisp
 (defvar my/el-secretario-org-map (make-sparse-keymap))
-(define-key el-secretario-org-keymap
+(define-key my/el-secretario-org-keymap
   "c" '("Capture with template a" . (lambda () (interactive) (org-capture nil "a"))))
 
 (defvar my/el-secretario-org-map-2 (make-sparse-keymap))
-(define-key el-secretario-org-keymap
+(define-key my/el-secretario-org-keymap
   "c" '("Capture with template b" . (lambda () (interactive) (org-capture nil "b"))))
 
 (defun el-secretario-review ()
