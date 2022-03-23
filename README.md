@@ -35,7 +35,7 @@ Or via `use-package`:
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orge315425) into inboxes but he can also learn new things if you [teach](#orgf7b53ab) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org5c97120) into inboxes but he can also learn new things if you [teach](#org4a309c3) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -69,6 +69,10 @@ go through your todo inbox. Pressing `n` will in a similar way take you to the
 next item in your inbox. When you&rsquo;ve refiled your tasks appropriately your
 secretary will go through all your existing todos over in `Todo.org`
 
+Pressing a key that isn&rsquo;t in the `which-key` menu will disable the menu, which
+essentially pauses the review.  You can reactivate it with
+`el-secretario-activate-keymap`.
+
 A more complete configuration can be found at [my configuration](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario).
 
 
@@ -88,7 +92,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="orge315425"></a>
+<a id="org5c97120"></a>
 
 # The modules
 
@@ -140,7 +144,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="org6bc8654"></a>
+<a id="org4819995"></a>
 
 ## Org
 
@@ -242,7 +246,7 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org6bc8654). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org4819995). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -327,7 +331,7 @@ keymaps for the two sources.
                                          :keymap my/el-secretario-org-map-2)))))
 
 
-<a id="orgf7b53ab"></a>
+<a id="org4a309c3"></a>
 
 ## Creating a new source
 
@@ -372,7 +376,7 @@ There are three ways to contribute to this project:
     Any feedback is very welcome! Documentation, usability, features etc.
 
 -   Patches
-    el-secretario is designed to be extensible. [Write your own sources](#orgf7b53ab) and
+    el-secretario is designed to be extensible. [Write your own sources](#org4a309c3) and
     contribute them, or improve the existing ones.
 
 -   Money

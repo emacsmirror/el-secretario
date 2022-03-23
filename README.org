@@ -72,6 +72,10 @@ go through your todo inbox. Pressing ~n~ will in a similar way take you to the
 next item in your inbox. When you've refiled your tasks appropriately your
 secretary will go through all your existing todos over in =Todo.org=
 
+Pressing a key that isn't in the =which-key= menu will disable the menu, which
+essentially pauses the review.  You can reactivate it with
+~el-secretario-activate-keymap~.
+
 
 A more complete configuration can be found at [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my configuration]].
 
