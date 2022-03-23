@@ -330,13 +330,16 @@ fantastic things it glues together! Huge thanks to the creators of:
 
 There are three ways to contribute to this project:
 - Feedback
+
   Any feedback is very welcome! Documentation, usability, features etc.
 
 - Patches
+
   el-secretario is designed to be extensible. [[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Write your own sources]] and
   contribute them, or improve the existing ones.
 
 - Money
+
   I have a ko-fi page if you want to throw money at me: https://ko-fi.com/zetagon
 
 It would be very nice to have a mascot for the project, so I would be
