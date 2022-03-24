@@ -196,8 +196,8 @@ Property hooks are similar to normal [[https://www.gnu.org/software/emacs/manual
 custom code at specific points in time. The difference is that property hooks
 are defined by setting a property to a headline which means that they are local
 to the headline. You can set a property hook by adding the corresponding
-property with unquoted lisp code as value. You can run your own property hooks
-with the function ~el-secretario-org--run-property-hook~.
+property with an unquoted lisp function as value. You can run your own property
+hooks with the function ~el-secretario-org--run-property-hook~.
 
 | Property                       | Run condition                                   |
 |--------------------------------+-------------------------------------------------|

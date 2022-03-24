@@ -301,10 +301,11 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
   (with-current-buffer (plist-get task :buffer)
     (save-excursion
       (goto-char (plist-get task :begin))
-      (eval (or (-some-> (plist-get task hook-name)
-                  (read))
-                default-hook)
-            t))))
+      (when-let ((fun (or (-some-> (plist-get task hook-name)
+                            (read))
+                          default-hook)))
+        (funcall fun)))))
+
 (defun el-secretario-org--step-tag-transition (tag-transitions)
   "Make one state transition according to TAG-TRANSITIONS.
 
