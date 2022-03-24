@@ -46,13 +46,13 @@
 * TODO bar :b:
 :PROPERTIES:
 :EL-SECRETARIO-PRIORITY: 85
-:EL-SECRETARIO-BEGIN-TASK-HOOK: (insert \"foobar\")
+:EL-SECRETARIO-BEGIN-TASK-HOOK: review-item-fun
 :END:
 
 * TODO baz :a:
 :PROPERTIES:
 :EL-SECRETARIO-PRIORITY: 106
-:EL-SECRETARIO-FINISH-TASK-HOOK: (insert \"foobar\")
+:EL-SECRETARIO-FINISH-TASK-HOOK: review-item-fun
 :END:
 
 ** TODO subtask1
@@ -65,11 +65,11 @@
 :END:
 * TODO Daily review :b:
 :PROPERTIES:
-:EL-SECRETARIO-BEGIN-TASK-HOOK: (progn  (el-secretario-tasks-subtask-begin))
+:EL-SECRETARIO-BEGIN-TASK-HOOK: el-secretario-tasks-subtask-begin
 :END:
 ** TODO Sync remarkable inbox
 :PROPERTIES:
-:EL-SECRETARIO-REVIEW-TASK-HOOK: (review-item-fun)
+:EL-SECRETARIO-REVIEW-TASK-HOOK: review-item-fun
 :END:
 
 ")

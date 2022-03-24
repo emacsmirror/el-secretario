@@ -301,7 +301,7 @@ DEFAULT-HOOK is a quoted s-exp to run if there is no hook in this subtree."
   (with-current-buffer (plist-get task :buffer)
     (save-excursion
       (goto-char (plist-get task :begin))
-      (eval (or (-some-> (plist-get task hook-name)
+      (funcall (or (-some-> (plist-get task hook-name)
                   (read))
                 default-hook)
             t))))
