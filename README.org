@@ -202,6 +202,17 @@ hooks with the function ~el-secretario-org--run-property-hook~.
 | Property                       | Run condition                                   |
 |--------------------------------+-------------------------------------------------|
 | EL-SECRETARIO-REVIEW-TASK-HOOK | When shown in a review in the org source        |
+
+Example:
+
+This will call the function =review-item-fun= when the Foo entry is shown in a review:
+#+begin_src org
+,* Foo
+:PROPERTIES:
+:EL-SECRETARIO-REVIEW-TASK-HOOK: review-item-fun
+:END:
+#+end_src
+
 **** Run property hook when marking a task as finished
 
 In order to run a function when a specific task is done, you can add the following to your config.
