@@ -213,7 +213,7 @@ This will call the function =review-item-fun= when the Foo entry is shown in a r
 :END:
 #+end_src
 
-**** Run property hook when marking a task as finished
+*** Run property hook when marking a task as finished
 
 In order to run a function when a specific task is done, you can add the following to your config.
 

@@ -35,7 +35,7 @@ Or via `use-package`:
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orgdbd35e0) into inboxes but he can also learn new things if you [teach](#org9a23ebf) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org2c7ce69) into inboxes but he can also learn new things if you [teach](#orgb948d40) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -92,7 +92,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="orgdbd35e0"></a>
+<a id="org2c7ce69"></a>
 
 # The modules
 
@@ -144,7 +144,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="orgcee51fc"></a>
+<a id="org869ecee"></a>
 
 ## Org
 
@@ -236,15 +236,16 @@ This will call the function `review-item-fun` when the Foo entry is shown in a r
     :EL-SECRETARIO-REVIEW-TASK-HOOK: review-item-fun
     :END:
 
-1.  Run property hook when marking a task as finished
 
-    In order to run a function when a specific task is done, you can add the following to your config.
-    
-        (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
-        (defun my/el-secretario-run-finish-task-hook ()
-          (when (member org-state org-done-keywords)
-            (el-secretario-org--run-property-hook (el-secretario-org--parse-headline)
-                             :EL-SECRETARIO-FINISH-TASK-HOOK)))
+### Run property hook when marking a task as finished
+
+In order to run a function when a specific task is done, you can add the following to your config.
+
+    (add-hook 'org-after-todo-state-change-hook #'el-secretario-tasks--finish-task-hook)
+    (defun my/el-secretario-run-finish-task-hook ()
+      (when (member org-state org-done-keywords)
+        (el-secretario-org--run-property-hook (el-secretario-org--parse-headline)
+                         :EL-SECRETARIO-FINISH-TASK-HOOK)))
 
 
 ## Space
@@ -255,7 +256,7 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#orgcee51fc). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org869ecee). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -340,7 +341,7 @@ keymaps for the two sources.
                                          :keymap my/el-secretario-org-map-2)))))
 
 
-<a id="org9a23ebf"></a>
+<a id="orgb948d40"></a>
 
 ## Creating a new source
 
@@ -387,7 +388,7 @@ There are three ways to contribute to this project:
 
 -   Patches
     
-    el-secretario is designed to be extensible. [Write your own sources](#org9a23ebf) and
+    el-secretario is designed to be extensible. [Write your own sources](#orgb948d40) and
     contribute them, or improve the existing ones.
 
 -   Money
