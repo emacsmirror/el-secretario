@@ -35,6 +35,13 @@ Or via ~use-package~:
   :defer t)
   #+end_src
 
+** Breaking Changes
+
+I post announcements about breaking changes on
+https://lists.sr.ht/~zetagon/el-secretario-announce .  If you don't have an
+sr.ht account, see https://man.sr.ht/lists.sr.ht/#email-controls for how to
+subscribe using your email account.
+
 * Introducing my secretary
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let's call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a "next email"  button. Let's call it the linked list method.

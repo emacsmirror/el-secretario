@@ -31,11 +31,19 @@ Or via `use-package`:
       :defer t)
 
 
+## Breaking Changes
+
+I post announcements about breaking changes on
+<https://lists.sr.ht/~zetagon/el-secretario-announce> .  If you don&rsquo;t have an
+sr.ht account, see <https://man.sr.ht/lists.sr.ht/#email-controls> for how to
+subscribe using your email account.
+
+
 # Introducing my secretary
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org2c7ce69) into inboxes but he can also learn new things if you [teach](#orgb948d40) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orgfd3eaca) into inboxes but he can also learn new things if you [teach](#orgacaefb5) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -92,7 +100,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="org2c7ce69"></a>
+<a id="orgfd3eaca"></a>
 
 # The modules
 
@@ -144,7 +152,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="org869ecee"></a>
+<a id="org9249a20"></a>
 
 ## Org
 
@@ -256,7 +264,7 @@ This module provides a way to defer todos into the future using a crude spaced
 repetition algorithm (the length of the deferral is incremented by one day each time).
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org869ecee). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org9249a20). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -341,7 +349,7 @@ keymaps for the two sources.
                                          :keymap my/el-secretario-org-map-2)))))
 
 
-<a id="orgb948d40"></a>
+<a id="orgacaefb5"></a>
 
 ## Creating a new source
 
@@ -388,7 +396,7 @@ There are three ways to contribute to this project:
 
 -   Patches
     
-    el-secretario is designed to be extensible. [Write your own sources](#orgb948d40) and
+    el-secretario is designed to be extensible. [Write your own sources](#orgacaefb5) and
     contribute them, or improve the existing ones.
 
 -   Money
