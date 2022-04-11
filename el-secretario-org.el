@@ -326,7 +326,8 @@ immediately change into a \"c\")."
     (dolist (tag tags-to-remove)
       (el-secretario-org-remove-tag tag))
     (dolist (tag tags-to-add)
-      (el-secretario-org-add-tag tag))) )
+      (unless (string-empty-p tag)
+        (el-secretario-org-add-tag tag)))) )
 
 (defun el-secretario-org-add-tag (&rest tags)
   "Add TAGS to current headline."

@@ -318,6 +318,15 @@
     (expect (buffer-substring-no-properties (line-beginning-position)
                                             (line-end-position))
             :to-equal "* TODO FOO :a:"))
+  (it "can remove a tag"
+    (outline-next-heading)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO :a:")
+    (el-secretario-org-remove-tag "a")
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO"))
   (describe "tag state machine"
     (it "can change the tag of every item"
 
@@ -357,6 +366,14 @@
               :to-be nil)
       (expect (el-secretario-org--has-tag "b")
               :to-be nil))
+    (it "can remove a tag without leaving :: behind"
+      (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
+                                                                        (list file)
+                                                                        :tag-transitions
+                                                                        '(("a" . "")))))
+      (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO"))
     (it "can change and remove tags in parallel"
 
       (el-secretario-start-session (list (el-secretario-org-make-source '(todo)
