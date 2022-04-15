@@ -9,11 +9,11 @@ The Emacs secretary that helps you through all your inboxes and tasks.
 
 * Requirements and Installation
 =el-secretario= is available on melpa and is divided into different packages:
-- =el-secretario= :: The main package
-- =el-secretario-org= :: [[https://orgmode.org/][Org-mode]] integration
-- =el-secretario-notmuch= :: [[https://notmuchmail.org/][Notmuch]] integration
-- =el-secretario-mu4e= :: [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]] integration
-- =el-secretario-elfeed= :: [[https://github.com/skeeto/elfeed][Elfeed]] integration
+- =el-secretario=: The main package
+- =el-secretario-org=: [[https://orgmode.org/][Org-mode]] integration
+- =el-secretario-notmuch=: [[https://notmuchmail.org/][Notmuch]] integration
+- =el-secretario-mu4e=: [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Mu4e]] integration
+- =el-secretario-elfeed=: [[https://github.com/skeeto/elfeed][Elfeed]] integration
 
 *Note:* =el-secretario= depends on a newer version of which-key than might be on elpa. See [[https://todo.sr.ht/~zetagon/el-secretario/2][Bug:  which-key: No bindings found in el-secretario-org-keymap]]
 
