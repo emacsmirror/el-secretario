@@ -236,7 +236,9 @@ In order to run a function when a specific task is done, you can add the followi
 A spaced repetition module for tasks (and not memorization!). When you begin to
 have lots of todos it becomes very tiring to review all of them all the time.
 This module provides a way to defer todos into the future using a crude spaced
-repetition algorithm (the length of the deferral is incremented by one day each time).
+repetition algorithm (the length of the deferral is incremented by one day each
+time).  Note that it uses org-mode's =SCHEDULE= property so it will mess with
+items you have scheduled.
 
 Currently this module doesn't stand on it's own and serves more as a library
 that augments the [[id:e378a8e0-2701-41e7-8814-b6a0b0186664][org module]]. See [[https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario][my config]] for an example of how to use it.
@@ -270,10 +272,6 @@ automatically during a specific time in the review. It calls the provided
 function each time the source is activated and goes to the next source
 immediately when ~el-secretario-next-item~ is called. To use it put
 ~(el-secretario-function-source :func #'YOUR-FUNCTION)~ in your source list.
-
-** TODO Tasks
-This one is still a little bit weird and I don't exactly know what it's supposed
-to do so ignore it for now!
 
 * Customization
 ** Keybindings
@@ -310,6 +308,11 @@ keymaps for the two sources.
       (el-secretario-org-make-source '(todo "TODO") '("~/org/Inbox.org")
                                      :keymap my/el-secretario-org-map-2)))))
 #+end_src
+*** Note for Doom Emacs users
+
+Doom's =map!= macro doesn't play well with =el-secretario= and =which-key=.  It
+will cause some descriptions for keybindings to be overwritten.  Instead I
+recommend using =define-key= as shown above.
 
 ** Creating a new source
 :PROPERTIES:
@@ -332,7 +335,7 @@ with a keymap. Otherwise the default keymap will be used.
 See [[./el-secretario-example.el][the example source]] and [[file:tests/test-el-secretario.el::(describe "Example module"][its unit tests]] for an easy to read example.
 
 * Thanks
-=el-secretario= is mostly a glue-package. It couldn't exists without all the
+=el-secretario= is mostly a glue-package and it couldn't exist without all the
 fantastic things it glues together! Huge thanks to the creators of:
 
 - [[https://orgmode.org/][Org-mode]]
@@ -353,7 +356,7 @@ There are three ways to contribute to this project:
 
 - Patches
 
-  el-secretario is designed to be extensible. [[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Write your own sources]] and
+  =el-secretario= is designed to be extensible. [[id:2be5fc5b-e6f6-48c0-ac60-15024247e615][Write your own sources]] and
   contribute them, or improve the existing ones.
 
 - Money

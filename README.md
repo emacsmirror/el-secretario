@@ -43,7 +43,7 @@ subscribe using your email account.
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#orgb62bc88) into inboxes but he can also learn new things if you [teach](#orged4dd1f) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org4b29bb0) into inboxes but he can also learn new things if you [teach](#org7bac0d2) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -100,7 +100,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="orgb62bc88"></a>
+<a id="org4b29bb0"></a>
 
 # The modules
 
@@ -152,7 +152,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="orgd43618d"></a>
+<a id="org523cc7d"></a>
 
 ## Org
 
@@ -261,10 +261,12 @@ In order to run a function when a specific task is done, you can add the followi
 A spaced repetition module for tasks (and not memorization!). When you begin to
 have lots of todos it becomes very tiring to review all of them all the time.
 This module provides a way to defer todos into the future using a crude spaced
-repetition algorithm (the length of the deferral is incremented by one day each time).
+repetition algorithm (the length of the deferral is incremented by one day each
+time).  Note that it uses org-mode&rsquo;s `SCHEDULE` property so it will mess with
+items you have scheduled.
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#orgd43618d). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org523cc7d). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -307,12 +309,6 @@ immediately when `el-secretario-next-item` is called. To use it put
 `(el-secretario-function-source :func #'YOUR-FUNCTION)` in your source list.
 
 
-## TODO Tasks
-
-This one is still a little bit weird and I don&rsquo;t exactly know what it&rsquo;s supposed
-to do so ignore it for now!
-
-
 # Customization
 
 
@@ -349,7 +345,14 @@ keymaps for the two sources.
                                          :keymap my/el-secretario-org-map-2)))))
 
 
-<a id="orged4dd1f"></a>
+### Note for Doom Emacs users
+
+Doom&rsquo;s `map!` macro doesn&rsquo;t play well with `el-secretario` and `which-key`.  It
+will cause some descriptions for keybindings to be overwritten.  Instead I
+recommend using `define-key` as shown above.
+
+
+<a id="org7bac0d2"></a>
 
 ## Creating a new source
 
@@ -373,7 +376,7 @@ See [the example source](./el-secretario-example.el) and [its unit tests](tests/
 
 # Thanks
 
-`el-secretario` is mostly a glue-package. It couldn&rsquo;t exists without all the
+`el-secretario` is mostly a glue-package and it couldn&rsquo;t exist without all the
 fantastic things it glues together! Huge thanks to the creators of:
 
 -   [Org-mode](https://orgmode.org/)
@@ -396,7 +399,7 @@ There are three ways to contribute to this project:
 
 -   Patches
     
-    el-secretario is designed to be extensible. [Write your own sources](#orged4dd1f) and
+    `el-secretario` is designed to be extensible. [Write your own sources](#org7bac0d2) and
     contribute them, or improve the existing ones.
 
 -   Money
