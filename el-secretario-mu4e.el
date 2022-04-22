@@ -63,16 +63,26 @@ INIT-FUNCTION is a function that is run before the source is initialized."
    :query query
    :init-function (or init-function (lambda ()))))
 
+(defvar el-secretario-mu4e--mu4e-split-view
+  "`mu4e-split-view' is set in `el-secretario-source-activate'.
+Keep the value around so that `el-secretario-source-cleanup' can
+set it to the value it had before this source was activated.")
+
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-mu4e-source) &optional backwards)
   "See `el-secretario-source.el'.
 OBJ BACKWARDS."
   (with-slots (query init-function) obj
     (funcall init-function)
     (setq el-secretario-mu4e--activate-backwards backwards)
+    (setq el-secretario-mu4e--mu4e-split-view mu4e-split-view)
     (setq mu4e-split-view 'single-window)
     (add-hook 'mu4e-headers-found-hook #'el-secretario-mu4e--after-search-h)
     (mu4e-headers-search (or query "flag:unread"))
     (el-secretario-activate-keymap)))
+
+(cl-defmethod el-secretario-source-cleanup ((obj el-secretario-mu4e-source))
+  "Do cleanup of the mu4e source OBJ."
+  (setq mu4e-split-view el-secretario-mu4e--mu4e-split-view))
 
 (defun el-secretario-mu4e--after-search-h ()
   "Go to the correct message directly after search is complete.
