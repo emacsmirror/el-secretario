@@ -96,6 +96,12 @@ This most likely means that the user has called
 the source to be shown."
   (el-secretario-source-activate obj backwards))
 
+(cl-defmethod el-secretario-source-cleanup ((obj el-secretario-source))
+  "Do cleanup required by OBJ.
+
+This method is called every time `el-secretario--next-source' is
+called, i.e. when the source is changed away from OBJ.")
+
 (cl-defmethod el-secretario-source-next-item ((_obj el-secretario-source))
   "Go to the next item of source OBJ.
 

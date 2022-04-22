@@ -37,25 +37,35 @@
 (defclass  el-secretario-example-source (el-secretario-source)
   ((current-item :initform nil)
    (items-left :initarg :items-left)
-   (items-done :initform '())))
+   (items-done :initform '())
+   ;; Some example dummy state
+   (internal-state :initform 'uninitialized)))
 
 (defun el-secretario-example-get-current-val (source)
   (plist-get (oref source current-item)
              :val))
+
+(defun el-secretario-example-get-internal-state (source)
+  (oref source internal-state))
 
 (cl-defmethod el-secretario-source-activate ((obj el-secretario-example-source) &optional backwards)
   (el-secretario-activate-keymap)
   (el-secretario-source-activate-item obj))
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-example-source) &optional backwards)
-  (with-slots (items-done items-left current-item) obj
+  (with-slots (items-done items-left current-item internal-state) obj
     (setq items-left (mapcar (lambda (x)
                                (list :val x :reviewed 0))
                              items-left))
+    (setq internal-state 'initialized)
     (el-secretario-source-next-item obj)))
 
+(cl-defmethod el-secretario-source-cleanup ((obj el-secretario-example-source))
+  (with-slots (internal-state) obj
+    (setq internal-state 'uninitialized)))
+
 (cl-defmethod el-secretario-source-activate-item ((obj el-secretario-example-source))
-  (with-slots (current-item) obj
+  (with-slots (current-item internal-state) obj
     (plist-put current-item :reviewed
                (1+ (plist-get current-item
                               :reviewed)))))

@@ -110,6 +110,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
   "Switch to the next source in this session."
   (if el-secretario--current-source-list
       (progn
+        (el-secretario-source-cleanup (car el-secretario--current-source-list))
         (push (pop el-secretario--current-source-list)
               el-secretario--current-source-list-done)
         (if el-secretario--current-source-list
@@ -124,6 +125,7 @@ SOURCE-LIST is a function that returns a list of newly instantiated sources."
   "Switch to the previous source in this session."
   (if el-secretario--current-source-list-done
       (progn
+        (el-secretario-source-cleanup (car el-secretario--current-source-list))
         (push (pop el-secretario--current-source-list-done)
               el-secretario--current-source-list)
         (if el-secretario--current-source-list

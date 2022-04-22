@@ -147,6 +147,28 @@
     (el-secretario-next-item)
     (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
             :to-equal 4))
+  (it "can call the cleanup function"
+    (el-secretario-start-session (list (el-secretario-example-source
+                                        :items-left '(1 2))
+                                       (el-secretario-example-source
+                                        :items-left '(3 4))))
+    (expect (el-secretario-example-get-internal-state (car el-secretario--current-source-list))
+            :to-equal 'initialized)
+
+    (el-secretario-next-item)
+    (el-secretario-next-item)
+
+    (expect (el-secretario-example-get-internal-state (car el-secretario--current-source-list-done))
+            :to-equal 'uninitialized)
+    (expect (el-secretario-example-get-internal-state (car el-secretario--current-source-list))
+            :to-equal 'initialized)
+
+    (el-secretario-next-item)
+    (el-secretario-next-item)
+
+    (expect (el-secretario-example-get-internal-state (car el-secretario--current-source-list-done))
+            :to-equal 'uninitialized))
+
   (it "can go to the previous source when there are no items left"
     (el-secretario-start-session (list (el-secretario-example-source
                                         :items-left '(1 2))
