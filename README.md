@@ -43,7 +43,7 @@ subscribe using your email account.
 
 There are at least two fundamental ways of reading email. The first, and the one I think is more common, is to open the inbox and choose an email to read from the list. Let&rsquo;s call it the random access method. The other method is to open an email, preferably the oldest unread one, and when you are done open the next one by pressing a &ldquo;next email&rdquo;  button. Let&rsquo;s call it the linked list method.
 
-This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org4b29bb0) into inboxes but he can also learn new things if you [teach](#org7bac0d2) him.
+This package was born from the realization that I like the linked list method, and that I would like to handle more things this way. So what el secretario does is that he turns different sources (e.g. org-mode todo items or RSS feeds) into linked list-style inboxes. And he doesn&rsquo;t stop there, he can also link different lists together so that email, org-mode items and RSS feeds come under the same unified inbox. El secretario can already turn many different [things](#org1ab9a47) into inboxes but he can also learn new things if you [teach](#org875b598) him.
 
 This was all very abstract so let&rsquo;s move on to a concrete example:
 
@@ -100,7 +100,7 @@ A session consists of a list of sources. Each source consists of a list of items
 The example above has one notmuch source, and two org sources.
 
 
-<a id="org4b29bb0"></a>
+<a id="org1ab9a47"></a>
 
 # The modules
 
@@ -119,25 +119,6 @@ relevant function is just `el-secretario-notmuch-make-source`, look at its
 docstring for more info.
 
 
-### Capturing and backlinks
-
-`el-secretario-notmuch-capture-get-thread-link` can be used in a capture
-template to get a link to the thread of the current email message. During review
-org entries that link to the current thread or message will automatically show
-in the status buffer as backlinks.
-
-    (setq org-capture-templates
-          '(("e" "Email" entry (file "~/org/Inbox.org")
-             "* TODO %a
-    %(el-secretario-notmuch-capture-get-thread-link)")))
-
-Note that the backlinks buffer will only be populated when
-`el-secretario--notmuch-search-show-thread` (our own version of
-`notmuch-show-next-thread-show`) is called. `M-x
-el-secretario-notmuch/open-link-for-current-email` can be used to open and
-populate the backlinks buffer manually.
-
-
 ## Mu4e
 
 Very similar to the notmuch module. It goes through your mu4e email. The
@@ -152,7 +133,7 @@ chronological order, oldest first. The relevant function is just
 `el-secretario-elfeed-make-source`, look at its docstring for more info.
 
 
-<a id="org523cc7d"></a>
+<a id="org176636d"></a>
 
 ## Org
 
@@ -266,7 +247,7 @@ time).  Note that it uses org-mode&rsquo;s `SCHEDULE` property so it will mess w
 items you have scheduled.
 
 Currently this module doesn&rsquo;t stand on it&rsquo;s own and serves more as a library
-that augments the [org module](#org523cc7d). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
+that augments the [org module](#org176636d). See [my config](https://github.com/Zetagon/literate-dotfiles/blob/master/config.org#el-secretario) for an example of how to use it.
 
 
 ### Relevant variables
@@ -352,7 +333,7 @@ will cause some descriptions for keybindings to be overwritten.  Instead I
 recommend using `define-key` as shown above.
 
 
-<a id="org7bac0d2"></a>
+<a id="org875b598"></a>
 
 ## Creating a new source
 
@@ -399,7 +380,7 @@ There are three ways to contribute to this project:
 
 -   Patches
     
-    `el-secretario` is designed to be extensible. [Write your own sources](#org7bac0d2) and
+    `el-secretario` is designed to be extensible. [Write your own sources](#org875b598) and
     contribute them, or improve the existing ones.
 
 -   Money
