@@ -72,6 +72,18 @@ OBJ BACKWARDS."
   "See `el-secretario-source.el'."
   (el-secretario-notmuch-show-next-thread t))
 
+(defun el-secretario-notmuch-advance-and-archive ()
+  "Advance through thread and archive.
+Like `notmuch-show-advance-and-archive', but adapted to el-secretario.
+
+Instead of using `notmuch-show-archive-thread-then-next' it's
+using `el-secretario-notmuch-show-next-thread' so that it
+properly goes to the next source when there are no more messages."
+  (interactive)
+  (when (notmuch-show-advance)
+    (notmuch-show-archive-thread)
+    (el-secretario-next-item)))
+
 ;;
 ;; The logic for detecting when to call next-source or previous-source is quite
 ;; unintuitive. The text below is the content after calling `notmuch-search'.

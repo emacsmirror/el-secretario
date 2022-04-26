@@ -117,6 +117,15 @@ A very simple module that goes through your email in chronological order. The
 relevant function is just ~el-secretario-notmuch-make-source~, look at its
 docstring for more info.
 
+*** Note on commands
+
+~el-secretario-next-item~ and ~el-secretario-previous-item~ will go to the next
+and previous thread respectively.  If you want more granularity I recommend
+using ~el-secretario-notmuch-advance-and-archive~ instead of
+~el-secretario-next-item~ which will call ~notmuch-show-advance-and-archive~,
+i.e. scroll through the thread until you are at the end, at which point it will
+archive the thread and go to the next thread.
+
 ** Mu4e
 Very similar to the notmuch module. It goes through your mu4e email. The
 relevant function is just ~el-secretario-mu4e-make-source~, look at its
