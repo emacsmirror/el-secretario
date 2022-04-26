@@ -71,15 +71,18 @@ be nil.  Set it to t if in testing.")
   "Start session specified by SOURCE-LIST.
 
 SOURCE-LIST should be a list of newly instantiated sources, or
-SOURCE-LIST is a function that returns a list of newly instantiated sources."
+SOURCE-LIST is a function that returns a list of newly instantiated sources.
+
+All nil elements are filtered out from SOURCE-LIST."
   (setq el-secretario--original-buffer (current-buffer))
   (setq el-secretario--current-source-list
-        (--> (if (functionp source-list)
-                 (funcall source-list)
-               source-list)
-          (if (listp it)
-              it
-            (list it))))
+        (seq-filter (-compose #'not #'null)
+                    (--> (if (functionp source-list)
+                             (funcall source-list)
+                           source-list)
+                         (if (listp it)
+                             it
+                           (list it)))))
   (setq el-secretario--current-source-list-done nil)
   (with-current-buffer (get-buffer-create "*el-secretario-en*")
     (delete-region (point-min) (point-max)))
