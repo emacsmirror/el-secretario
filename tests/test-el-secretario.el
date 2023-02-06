@@ -1,9 +1,9 @@
 ;;; test-el-secretario.el --- description -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2021 Leo
+;; Copyright (C) 2021 Leo Okawa Ericson
 ;;
-;; Author: Leo <https://github.com/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://github.com/Zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: February 17, 2021
 ;; Modified: February 17, 2021
 ;; Version: 0.0.1

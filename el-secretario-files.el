@@ -1,9 +1,9 @@
 ;;; el-secretario-files.el --- files source for el-secretario -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2021 Leo
+;; Copyright (C) 2021 Leo Okawa Ericson
 ;;
-;; Author: Leo Okawa Ericson <http://github/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://sr.ht/~zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: Aug 26, 2021
 ;; Modified: Aug 26, 2021
 ;; Version: 0.0.1

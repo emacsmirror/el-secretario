@@ -1,9 +1,9 @@
 ;;; el-secretario-source.el --- The base class for sources -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2021 Leo
+;; Copyright (C) 2021 Leo Okawa Ericson
 ;;
-;; Author: Leo Okawa Ericson <http://github/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://sr.ht/~zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: June 07, 2021
 ;; Modified: June 07, 2021
 ;; Version: 0.0.1

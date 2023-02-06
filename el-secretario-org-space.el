@@ -1,9 +1,9 @@
 ;;; el-secretario-org-space.el --- Spaced repetition module of el-secretario -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2021 Leo
+;; Copyright (C) 2021 Leo Okawa Ericson
 ;;
-;; Author: Leo <https://github.com/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://github.com/Zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: March 21, 2021
 ;; Modified: March 21, 2021
 ;; Version: 0.0.1

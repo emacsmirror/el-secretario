@@ -1,9 +1,9 @@
 ;;; el-secretario-notmuch.el --- Add notmuch inboxes to el-secretario -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2020 Leo
+;; Copyright (C) 2020 Leo Okawa Ericson
 ;;
-;; Author: Leo Okawa Ericson <http://github/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://sr.ht/~zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: September 20, 2020
 ;; Modified: October 17, 2020
 ;; Version: 0.0.1

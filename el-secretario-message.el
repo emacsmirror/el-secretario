@@ -1,9 +1,9 @@
 ;;; el-secretario-message.el --- A source that displays one message -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2021 Leo
+;; Copyright (C) 2021 Leo Okawa Ericson
 ;;
-;; Author: Leo Okawa Ericson <http://github/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://sr.ht/~zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: January 21, 2021
 ;; Modified: January 21, 2021
 ;; Version: 0.0.1

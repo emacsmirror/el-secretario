@@ -1,9 +1,9 @@
 ;;; el-secretario-example.el --- Example source for el-secretario -*- lexical-binding: t; -*-
 ;;
-;; Copyright (C) 2021 Leo
+;; Copyright (C) 2021 Leo Okawa Ericson
 ;;
-;; Author: Leo Okawa Ericson <http://github/Zetagon>
-;; Maintainer: Leo <github@relevant-information.com>
+;; Author: Leo Okawa Ericson <https://sr.ht/~zetagon>
+;; Maintainer: Leo Okawa Ericson <git@relevant-information.com>
 ;; Created: June 08, 2021
 ;; Modified: June 08, 2021
 ;; Version: 0.0.1
