@@ -365,7 +365,11 @@ Pass ARG to `outline-up-heading'."
 This is like `org-element-headline-parser' but with some extra
 properties put in."
   (--> (org-element-headline-parser (line-end-position))
-       (nth 1 it)
+       (org-element-properties-map  (lambda (prop-name prop-value)
+                                      (list prop-name prop-value))
+                                    it
+                                    'undefer)
+       (-flatten-n 1 it)
        (plist-put it :file-name (buffer-file-name))
        (plist-put it :buffer (current-buffer))
        (plist-put it :marker (point-marker))))
