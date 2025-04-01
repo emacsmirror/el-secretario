@@ -519,15 +519,16 @@
         (expect (buffer-substring-no-properties (line-beginning-position)
                                                 (line-end-position))
                 :to-equal "** TODO subtask1")
+        (expect 'next-item-fun :to-have-been-called-times 1)
 
         (dotimes (_ 6)
           (el-secretario-next-item))
 
-        (with-current-buffer file
-          ;; Invalidate org-ql's cache
-          (set-buffer-modified-p t))
+        (expect 'next-item-fun :to-have-been-called-times 7)
 
         (el-secretario-start-session my-source)
+
+        (expect 'next-item-fun :to-have-been-called-times 8)
 
         (expect (buffer-substring-no-properties (line-beginning-position)
                                                 (line-end-position))

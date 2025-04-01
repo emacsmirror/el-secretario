@@ -173,22 +173,23 @@ OBJ."
 
 
 (cl-defmethod el-secretario-source-init ((obj el-secretario-org-source) &optional _backwards)
-    "See `el-secretario-source.el'.
+  "See `el-secretario-source.el'.
 OBJ."
   (with-slots (query files compare-fun shuffle-p ids items-left items-done) obj
     (el-secretario-org--widen-all obj)
-    (setq items-left
-          (append (-map (lambda (id)
-                          (let ((m (org-id-find id 'marker)))
-                            (when m
-                              (with-current-buffer (marker-buffer m)
-                                (save-excursion
-                                  (goto-char m)
-                                  (el-secretario-org--parse-headline))))))
-                        ids)
-                  (org-ql-select (or files
-                                     (org-agenda-files)) query
-                                     :action #'el-secretario-org--parse-headline)))
+    (let ((org-ql-cache (make-hash-table)))
+      (setq items-left
+            (append (-map (lambda (id)
+                            (let ((m (org-id-find id 'marker)))
+                              (when m
+                                (with-current-buffer (marker-buffer m)
+                                  (save-excursion
+                                    (goto-char m)
+                                    (el-secretario-org--parse-headline))))))
+                          ids)
+                    (org-ql-select (or files
+                                       (org-agenda-files)) query
+                                       :action #'el-secretario-org--parse-headline))))
     (when shuffle-p
       (el-secretario--shuffle items-left))
     (when compare-fun
