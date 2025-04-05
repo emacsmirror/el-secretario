@@ -111,30 +111,23 @@ All nil elements are filtered out from SOURCE-LIST."
 
 (defun el-secretario--next-source ()
   "Switch to the next source in this session."
-  (if el-secretario--current-source-list
-      (progn
-        (el-secretario-source-cleanup (car el-secretario--current-source-list))
-        (push (pop el-secretario--current-source-list)
-              el-secretario--current-source-list-done)
-        (if el-secretario--current-source-list
-            (el-secretario-source-init (car el-secretario--current-source-list))
-          (with-current-buffer (get-buffer-create "*el-secretario-en*")
-            (insert "Done!"))
-          (switch-to-buffer (get-buffer-create "*el-secretario-en*"))))
-    (el-secretario-status-buffer-deactivate)
-    (el-secretario-end-session)))
+  (when (cdr-safe el-secretario--current-source-list)
+    (el-secretario-source-cleanup (car el-secretario--current-source-list))
+    (push (pop el-secretario--current-source-list)
+          el-secretario--current-source-list-done)
+    (if el-secretario--current-source-list
+        (el-secretario-source-init (car el-secretario--current-source-list))
+      (error "el-secretario reached a state it should not reach.  Please file bug report with relevant details."))))
 
 (defun el-secretario--previous-source ()
   "Switch to the previous source in this session."
-  (if el-secretario--current-source-list-done
-      (progn
-        (el-secretario-source-cleanup (car el-secretario--current-source-list))
-        (push (pop el-secretario--current-source-list-done)
-              el-secretario--current-source-list)
-        (if el-secretario--current-source-list
-            (el-secretario-source-init (car el-secretario--current-source-list) 'backward)
-          (message "ooflakjdlkf")))
-    (message "No more previous sources!")))
+  (when el-secretario--current-source-list-done
+    (el-secretario-source-cleanup (car el-secretario--current-source-list))
+      (push (pop el-secretario--current-source-list-done)
+            el-secretario--current-source-list)
+      (if el-secretario--current-source-list
+          (el-secretario-source-init (car el-secretario--current-source-list) 'backward)
+        (error "el-secretario reached a state it should not reach.  Please file bug report with relevant details."))))
 
 
 (defun el-secretario--status-buffer-activate ()
