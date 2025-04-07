@@ -252,6 +252,11 @@ OBJ."
       (el-secretario-org--widen-all obj)
       (el-secretario--previous-source))))
 
+(cl-defmethod el-secretario-source-cleanup ((obj el-secretario-org-source))
+  "See `el-secretario-source.el'.
+OBJ."
+  (el-secretario-org--widen-all obj))
+
 (defun el-secretario-org--widen-all (source)
   "Widen all buffers that were visited by this SOURCE."
   (with-slots (files) source

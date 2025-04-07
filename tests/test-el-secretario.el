@@ -117,6 +117,26 @@
     (el-secretario-next-item)
     (expect (el-secretario-example-get-current-val(car el-secretario--current-source-list))
             :to-equal 5))
+  (it  "should not do anything after ending the session"
+    (el-secretario-start-session (el-secretario-example-source
+                                  :items-left '(1 2 3 4 5)))
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 1)
+    (el-secretario-next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 2)
+    (el-secretario-next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 3)
+    (el-secretario-next-item)
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-equal 4)
+
+    (el-secretario-end-session)
+    (el-secretario-next-item)
+
+    (expect (el-secretario-example-get-current-val (car el-secretario--current-source-list))
+            :to-throw 'wrong-type-argument))
   (it "can go backwards"
     (el-secretario-start-session (el-secretario-example-source
                                   :items-left '(1 2 3 4 5)))
@@ -250,6 +270,24 @@
     (dotimes (_ 6)
       (el-secretario-next-item))
     (expect 'next-item-fun :to-have-been-called-times 7))
+
+  (it "widens the buffer after ending the session"
+    (el-secretario-start-session source)
+    (el-secretario-next-item)
+
+    (goto-char (point-min))
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO bar :b:")
+
+    (el-secretario-end-session)
+
+    (goto-char (point-min))
+    ;; the first line in the test buffer is empty so we skip one
+    (forward-line)
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO :a:"))
 
   (it "runs the review-item hook on each todo heading"
     (el-secretario-start-session (list (el-secretario-org-make-source '(todo)

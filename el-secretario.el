@@ -92,8 +92,13 @@ All nil elements are filtered out from SOURCE-LIST."
 (defun el-secretario-end-session ()
   "End current session and do cleanup."
   (interactive)
-  (switch-to-buffer el-secretario--original-buffer)
-  (el-secretario-status-buffer-deactivate))
+  ;; TODO: should car be car-safe here?
+  (when el-secretario--current-source-list
+    (el-secretario-source-cleanup (car el-secretario--current-source-list))
+    (switch-to-buffer el-secretario--original-buffer)
+    (el-secretario-status-buffer-deactivate)
+    (setq el-secretario--current-source-list nil)
+    (setq el-secretario--current-source-list-done nil)))
 
 (defun el-secretario-next-item ()
   "Go to the next item of this session."
