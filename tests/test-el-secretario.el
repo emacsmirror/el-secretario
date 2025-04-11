@@ -264,12 +264,41 @@
     (el-secretario-start-session source)
     (expect 'next-item-fun :to-have-been-called-times 1))
 
-
   (it "runs the next-item hook on each todo heading"
     (el-secretario-start-session source)
     (dotimes (_ 6)
       (el-secretario-next-item))
     (expect 'next-item-fun :to-have-been-called-times 7))
+
+  (it "narrows the buffer when going to the previous item while being at the start of a source."
+    (el-secretario-start-session source)
+    (goto-char (point-min))
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO :a:")
+
+    (el-secretario-previous-item)
+
+    (goto-char (point-min))
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "* TODO FOO :a:"))
+
+  (it "narrows the buffer when going to the next item while being at the end of a source."
+    (el-secretario-start-session source)
+    (dotimes (_ 6)
+      (el-secretario-next-item))
+    (goto-char (point-min))
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "** TODO Sync remarkable inbox")
+
+    (el-secretario-next-item)
+
+    (goto-char (point-min))
+    (expect (buffer-substring-no-properties (line-beginning-position)
+                                            (line-end-position))
+            :to-equal "** TODO Sync remarkable inbox"))
 
   (it "widens the buffer after ending the session"
     (el-secretario-start-session source)

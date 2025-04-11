@@ -235,7 +235,6 @@ OBJ."
           (el-secretario-source-activate-item obj))
 
       (message "No next item!")
-      (el-secretario-org--widen-all obj)
       (el-secretario--next-source))))
 
 (cl-defmethod el-secretario-source-previous-item ((obj el-secretario-org-source))
@@ -249,7 +248,6 @@ OBJ."
           (setq current-item item)
           (el-secretario-source-activate-item obj))
       (message "No previous item!")
-      (el-secretario-org--widen-all obj)
       (el-secretario--previous-source))))
 
 (cl-defmethod el-secretario-source-cleanup ((obj el-secretario-org-source))
